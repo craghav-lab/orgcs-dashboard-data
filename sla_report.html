@@ -36,7 +36,7 @@
     .heatmap-row { display: flex; align-items: center; gap: 10px; }
     .heatmap-label { width: 200px; font-size: 11px; font-weight: 600; color: #444; text-align: right; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .heatmap-cells { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; }
-    .heatmap-cell { width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; cursor: pointer; transition: transform 0.1s; position: relative; }
+    .heatmap-cell { width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; cursor: pointer; transition: transform 0.1s; position: relative; }
     .heatmap-cell:hover { transform: scale(1.15); z-index: 1; }
     .cell-none    { background: #f0f2f8; }
     .cell-low     { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
@@ -44,8 +44,8 @@
     .cell-high    { background: #ffccbc; color: #bf360c; border: 1px solid #ff7043; }
     .cell-critical { background: #b71c1c; color: white; border: 1px solid #7f0000; }
     .cell-never   { background: #212121; color: white; border: 1px solid #000; }
-    .heatmap-x-labels { display: flex; gap: 4px; padding-left: 214px; margin-bottom: 4px; flex-wrap: nowrap; }
-    .heatmap-x-label  { width: 28px; font-size: 9px; color: #888; text-align: center; font-weight: 600; }
+    .heatmap-x-labels { display: flex; gap: 4px; padding-left: 214px; margin-bottom: 4px; flex-wrap: nowrap; overflow-x: auto; }
+    .heatmap-x-label  { width: 26px; min-width: 26px; font-size: 9px; color: #555; text-align: center; font-weight: 700; }
 
     /* ── Timeline chart ── */
     .timeline-container { background: white; border: 1px solid #dde0ea; border-radius: 8px; padding: 16px; overflow: hidden; }
@@ -141,7 +141,8 @@
 
 <!-- Heatmap by week/account -->
 <div class="section">
-  <div class="section-title">Case Creation Heatmap — Week × Breach Severity</div>
+  <div class="section-title">Case Creation Heatmap — Hour of Day (UTC) × Account × Breach Severity</div>
+  <div style="font-size:11px;color:#888;margin-bottom:10px">X-axis: hour the case was logged (00–23 UTC) &nbsp;·&nbsp; Y-axis: impacted account &nbsp;·&nbsp; Color: breach severity</div>
   <div style="background:white;border:1px solid #dde0ea;border-radius:8px;padding:16px;overflow-x:auto">
     <div class="heatmap-x-labels" id="heatmap-x-labels"></div>
     <div class="heatmap-grid" id="heatmap-grid"></div>
@@ -225,43 +226,32 @@ document.getElementById('kpi-avg').textContent = avg;
 document.getElementById('kpi-worst').textContent = worst;
 document.getElementById('kpi-under5').textContent = under5;
 
-// ── Heatmap ──────────────────────────────────────────────────────────────────
-// Group cases by ISO week (Mon-Sun)
-function isoWeek(d) {
-  const dt = new Date(d);
-  const day = dt.getUTCDay() || 7;
-  dt.setUTCDate(dt.getUTCDate() + 4 - day);
-  const yearStart = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
-  const wk = Math.ceil(((dt - yearStart) / 86400000 + 1) / 7);
-  return `${dt.getUTCFullYear()}-W${String(wk).padStart(2,'0')}`;
-}
-function weekLabel(w) {
-  // w = "2026-W19" -> "May W19"
-  const [yr, wStr] = w.split('-W');
-  const jan4 = new Date(Date.UTC(Number(yr), 0, 4));
-  const ms = jan4.getTime() + (Number(wStr)-1)*7*86400000;
-  const d = new Date(ms);
-  return d.toLocaleDateString('en-GB',{month:'short',day:'numeric',timeZone:'UTC'});
-}
+// ── Heatmap — Hour of Day (UTC) ───────────────────────────────────────────────
+// All 24 hours on X axis; accounts on Y axis
+const HOURS = Array.from({length:24}, (_,i) => i);  // 0..23
 
-const weeks = [...new Set(CASES.map(c => isoWeek(c.created_utc)))].sort();
-const accts = [...new Set(CASES.map(c => c.account))].sort();
-
-// Build week → account → case map
+// Build hour → account → cases map
 const grid = {};
 CASES.forEach(c => {
-  const w = isoWeek(c.created_utc);
-  if (!grid[w]) grid[w] = {};
-  if (!grid[w][c.account]) grid[w][c.account] = [];
-  grid[w][c.account].push(c);
+  const h = new Date(c.created_utc).getUTCHours();
+  if (!grid[h]) grid[h] = {};
+  if (!grid[h][c.account]) grid[h][c.account] = [];
+  grid[h][c.account].push(c);
 });
 
-// X-labels
+// Only show hours that have at least one case
+const activeHours = HOURS.filter(h => grid[h]);
+
+// Accounts sorted by the hour they logged (earliest first)
+const accts = [...new Set(CASES.sort((a,b)=>a.created_utc.localeCompare(b.created_utc)).map(c=>c.account))];
+
+// X-labels (hour blocks)
 const xlEl = document.getElementById('heatmap-x-labels');
-weeks.forEach(w => {
+// We'll show all 24 hours so pattern is clear (empty hours show as grey)
+HOURS.forEach(h => {
   const d = document.createElement('div');
   d.className = 'heatmap-x-label';
-  d.textContent = weekLabel(w);
+  d.textContent = String(h).padStart(2,'0');
   xlEl.appendChild(d);
 });
 
@@ -284,10 +274,10 @@ accts.forEach(acct => {
 
   const cells = document.createElement('div');
   cells.className = 'heatmap-cells';
-  weeks.forEach(w => {
+  HOURS.forEach(h => {
     const cell = document.createElement('div');
     cell.className = 'heatmap-cell';
-    const cs = (grid[w] || {})[acct] || [];
+    const cs = (grid[h] || {})[acct] || [];
     if (cs.length === 0) {
       cell.classList.add('cell-none');
     } else {
@@ -296,7 +286,7 @@ accts.forEach(acct => {
       cell.textContent = cs.length > 1 ? cs.length : '';
       cell.addEventListener('mouseenter', e => {
         const late = c.late_mins !== null ? `${fmtLate(c.late_mins)} late` : '<span style="color:#ef5350">NEVER RESPONDED</span>';
-        showTip(e, `<strong>${c.case_number}</strong><br>${acct}<br>Created: ${fmtDT(c.created_utc)}<br>SLA: ${c.sla_window_mins} min window<br>Breach: ${late}<br><em>${c.subject}</em>`);
+        showTip(e, `<strong>${c.case_number}</strong><br>${acct}<br>Logged at: ${String(h).padStart(2,'0')}:xx UTC<br>Created: ${fmtDT(c.created_utc)}<br>SLA: ${c.sla_window_mins} min window<br>Breach: ${late}<br><em>${c.subject}</em>`);
       });
       cell.addEventListener('mousemove', moveTip);
       cell.addEventListener('mouseleave', hideTip);
