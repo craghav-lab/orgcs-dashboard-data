@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SLA Breach Analysis — Leadership Report</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; background: #f0f2f8; color: #1a1a2e; }
+
+    /* ── Header ── */
+    .report-header { background: linear-gradient(135deg, #0070d2 0%, #003f7a 100%); color: white; padding: 28px 36px 22px; }
+    .report-header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.2px; }
+    .report-header .sub { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+    .report-meta { display: flex; gap: 24px; margin-top: 14px; flex-wrap: wrap; }
+    .report-meta-item { font-size: 11px; opacity: 0.75; }
+    .report-meta-item strong { opacity: 1; font-size: 13px; display: block; margin-top: 2px; }
+
+    /* ── KPI bar ── */
+    .kpi-bar { display: flex; gap: 14px; padding: 18px 36px; background: white; border-bottom: 1px solid #dde0ea; flex-wrap: wrap; }
+    .kpi { flex: 1; min-width: 130px; background: #f8f9fe; border: 1px solid #dde0ea; border-radius: 8px; padding: 12px 16px; }
+    .kpi .kpi-val { font-size: 28px; font-weight: 800; line-height: 1; }
+    .kpi .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-top: 4px; }
+    .kpi.red   .kpi-val { color: #c62828; }
+    .kpi.amber .kpi-val { color: #e65100; }
+    .kpi.blue  .kpi-val { color: #0070d2; }
+    .kpi.green .kpi-val { color: #2e7d32; }
+
+    /* ── Section wrapper ── */
+    .section { padding: 20px 36px; }
+    .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #555; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .section-title::after { content: ""; flex: 1; height: 1px; background: #dde0ea; }
+
+    /* ── Heatmap grid ── */
+    .heatmap-grid { display: grid; gap: 14px; }
+    .heatmap-row { display: flex; align-items: center; gap: 10px; }
+    .heatmap-label { width: 200px; font-size: 11px; font-weight: 600; color: #444; text-align: right; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .heatmap-cells { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; }
+    .heatmap-cell { width: 28px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; cursor: pointer; transition: transform 0.1s; position: relative; }
+    .heatmap-cell:hover { transform: scale(1.15); z-index: 1; }
+    .cell-none    { background: #f0f2f8; }
+    .cell-low     { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .cell-medium  { background: #ffe0b2; color: #bf360c; border: 1px solid #ffa726; }
+    .cell-high    { background: #ffccbc; color: #bf360c; border: 1px solid #ff7043; }
+    .cell-critical { background: #b71c1c; color: white; border: 1px solid #7f0000; }
+    .cell-never   { background: #212121; color: white; border: 1px solid #000; }
+    .heatmap-x-labels { display: flex; gap: 4px; padding-left: 214px; margin-bottom: 4px; flex-wrap: nowrap; }
+    .heatmap-x-label  { width: 28px; font-size: 9px; color: #888; text-align: center; font-weight: 600; }
+
+    /* ── Timeline chart ── */
+    .timeline-container { background: white; border: 1px solid #dde0ea; border-radius: 8px; padding: 16px; overflow: hidden; }
+    canvas { display: block; width: 100%; }
+
+    /* ── Case table ── */
+    .cases-table-wrap { background: white; border-radius: 8px; overflow: hidden; border: 1px solid #dde0ea; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { background: #f0f2f8; padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #555; border-bottom: 2px solid #dde0ea; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #f0f0f5; transition: background 0.1s; }
+    tbody tr:hover { background: #f5f7ff; }
+    tbody td { padding: 8px 12px; vertical-align: middle; }
+    .case-num { font-weight: 700; color: #0070d2; white-space: nowrap; font-size: 11px; }
+    .acct-name { font-weight: 600; color: #222; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    .sev-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .sev-critical { background: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
+    .sev-urgent   { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .breach-bar-wrap { display: flex; align-items: center; gap: 6px; }
+    .breach-bar { height: 8px; border-radius: 4px; min-width: 3px; flex-shrink: 0; }
+    .breach-low      { background: #ffe082; }
+    .breach-medium   { background: #ffa726; }
+    .breach-high     { background: #ef5350; }
+    .breach-critical { background: #b71c1c; }
+    .breach-never    { background: #212121; }
+    .breach-val { font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .never-txt { color: #b71c1c; font-weight: 700; font-size: 11px; }
+    .status-chip { display: inline-block; padding: 1px 7px; border-radius: 8px; font-size: 10px; font-weight: 600; }
+    .status-closed { background: #f5f5f5; color: #616161; }
+    .status-open   { background: #e3f2fd; color: #1565c0; }
+    .ts-cell { color: #666; white-space: nowrap; font-size: 11px; }
+
+    /* ── Insight box ── */
+    .insights { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .insight-card { background: white; border: 1px solid #dde0ea; border-radius: 8px; padding: 16px; }
+    .insight-card h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 10px; }
+    .insight-card ul { list-style: none; padding: 0; }
+    .insight-card li { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #f0f0f5; font-size: 12px; }
+    .insight-card li:last-child { border-bottom: none; }
+    .insight-card li .name { color: #333; }
+    .insight-card li .val  { font-weight: 700; color: #0070d2; }
+
+    /* ── Legend ── */
+    .legend { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #555; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 3px; }
+
+    /* Print */
+    @media print {
+      body { background: white; }
+      .report-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .kpi, .timeline-container, .cases-table-wrap, .insight-card { break-inside: avoid; }
+    }
+
+    /* Tooltip */
+    .tooltip { position: fixed; background: rgba(26,26,46,0.92); color: white; padding: 7px 12px; border-radius: 5px; font-size: 11px; pointer-events: none; z-index: 999; display: none; max-width: 260px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<div class="report-header">
+  <h1>SLA Breach Report — Initial Response Violations</h1>
+  <div class="sub">OrgCS · Industry &amp; Revenue Cloud · Signature-tier customers · 25 breached cases</div>
+  <div class="report-meta">
+    <div class="report-meta-item">Period Covered<strong>May 7 – Jul 27, 2026</strong></div>
+    <div class="report-meta-item">SLA Milestone<strong>Initial Response (15 min / 60 min)</strong></div>
+    <div class="report-meta-item">Breach Rate<strong>100% (25 / 25)</strong></div>
+    <div class="report-meta-item">Severity Mix<strong>23 Critical · 2 Urgent</strong></div>
+    <div class="report-meta-item">Report Generated<strong id="gen-date"></strong></div>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-bar">
+  <div class="kpi red"><div class="kpi-val">25</div><div class="kpi-label">Total SLA Breaches</div></div>
+  <div class="kpi red"><div class="kpi-val">1</div><div class="kpi-label">Never Responded (Equinix)</div></div>
+  <div class="kpi amber"><div class="kpi-val" id="kpi-avg">—</div><div class="kpi-label">Avg Breach Duration (min)</div></div>
+  <div class="kpi red"><div class="kpi-val" id="kpi-worst">—</div><div class="kpi-label">Worst Breach (min)</div></div>
+  <div class="kpi blue"><div class="kpi-val">25</div><div class="kpi-label">Unique Accounts Impacted</div></div>
+  <div class="kpi amber"><div class="kpi-val" id="kpi-under5">—</div><div class="kpi-label">Breached &lt; 5 min (near-miss)</div></div>
+</div>
+
+<!-- Legend -->
+<div class="section" style="padding-bottom:0">
+  <div class="legend">
+    <span style="font-size:11px;font-weight:600;color:#555">Breach Delay:</span>
+    <div class="legend-item"><div class="legend-dot" style="background:#212121"></div> Never responded</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#b71c1c"></div> &gt; 60 min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div> 15–60 min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffa726"></div> 5–15 min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffe082"></div> &lt; 5 min</div>
+  </div>
+</div>
+
+<!-- Heatmap by week/account -->
+<div class="section">
+  <div class="section-title">Case Creation Heatmap — Week × Breach Severity</div>
+  <div style="background:white;border:1px solid #dde0ea;border-radius:8px;padding:16px;overflow-x:auto">
+    <div class="heatmap-x-labels" id="heatmap-x-labels"></div>
+    <div class="heatmap-grid" id="heatmap-grid"></div>
+  </div>
+</div>
+
+<!-- Timeline -->
+<div class="section">
+  <div class="section-title">Case Creation Timeline — Breach Volume Over Time</div>
+  <div class="timeline-container">
+    <canvas id="timeline-canvas" height="140"></canvas>
+  </div>
+</div>
+
+<!-- Insights -->
+<div class="section">
+  <div class="section-title">Key Insights</div>
+  <div class="insights">
+    <div class="insight-card">
+      <h4>Breach Duration Distribution</h4>
+      <ul id="breach-dist-list"></ul>
+    </div>
+    <div class="insight-card">
+      <h4>Top Accounts by Breach Delay</h4>
+      <ul id="top-accounts-list"></ul>
+    </div>
+    <div class="insight-card">
+      <h4>Cases by Month</h4>
+      <ul id="monthly-list"></ul>
+    </div>
+    <div class="insight-card">
+      <h4>Cases by Hour of Day (UTC)</h4>
+      <ul id="hour-list"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Table -->
+<div class="section">
+  <div class="section-title">Case Detail — All 25 Breaches</div>
+  <div class="cases-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Case #</th>
+          <th>Account</th>
+          <th>Subject</th>
+          <th>Severity</th>
+          <th>Status</th>
+          <th>Created (UTC)</th>
+          <th>SLA Target (UTC)</th>
+          <th>Responded (UTC)</th>
+          <th>Breach Delay</th>
+        </tr>
+      </thead>
+      <tbody id="detail-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+const CASES = [{"case_number":"473422430","account":"Equinix, Inc.","subject":"EG B2B Commerce - Flash Sales Enabled at Org Level is Causing Performa","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-B2B Commerce","success_plan":"Signature","instance":"","created_utc":"2026-05-07T20:26:46.000+0000","sla_start_utc":"2026-05-07T20:26:46.000+0000","sla_target_utc":"2026-05-07T20:41:46.000+0000","sla_completed_utc":null,"sla_window_mins":15,"late_mins":null,"is_completed":false,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473434759","account":"Missouri Division of Professional Registration","subject":"Data Loss in Production: OmniScript Saving Incorrect Data in Production","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Omnistudio","success_plan":"Signature","instance":"Production","created_utc":"2026-05-10T23:32:21.000+0000","sla_start_utc":"2026-05-10T23:32:21.000+0000","sla_target_utc":"2026-05-10T23:47:21.000+0000","sla_completed_utc":"2026-05-11T03:47:00.000+0000","sla_window_mins":15,"late_mins":239.6,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473440960","account":"Pacific Gas & Electric Company","subject":"[PROD DOWN] Integration Mule connector error affecting outbound Sales Orde","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-CPQ \/ Order Management \/ Digital Commerce","success_plan":"Signature","instance":"Production","created_utc":"2026-05-11T14:46:09.000+0000","sla_start_utc":"2026-05-11T14:46:09.000+0000","sla_target_utc":"2026-05-11T15:01:09.000+0000","sla_completed_utc":"2026-05-11T15:21:46.000+0000","sla_window_mins":15,"late_mins":20.6,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473450648","account":"Samsara Inc","subject":"Revenue Cloud Renewal Quote - Amendment: Duplicate Products on Quote","status":"Closed","severity":"Level 1 - Critical","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-05-12T13:47:41.000+0000","sla_start_utc":"2026-05-12T13:47:41.000+0000","sla_target_utc":"2026-05-12T14:02:41.000+0000","sla_completed_utc":"2026-05-12T14:05:44.000+0000","sla_window_mins":15,"late_mins":3.0,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473475681","account":"Colmena Seguros Riesgos Laborales S.A","subject":"OmniScript - Production Not Working After New Release","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Omnistudio","success_plan":"Signature","instance":"","created_utc":"2026-05-14T23:27:25.000+0000","sla_start_utc":"2026-05-14T23:27:25.000+0000","sla_target_utc":"2026-05-14T23:42:25.000+0000","sla_completed_utc":"2026-05-15T00:22:57.000+0000","sla_window_mins":15,"late_mins":40.5,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473482566","account":"Pennsylvania Department of Human Services","subject":"Revenue Grid - unable to use the application","status":"Closed","severity":"Level 1 - Critical","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-05-15T17:30:10.000+0000","sla_start_utc":"2026-05-15T17:30:10.000+0000","sla_target_utc":"2026-05-15T17:45:10.000+0000","sla_completed_utc":"2026-05-15T18:07:10.000+0000","sla_window_mins":15,"late_mins":22.0,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473482460","account":"Keyloop Keyforce 2.0","subject":"OmniStudio Production Issue - Batch Processing Failing After Spring 25 Rel","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Omnistudio","success_plan":"Signature","instance":"Production","created_utc":"2026-05-15T17:14:45.000+0000","sla_start_utc":"2026-05-15T17:14:45.000+0000","sla_target_utc":"2026-05-15T17:29:45.000+0000","sla_completed_utc":"2026-05-15T17:33:06.000+0000","sla_window_mins":15,"late_mins":3.3,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473484181","account":"Laboratory Corporation of America Holdings Inc.","subject":"[PROD OUTAGE] OmniStudio - OmniScript not loading on Production","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Omnistudio","success_plan":"Signature","instance":"Production","created_utc":"2026-05-15T22:24:32.000+0000","sla_start_utc":"2026-05-15T22:24:32.000+0000","sla_target_utc":"2026-05-15T22:39:32.000+0000","sla_completed_utc":"2026-05-15T23:02:38.000+0000","sla_window_mins":15,"late_mins":23.1,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473485408","account":"JOINT STOCK COMMERCIAL BANK FOR FOREIGN TRADE OF VIETNAM","subject":"Unable to Access Salesforce - Production Down","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Financial Services Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-05-16T10:39:12.000+0000","sla_start_utc":"2026-05-16T10:39:12.000+0000","sla_target_utc":"2026-05-16T10:54:12.000+0000","sla_completed_utc":"2026-05-16T10:55:07.000+0000","sla_window_mins":15,"late_mins":0.9,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473485806","account":"Rapid7","subject":"Revenue Grid - cannot access Opportunities within SFDC","status":"Closed","severity":"Level 1 - Critical","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-05-16T17:00:34.000+0000","sla_start_utc":"2026-05-16T17:00:34.000+0000","sla_target_utc":"2026-05-16T17:15:34.000+0000","sla_completed_utc":"2026-05-16T17:47:24.000+0000","sla_window_mins":15,"late_mins":31.8,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473536170","account":"Palo Alto Networks, Inc.","subject":"Revenue Cloud - CPQ Revenue Schedules are not getting populated","status":"Closed","severity":"Level 1 - Critical","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-05-22T14:53:16.000+0000","sla_start_utc":"2026-05-22T14:53:16.000+0000","sla_target_utc":"2026-05-22T15:08:16.000+0000","sla_completed_utc":"2026-05-22T15:15:35.000+0000","sla_window_mins":15,"late_mins":7.3,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473819509","account":"Bradesco Seguros BVP","subject":"[P0] PQE - FSC Production - Contact Point Phone - Deduplication Issues","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Financial Services Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-06-15T14:55:52.000+0000","sla_start_utc":"2026-06-15T14:55:52.000+0000","sla_target_utc":"2026-06-15T15:10:52.000+0000","sla_completed_utc":"2026-06-15T15:23:01.000+0000","sla_window_mins":15,"late_mins":12.1,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473862924","account":"Fortra, LLC","subject":"[P0] MED Flows Failing To Execute In Production - Impacting Customers","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Health Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-06-17T14:48:40.000+0000","sla_start_utc":"2026-06-17T14:48:40.000+0000","sla_target_utc":"2026-06-17T15:03:40.000+0000","sla_completed_utc":"2026-06-17T15:09:06.000+0000","sla_window_mins":15,"late_mins":5.4,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473864729","account":"Digicert, Inc","subject":"Revenue Cloud - Approval Process Automation failing for Approval Requests","status":"Closed","severity":"Level 1 - Critical","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-06-17T16:16:12.000+0000","sla_start_utc":"2026-06-17T16:16:12.000+0000","sla_target_utc":"2026-06-17T16:31:12.000+0000","sla_completed_utc":"2026-06-17T16:32:03.000+0000","sla_window_mins":15,"late_mins":0.8,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473884389","account":"Colibri - OCL Org","subject":"OmniScript - Branching condition not working as expected in production","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Omnistudio","success_plan":"Signature","instance":"Production","created_utc":"2026-06-18T16:30:05.000+0000","sla_start_utc":"2026-06-18T16:30:05.000+0000","sla_target_utc":"2026-06-18T16:45:05.000+0000","sla_completed_utc":"2026-06-18T16:51:02.000+0000","sla_window_mins":15,"late_mins":5.9,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473896077","account":"Bharti Airtel Limited","subject":"Health cloud - Error while creating Health Cloud for Outbound Call and Inb","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Health Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-06-19T19:47:08.000+0000","sla_start_utc":"2026-06-19T19:47:08.000+0000","sla_target_utc":"2026-06-19T20:02:08.000+0000","sla_completed_utc":"2026-06-19T20:17:53.000+0000","sla_window_mins":15,"late_mins":15.8,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473952481","account":"Fortra, LLC","subject":"[P0] MED Flows are Failing to Execute in Production","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Health Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-06-26T22:19:34.000+0000","sla_start_utc":"2026-06-26T22:19:34.000+0000","sla_target_utc":"2026-06-26T22:34:34.000+0000","sla_completed_utc":"2026-06-26T22:37:05.000+0000","sla_window_mins":15,"late_mins":2.5,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473964222","account":"Sky Deutschland Fernsehen GmbH & Co. KG","subject":"Revenue Cloud Billing - Run Billing Job creating erroneous invoices","status":"Closed","severity":"Level 2 - Urgent","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-06-29T10:08:55.000+0000","sla_start_utc":"2026-06-29T10:08:55.000+0000","sla_target_utc":"2026-06-29T10:23:55.000+0000","sla_completed_utc":"2026-06-29T10:26:55.000+0000","sla_window_mins":15,"late_mins":3.0,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473974769","account":"UKG Inc. - Kronos Org","subject":"Revenue Cloud Invoice Failing to Generate due to null pointer error","status":"Closed","severity":"Level 1 - Critical","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-06-30T10:07:09.000+0000","sla_start_utc":"2026-06-30T10:07:09.000+0000","sla_target_utc":"2026-06-30T10:22:09.000+0000","sla_completed_utc":"2026-06-30T10:34:20.000+0000","sla_window_mins":15,"late_mins":12.2,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"473980335","account":"William Reed Limited","subject":"Production Down: Unable to access Salesforce org","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-CRM","success_plan":"Signature","instance":"Production","created_utc":"2026-06-30T18:23:25.000+0000","sla_start_utc":"2026-06-30T18:23:25.000+0000","sla_target_utc":"2026-06-30T19:23:25.000+0000","sla_window_mins":60,"late_mins":30.4,"is_completed":true,"is_violated":true,"milestone":"Initial Response","sla_completed_utc":"2026-06-30T19:53:51.000+0000"},{"case_number":"474060726","account":"ZoomInfo Technologies LLC","subject":"Revenue Cloud Billing: Billing Date Changed After Upgrade from Summer 25","status":"Closed","severity":"Level 1 - Critical","product":"Revenue","topic":"Revenue-Revenue Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-07-10T19:19:32.000+0000","sla_start_utc":"2026-07-10T19:19:32.000+0000","sla_target_utc":"2026-07-10T19:34:32.000+0000","sla_completed_utc":"2026-07-10T19:44:27.000+0000","sla_window_mins":15,"late_mins":9.9,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"474070759","account":"Select Plant Hire Limited","subject":"Production Down - Unable to Access Org","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-CRM","success_plan":"Signature","instance":"Production","created_utc":"2026-07-13T11:41:50.000+0000","sla_start_utc":"2026-07-13T11:41:50.000+0000","sla_target_utc":"2026-07-13T11:56:50.000+0000","sla_completed_utc":"2026-07-13T11:59:26.000+0000","sla_window_mins":15,"late_mins":2.6,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"474083557","account":"E.ON Energia Spa","subject":"[P0] Production - Unable to Activate Contracts","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Energy & Utilities Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-07-14T14:26:13.000+0000","sla_start_utc":"2026-07-14T14:26:13.000+0000","sla_target_utc":"2026-07-14T14:41:13.000+0000","sla_completed_utc":"2026-07-14T14:48:32.000+0000","sla_window_mins":15,"late_mins":7.3,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"474156444","account":"National Grid USA Service Company, Inc.","subject":"[P0] Error: User does not have access to API-only Connected App","status":"Closed","severity":"Level 1 - Critical","product":"Industry","topic":"Industry-Energy & Utilities Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-07-23T14:43:20.000+0000","sla_start_utc":"2026-07-23T14:43:20.000+0000","sla_target_utc":"2026-07-23T14:58:20.000+0000","sla_completed_utc":"2026-07-23T15:02:26.000+0000","sla_window_mins":15,"late_mins":4.1,"is_completed":true,"is_violated":true,"milestone":"Initial Response"},{"case_number":"474179422","account":"Bharti Airtel Limited","subject":"Blank Screen on Production - Health Cloud Console App","status":"Need More Information","severity":"Level 2 - Urgent","product":"Industry","topic":"Industry-Health Cloud","success_plan":"Signature","instance":"Production","created_utc":"2026-07-27T09:30:00.000+0000","sla_start_utc":"2026-07-27T09:30:00.000+0000","sla_target_utc":"2026-07-27T09:45:00.000+0000","sla_completed_utc":"2026-07-27T09:47:04.000+0000","sla_window_mins":15,"late_mins":2.1,"is_completed":true,"is_violated":true,"milestone":"Initial Response"}];
+
+function parseUTC(s) { if (!s) return null; return new Date(s); }
+function fmtDT(s) { if (!s) return "—"; const d = new Date(s); return d.toISOString().replace('T',' ').slice(0,16) + ' UTC'; }
+function fmtLate(m) { if (m === null || m === undefined) return null; if (m < 60) return `${Math.round(m)} min`; return `${Math.round(m/60*10)/10} hr`; }
+function breachClass(late) { if (late === null) return 'cell-never'; if (late > 60) return 'cell-critical'; if (late > 15) return 'cell-high'; if (late > 5) return 'cell-medium'; return 'cell-low'; }
+function breachBarClass(late) { if (late === null) return 'breach-never'; if (late > 60) return 'breach-critical'; if (late > 15) return 'breach-high'; if (late > 5) return 'breach-medium'; return 'breach-low'; }
+
+// Set report date
+document.getElementById('gen-date').textContent = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+
+// KPIs
+const lates = CASES.map(c => c.late_mins).filter(x => x !== null);
+const avg = lates.length ? Math.round(lates.reduce((a,b)=>a+b,0)/lates.length*10)/10 : 0;
+const worst = Math.max(...lates);
+const under5 = CASES.filter(c => c.late_mins !== null && c.late_mins < 5).length;
+document.getElementById('kpi-avg').textContent = avg;
+document.getElementById('kpi-worst').textContent = worst;
+document.getElementById('kpi-under5').textContent = under5;
+
+// ── Heatmap ──────────────────────────────────────────────────────────────────
+// Group cases by ISO week (Mon-Sun)
+function isoWeek(d) {
+  const dt = new Date(d);
+  const day = dt.getUTCDay() || 7;
+  dt.setUTCDate(dt.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil(((dt - yearStart) / 86400000 + 1) / 7);
+  return `${dt.getUTCFullYear()}-W${String(wk).padStart(2,'0')}`;
+}
+function weekLabel(w) {
+  // w = "2026-W19" -> "May W19"
+  const [yr, wStr] = w.split('-W');
+  const jan4 = new Date(Date.UTC(Number(yr), 0, 4));
+  const ms = jan4.getTime() + (Number(wStr)-1)*7*86400000;
+  const d = new Date(ms);
+  return d.toLocaleDateString('en-GB',{month:'short',day:'numeric',timeZone:'UTC'});
+}
+
+const weeks = [...new Set(CASES.map(c => isoWeek(c.created_utc)))].sort();
+const accts = [...new Set(CASES.map(c => c.account))].sort();
+
+// Build week → account → case map
+const grid = {};
+CASES.forEach(c => {
+  const w = isoWeek(c.created_utc);
+  if (!grid[w]) grid[w] = {};
+  if (!grid[w][c.account]) grid[w][c.account] = [];
+  grid[w][c.account].push(c);
+});
+
+// X-labels
+const xlEl = document.getElementById('heatmap-x-labels');
+weeks.forEach(w => {
+  const d = document.createElement('div');
+  d.className = 'heatmap-x-label';
+  d.textContent = weekLabel(w);
+  xlEl.appendChild(d);
+});
+
+const tooltip = document.getElementById('tooltip');
+function showTip(e, html) { tooltip.innerHTML = html; tooltip.style.display = 'block'; moveTip(e); }
+function moveTip(e) { tooltip.style.left = (e.clientX + 12) + 'px'; tooltip.style.top = (e.clientY + 12) + 'px'; }
+function hideTip() { tooltip.style.display = 'none'; }
+
+const gridEl = document.getElementById('heatmap-grid');
+accts.forEach(acct => {
+  const row = document.createElement('div');
+  row.className = 'heatmap-row';
+
+  const lbl = document.createElement('div');
+  lbl.className = 'heatmap-label';
+  const shortName = acct.length > 32 ? acct.slice(0,30)+'…' : acct;
+  lbl.textContent = shortName;
+  lbl.title = acct;
+  row.appendChild(lbl);
+
+  const cells = document.createElement('div');
+  cells.className = 'heatmap-cells';
+  weeks.forEach(w => {
+    const cell = document.createElement('div');
+    cell.className = 'heatmap-cell';
+    const cs = (grid[w] || {})[acct] || [];
+    if (cs.length === 0) {
+      cell.classList.add('cell-none');
+    } else {
+      const c = cs[0];
+      cell.classList.add(breachClass(c.late_mins));
+      cell.textContent = cs.length > 1 ? cs.length : '';
+      cell.addEventListener('mouseenter', e => {
+        const late = c.late_mins !== null ? `${fmtLate(c.late_mins)} late` : '<span style="color:#ef5350">NEVER RESPONDED</span>';
+        showTip(e, `<strong>${c.case_number}</strong><br>${acct}<br>Created: ${fmtDT(c.created_utc)}<br>SLA: ${c.sla_window_mins} min window<br>Breach: ${late}<br><em>${c.subject}</em>`);
+      });
+      cell.addEventListener('mousemove', moveTip);
+      cell.addEventListener('mouseleave', hideTip);
+    }
+    cells.appendChild(cell);
+  });
+  row.appendChild(cells);
+  gridEl.appendChild(row);
+});
+
+// ── Timeline bar chart ────────────────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('timeline-canvas');
+  canvas.width = canvas.offsetWidth || 900;
+  canvas.height = 140;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const pad = { l: 36, r: 16, t: 12, b: 36 };
+
+  // Sort by created
+  const sorted = [...CASES].sort((a,b) => a.created_utc.localeCompare(b.created_utc));
+  const n = sorted.length;
+  const bw = Math.max(8, Math.floor((W - pad.l - pad.r) / n) - 3);
+  const maxLate = Math.max(...sorted.map(c => c.late_mins === null ? 300 : c.late_mins), 1);
+
+  ctx.fillStyle = '#f8f9fe';
+  ctx.fillRect(0, 0, W, H);
+
+  // Y grid
+  [0, 0.25, 0.5, 0.75, 1].forEach(f => {
+    const y = pad.t + (1-f)*(H-pad.t-pad.b);
+    ctx.strokeStyle = '#e4e6f0'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W-pad.r, y); ctx.stroke();
+    ctx.fillStyle = '#aaa'; ctx.font = '9px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(Math.round(maxLate*f)+'m', pad.l-2, y+3);
+  });
+
+  // 15-min SLA line
+  const slaY = pad.t + (1 - 15/maxLate)*(H-pad.t-pad.b);
+  ctx.strokeStyle = '#0070d2'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(pad.l, slaY); ctx.lineTo(W-pad.r, slaY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#0070d2'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('15m SLA', pad.l+2, slaY-3);
+
+  // Bars
+  sorted.forEach((c, i) => {
+    const x = pad.l + i * (W-pad.l-pad.r)/n;
+    const late = c.late_mins !== null ? c.late_mins : maxLate;
+    const bh = Math.max(4, (late/maxLate)*(H-pad.t-pad.b));
+    const y = pad.t + (H-pad.t-pad.b) - bh;
+
+    const colors = { 'cell-never': '#212121', 'cell-critical': '#b71c1c', 'cell-high': '#ef5350', 'cell-medium': '#ffa726', 'cell-low': '#ffe082' };
+    ctx.fillStyle = colors[breachClass(c.late_mins)] || '#ef5350';
+    ctx.globalAlpha = 0.88;
+    ctx.fillRect(x, y, bw, bh);
+    ctx.globalAlpha = 1;
+  });
+
+  // X labels (every 5)
+  ctx.fillStyle = '#888'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+  sorted.forEach((c, i) => {
+    if (i % 4 === 0) {
+      const x = pad.l + i*(W-pad.l-pad.r)/n + bw/2;
+      const d = new Date(c.created_utc);
+      ctx.fillText(d.toLocaleDateString('en-GB',{month:'short',day:'numeric',timeZone:'UTC'}), x, H-4);
+    }
+  });
+})();
+
+// ── Insights ──────────────────────────────────────────────────────────────────
+// Breach distribution
+const dist = [
+  { label: 'NEVER (no response)', count: CASES.filter(c=>c.late_mins===null).length, color:'#212121' },
+  { label: '> 60 min', count: CASES.filter(c=>c.late_mins!==null&&c.late_mins>60).length, color:'#b71c1c' },
+  { label: '15–60 min', count: CASES.filter(c=>c.late_mins!==null&&c.late_mins>15&&c.late_mins<=60).length, color:'#ef5350' },
+  { label: '5–15 min', count: CASES.filter(c=>c.late_mins!==null&&c.late_mins>5&&c.late_mins<=15).length, color:'#ffa726' },
+  { label: '< 5 min', count: CASES.filter(c=>c.late_mins!==null&&c.late_mins<=5).length, color:'#ffe082' },
+];
+document.getElementById('breach-dist-list').innerHTML = dist.map(d=>
+  `<li><span class="name" style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:${d.color};display:inline-block;flex-shrink:0"></span>${d.label}</span><span class="val">${d.count}</span></li>`
+).join('');
+
+// Top accounts by worst breach
+const byAcct = {};
+CASES.forEach(c => {
+  if (!byAcct[c.account] || (c.late_mins === null) || (byAcct[c.account] !== null && c.late_mins > byAcct[c.account])) {
+    byAcct[c.account] = c.late_mins;
+  }
+});
+const topAccts = Object.entries(byAcct).sort((a,b)=>{
+  if (a[1]===null) return -1; if (b[1]===null) return 1; return b[1]-a[1];
+}).slice(0,8);
+document.getElementById('top-accounts-list').innerHTML = topAccts.map(([a,m])=>
+  `<li><span class="name" title="${a}">${a.length>30?a.slice(0,28)+'…':a}</span><span class="val" style="color:${m===null?'#b71c1c':m>60?'#b71c1c':m>15?'#ef5350':'#ffa726'}">${m===null?'NEVER':fmtLate(m)+' late'}</span></li>`
+).join('');
+
+// Monthly
+const monthly = {};
+CASES.forEach(c => { const m = c.created_utc.slice(0,7); monthly[m]=(monthly[m]||0)+1; });
+document.getElementById('monthly-list').innerHTML = Object.entries(monthly).sort().map(([m,n])=>
+  `<li><span class="name">${new Date(m+'-01').toLocaleDateString('en-GB',{month:'long',year:'numeric',timeZone:'UTC'})}</span><span class="val">${n} cases</span></li>`
+).join('');
+
+// Hour of day (UTC)
+const hours = {};
+CASES.forEach(c => { const h = new Date(c.created_utc).getUTCHours(); hours[h]=(hours[h]||0)+1; });
+const sortedHours = Object.entries(hours).sort((a,b)=>b[1]-a[1]).slice(0,6);
+document.getElementById('hour-list').innerHTML = sortedHours.map(([h,n])=>{
+  const hh = String(h).padStart(2,'0');
+  const hh1 = String((+h+1)%24).padStart(2,'0');
+  return `<li><span class="name">${hh}:00–${hh1}:00 UTC</span><span class="val">${n} cases</span></li>`;
+}).join('');
+
+// ── Detail Table ──────────────────────────────────────────────────────────────
+const sorted = [...CASES].sort((a,b) => a.created_utc.localeCompare(b.created_utc));
+document.getElementById('detail-tbody').innerHTML = sorted.map(c => {
+  const late = c.late_mins;
+  const lateDisplay = late === null
+    ? `<span class="never-txt">NEVER</span>`
+    : (() => {
+        const barW = Math.min(120, Math.max(4, late/300*120));
+        return `<div class="breach-bar-wrap"><div class="breach-bar ${breachBarClass(late)}" style="width:${barW}px"></div><span class="breach-val">${fmtLate(late)}</span></div>`;
+      })();
+  const sevClass = c.severity && c.severity.includes('1') ? 'sev-critical' : 'sev-urgent';
+  const sevLabel = c.severity ? c.severity.replace('Level 1 - ','').replace('Level 2 - ','') : '—';
+  return `<tr>
+    <td class="case-num">${c.case_number}</td>
+    <td><span class="acct-name" title="${c.account}">${c.account}</span></td>
+    <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#555;font-size:11px" title="${c.subject}">${c.subject}</td>
+    <td><span class="sev-badge ${sevClass}">${sevLabel}</span></td>
+    <td><span class="status-chip ${c.status==='Closed'?'status-closed':'status-open'}">${c.status}</span></td>
+    <td class="ts-cell">${fmtDT(c.created_utc)}</td>
+    <td class="ts-cell">${fmtDT(c.sla_target_utc)}</td>
+    <td class="ts-cell">${c.sla_completed_utc ? fmtDT(c.sla_completed_utc) : '<span style="color:#b71c1c;font-weight:600">—</span>'}</td>
+    <td style="min-width:140px">${lateDisplay}</td>
+  </tr>`;
+}).join('');
+</script>
+</body>
+</html>
