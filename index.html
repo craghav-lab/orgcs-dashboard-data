@@ -6,99 +6,88 @@
   <title>OrgCS Architect Engagement Dashboard</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 13px; background: #f4f6fb; color: #1a1a2e; min-height: 100vh;
-    }
-    .header {
-      background: #0070d2; color: white; padding: 14px 24px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; background: #f4f6fb; color: #1a1a2e; min-height: 100vh; }
+
+    /* ── Header ── */
+    .header { background: #0070d2; color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.18); }
     .header-left { display: flex; align-items: center; gap: 10px; }
     .header-logo { font-size: 22px; color: #7ec8e3; }
     .header-title { font-size: 16px; font-weight: 700; letter-spacing: 0.3px; }
     .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
     .header-right { display: flex; align-items: center; gap: 12px; }
     .timestamp { font-size: 11px; opacity: 0.85; }
-    .header-nav-btn {
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
-      color: white; border-radius: 6px; padding: 5px 14px; cursor: pointer;
-      font-size: 12px; font-weight: 500; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s;
-    }
+    .header-nav-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 6px; padding: 5px 14px; cursor: pointer; font-size: 12px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s; }
     .header-nav-btn:hover { background: rgba(255,255,255,0.28); }
-    .reviews-badge {
-      background: white; color: #0070d2; font-size: 10px; font-weight: 700;
-      padding: 1px 6px; border-radius: 8px; min-width: 18px; text-align: center;
-    }
-    .refresh-btn {
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
-      color: white; border-radius: 6px; padding: 5px 12px; cursor: pointer;
-      font-size: 12px; font-weight: 500; transition: background 0.15s;
-    }
+    .reviews-badge { background: white; color: #0070d2; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px; min-width: 18px; text-align: center; }
+    .refresh-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 6px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.15s; }
     .refresh-btn:hover { background: rgba(255,255,255,0.28); }
     .refresh-btn.spinning { animation: spin 1s linear infinite; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-    .stats-bar {
-      display: flex; gap: 12px; padding: 12px 24px;
-      background: white; border-bottom: 1px solid #e0e0e8;
-    }
-    .stat-card {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 8px 20px; border-radius: 8px; border: 1px solid #e8e8f0;
-      background: #fafafa; min-width: 90px;
-    }
+    /* ── Stats bar ── */
+    .stats-bar { display: flex; gap: 12px; padding: 12px 24px; background: white; border-bottom: 1px solid #e0e0e8; flex-wrap: wrap; }
+    .stat-card { display: flex; flex-direction: column; align-items: center; padding: 8px 20px; border-radius: 8px; border: 1px solid #e8e8f0; background: #fafafa; min-width: 90px; }
     .stat-card .stat-num { font-size: 22px; font-weight: 700; }
     .stat-card .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-top: 2px; }
-    .stat-card.high .stat-num   { color: #d32f2f; }
+    .stat-card.high .stat-num { color: #d32f2f; }
     .stat-card.medium .stat-num { color: #f57c00; }
-    .stat-card.low .stat-num    { color: #388e3c; }
-    .stat-card.total .stat-num  { color: #0070d2; }
+    .stat-card.low .stat-num { color: #388e3c; }
+    .stat-card.total .stat-num { color: #0070d2; }
 
-    .filter-area {
-      background: white; border-bottom: 1px solid #e0e0e8;
-      padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
-    }
+    /* ── Trends panel ── */
+    .trends-panel { background: white; border-bottom: 1px solid #e0e0e8; padding: 16px 24px; }
+    .trends-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .trends-toggle { background: none; border: 1px solid #d0d0d8; color: #666; border-radius: 4px; padding: 2px 9px; font-size: 11px; cursor: pointer; transition: all 0.12s; }
+    .trends-toggle:hover { background: #f0f0f5; }
+    .trends-body { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .trends-body.collapsed { display: none; }
+
+    /* Heatmap */
+    .heatmap-section h4 { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; }
+    .heatmap-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .heatmap-table th { background: #f5f6fa; padding: 5px 8px; text-align: left; font-weight: 600; color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid #e4e6f0; }
+    .heatmap-table th.sev-col { text-align: center; min-width: 52px; }
+    .heatmap-table td { padding: 5px 8px; border-bottom: 1px solid #f0f0f5; vertical-align: middle; }
+    .heatmap-table tbody tr:hover { background: #f7f9ff; }
+    .heatmap-table .topic-cell { font-weight: 500; color: #333; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .heatmap-table .product-label { font-size: 10px; color: #888; font-weight: 400; }
+    .sev-cell { text-align: center; }
+    .sev-pill { display: inline-block; padding: 2px 7px; border-radius: 8px; font-size: 10px; font-weight: 700; min-width: 28px; text-align: center; }
+    .sev1-pill { background: #ffebee; color: #b71c1c; }
+    .sev2-pill { background: #fff3e0; color: #e65100; }
+    .sev3-pill { background: #fffde7; color: #f57f17; }
+    .sev4-pill { background: #f3e5f5; color: #6a1b9a; }
+    .sev-zero  { color: #ccc; font-size: 10px; }
+
+    /* Severity total bar */
+    .sev-summary { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .sev-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .sev1-chip { background: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
+    .sev2-chip { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .sev3-chip { background: #fffde7; color: #f57f17; border: 1px solid #fff176; }
+    .sev4-chip { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+    .sev5-chip { background: #f5f5f5; color: #616161; border: 1px solid #e0e0e0; }
+
+    /* ── Filters ── */
+    .filter-area { background: white; border-bottom: 1px solid #e0e0e8; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .filter-group { display: flex; align-items: center; gap: 6px; }
     .filter-label { font-size: 11px; font-weight: 600; color: #666; white-space: nowrap; }
-    .filter-btn {
-      border: 1px solid #d0d0d8; background: #f0f0f5; color: #444;
-      border-radius: 14px; padding: 4px 13px; cursor: pointer;
-      font-size: 12px; font-weight: 500; transition: all 0.15s;
-    }
+    .filter-btn { border: 1px solid #d0d0d8; background: #f0f0f5; color: #444; border-radius: 14px; padding: 4px 13px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; }
     .filter-btn.active, .filter-btn:hover { background: #0070d2; color: white; border-color: #0070d2; }
-    .filter-select {
-      border: 1px solid #d0d0d8; border-radius: 6px; padding: 4px 10px;
-      font-size: 12px; color: #333; background: #f8f8fb; outline: none; cursor: pointer; max-width: 220px;
-    }
+    .filter-select { border: 1px solid #d0d0d8; border-radius: 6px; padding: 4px 10px; font-size: 12px; color: #333; background: #f8f8fb; outline: none; cursor: pointer; max-width: 220px; }
     .filter-select:focus, .filter-select:hover { border-color: #0070d2; }
-    .search-input {
-      border: 1px solid #d0d0d8; border-radius: 6px; padding: 5px 12px;
-      font-size: 12px; outline: none; width: 220px; margin-left: auto;
-    }
+    .search-input { border: 1px solid #d0d0d8; border-radius: 6px; padding: 5px 12px; font-size: 12px; outline: none; width: 220px; margin-left: auto; }
     .search-input:focus { border-color: #0070d2; }
     .divider { width: 1px; height: 20px; background: #e0e0e8; }
 
-    .error-banner {
-      background: #fff3cd; border: 1px solid #ffc107;
-      color: #856404; padding: 10px 24px; font-size: 12px;
-    }
+    .error-banner { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 10px 24px; font-size: 12px; }
     .hidden { display: none !important; }
 
+    /* ── Main Table ── */
     .table-wrapper { padding: 16px 24px; }
     .result-count { font-size: 12px; color: #888; margin-bottom: 8px; }
-    table {
-      width: 100%; border-collapse: collapse; background: white;
-      border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    }
-    thead th {
-      background: #f0f2f8; text-align: left; padding: 10px 12px;
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.4px; color: #555; border-bottom: 2px solid #dde0ea;
-      white-space: nowrap; cursor: pointer; user-select: none;
-    }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    thead th { background: #f0f2f8; text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #555; border-bottom: 2px solid #dde0ea; white-space: nowrap; cursor: pointer; user-select: none; }
     thead th:hover { background: #e4e8f4; }
     thead th .sort-icon { margin-left: 4px; opacity: 0.4; }
     thead th.sorted .sort-icon { opacity: 1; }
@@ -107,13 +96,11 @@
     tbody td { padding: 9px 12px; vertical-align: middle; }
     .loading { text-align: center; color: #888; padding: 60px !important; font-size: 14px; }
 
-    .priority {
-      display: inline-block; padding: 2px 10px; border-radius: 10px;
-      font-size: 11px; font-weight: 600; text-transform: uppercase;
-    }
+    .priority { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
     .priority-HIGH   { background: #fff0f0; color: #d32f2f; border: 1px solid #ffb3b3; }
     .priority-MEDIUM { background: #fff8e1; color: #f57c00; border: 1px solid #ffe082; }
     .priority-LOW    { background: #f0faf0; color: #388e3c; border: 1px solid #a5d6a7; }
+
     .rec { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 500; }
     .rec-new      { background: #e3f2fd; color: #1565c0; }
     .rec-followup { background: #fce4ec; color: #c62828; }
@@ -124,75 +111,71 @@
     .feature-text { color: #555; font-size: 12px; max-width: 240px; }
     .case-count-col { font-weight: 700; text-align: center; font-size: 14px; }
 
-    .view-btn {
-      background: #0070d2; color: white; border: none; border-radius: 4px;
-      padding: 4px 12px; font-size: 11px; font-weight: 600;
-      cursor: pointer; white-space: nowrap; transition: background 0.12s;
-    }
+    /* Severity mini-bar in table */
+    .sev-mini { display: flex; gap: 2px; align-items: center; }
+    .sev-dot { display: inline-block; padding: 1px 5px; border-radius: 4px; font-size: 9px; font-weight: 700; white-space: nowrap; }
+    .sev-dot.s1 { background: #ffebee; color: #b71c1c; }
+    .sev-dot.s2 { background: #fff3e0; color: #e65100; }
+    .sev-dot.s3 { background: #fffde7; color: #f57f17; }
+    .sev-dot.s4 { background: #f3e5f5; color: #6a1b9a; }
+
+    .view-btn { background: #0070d2; color: white; border: none; border-radius: 4px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.12s; }
     .view-btn:hover { background: #005bb5; }
     .reviewed-icon { font-size: 14px; }
 
-    /* Modal */
-    .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-      display: flex; align-items: center; justify-content: center; z-index: 100;
-    }
-    .modal-content {
-      background: white; border-radius: 10px; padding: 28px 32px 20px;
-      max-width: 820px; width: 94%; max-height: 88vh; overflow-y: auto;
-      position: relative; box-shadow: 0 12px 40px rgba(0,0,0,0.22);
-    }
-    .modal-close {
-      position: absolute; top: 14px; right: 18px; background: none;
-      border: none; font-size: 22px; cursor: pointer; color: #aaa; line-height: 1;
-    }
+    /* ── Modal ── */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .modal-content { background: white; border-radius: 10px; padding: 28px 32px 20px; max-width: 900px; width: 96%; max-height: 92vh; overflow-y: auto; position: relative; box-shadow: 0 12px 40px rgba(0,0,0,0.22); }
+    .modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; font-size: 22px; cursor: pointer; color: #aaa; line-height: 1; }
     .modal-close:hover { color: #222; }
     .modal-header { margin-bottom: 18px; padding-right: 28px; }
     .modal-header h2 { font-size: 18px; color: #0070d2; }
     .modal-chips { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
-    .modal-section { margin-bottom: 16px; }
-    .modal-section h3 {
-      font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-      color: #888; margin-bottom: 8px; font-weight: 700;
-    }
-    .modal-section p { font-size: 13px; line-height: 1.65; color: #333; }
+    .modal-section { margin-bottom: 18px; }
+    .modal-section h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 8px; font-weight: 700; }
+    .modal-section p { font-size: 13px; line-height: 1.7; color: #333; }
     .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
-    .modal-field label {
-      font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-      color: #888; font-weight: 700; display: block; margin-bottom: 3px;
-    }
+    .modal-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; font-weight: 700; display: block; margin-bottom: 3px; }
     .modal-field span { font-size: 13px; color: #222; }
+
+    /* Severity breakdown in modal */
+    .sev-breakdown { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .sev-breakdown-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+
+    /* Technical analysis block */
+    .tech-block { background: #f8f9fe; border: 1px solid #dde0ea; border-radius: 6px; padding: 12px 14px; margin-bottom: 4px; }
+    .tech-block p { font-size: 12px; line-height: 1.65; color: #333; }
+
+    /* Top issues list */
+    .top-issues-list { list-style: none; padding: 0; }
+    .top-issues-list li { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid #f0f0f5; font-size: 12px; color: #333; }
+    .top-issues-list li:last-child { border-bottom: none; }
+    .issue-count { background: #e8ecf4; color: #444; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 8px; min-width: 28px; text-align: center; flex-shrink: 0; }
 
     .modal-section-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
     .modal-section-title-row h3 { margin-bottom: 0; }
-    .case-count-badge {
-      background: #e8ecf4; color: #555; font-size: 11px;
-      font-weight: 600; padding: 1px 8px; border-radius: 10px;
-    }
+    .case-count-badge { background: #e8ecf4; color: #555; font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 10px; }
     .instance-filter-bar { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
-    .inst-chip {
-      border: 1px solid #d0d0d8; background: #f0f0f5; color: #555;
-      border-radius: 10px; padding: 2px 11px; cursor: pointer;
-      font-size: 11px; font-weight: 500; transition: all 0.12s;
-    }
+    .inst-chip { border: 1px solid #d0d0d8; background: #f0f0f5; color: #555; border-radius: 10px; padding: 2px 11px; cursor: pointer; font-size: 11px; font-weight: 500; transition: all 0.12s; }
     .inst-chip.active, .inst-chip:hover { background: #0070d2; color: white; border-color: #0070d2; }
-    .case-table-wrapper {
-      max-height: 200px; overflow-y: auto;
-      border: 1px solid #e4e6f0; border-radius: 5px;
-    }
+    .case-table-wrapper { max-height: 260px; overflow-y: auto; border: 1px solid #e4e6f0; border-radius: 5px; }
     .case-breakdown-table { width: 100%; border-collapse: collapse; font-size: 12px; background: white; }
-    .case-breakdown-table thead th {
-      background: #f5f6fa; font-size: 10px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.3px; color: #777; padding: 5px 8px;
-      border-bottom: 1px solid #e4e6f0; position: sticky; top: 0; z-index: 1;
-    }
+    .case-breakdown-table thead th { background: #f5f6fa; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: #777; padding: 5px 8px; border-bottom: 1px solid #e4e6f0; position: sticky; top: 0; z-index: 1; }
     .case-breakdown-table tbody tr { border-bottom: 1px solid #f0f0f5; }
-    .case-breakdown-table tbody tr:hover { background: #f7f9ff; }
-    .case-breakdown-table tbody td { padding: 5px 8px; vertical-align: middle; }
+    .case-breakdown-table tbody tr:hover { background: #f7f9ff; cursor: pointer; }
+    .case-breakdown-table tbody td { padding: 5px 8px; vertical-align: top; }
     .ct-num { font-weight: 600; color: #0070d2; white-space: nowrap; font-size: 11px; }
-    .ct-subject { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #333; }
+    .ct-subject { max-width: 180px; }
+    .ct-subject-main { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #333; max-width: 180px; display: block; }
+    .ct-tech { font-size: 10px; color: #888; margin-top: 2px; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
     .ct-ptf { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #666; font-size: 11px; }
     .case-table-empty { text-align: center; color: #aaa; padding: 16px !important; font-style: italic; }
+
+    /* Case expand panel */
+    .case-detail-row td { background: #f8f9fe; padding: 10px 14px !important; border-bottom: 1px solid #e4e6f0; }
+    .case-detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px 16px; }
+    .case-detail-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; color: #999; font-weight: 700; display: block; margin-bottom: 2px; }
+    .case-detail-field span { font-size: 11px; color: #333; line-height: 1.5; }
 
     .status-chip { display: inline-block; padding: 1px 7px; border-radius: 8px; font-size: 10px; font-weight: 600; text-transform: capitalize; white-space: nowrap; }
     .status-open   { background: #e3f2fd; color: #1565c0; }
@@ -203,14 +186,8 @@
     .inst-staging { background: #f3e5f5; color: #6a1b9a; }
     .inst-unknown { background: #f5f5f5; color: #9e9e9e; }
 
-    .modal-actions {
-      display: flex; gap: 10px; padding-top: 16px;
-      border-top: 1px solid #eee; margin-top: 6px; align-items: center; flex-wrap: wrap;
-    }
-    .action-btn {
-      padding: 8px 20px; border-radius: 5px; font-size: 13px; font-weight: 600;
-      cursor: pointer; border: none; transition: filter 0.12s, transform 0.08s;
-    }
+    .modal-actions { display: flex; gap: 10px; padding-top: 16px; border-top: 1px solid #eee; margin-top: 6px; align-items: center; flex-wrap: wrap; }
+    .action-btn { padding: 8px 20px; border-radius: 5px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: filter 0.12s, transform 0.08s; }
     .action-btn:hover  { filter: brightness(0.93); }
     .action-btn:active { transform: scale(0.97); }
     .btn-valid     { background: #2e7d32; color: white; }
@@ -221,473 +198,599 @@
     .already-invalid { color: #c62828; font-weight: 600; }
 
     /* Dialogs */
-    .dialog-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
-      display: flex; align-items: center; justify-content: center; z-index: 200;
-    }
-    .dialog-box {
-      background: white; border-radius: 8px; padding: 22px 26px 18px;
-      width: 580px; max-height: 560px; overflow-y: auto;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.28);
-    }
+    .dialog-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 200; }
+    .dialog-box { background: white; border-radius: 8px; padding: 22px 26px 18px; width: 580px; max-height: 560px; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.28); }
     .dialog-title { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
     .dialog-meta { font-size: 12px; color: #666; margin-bottom: 14px; line-height: 1.4; }
     .dialog-label { display: block; font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 5px; }
-    .required { color: #c62828; }
-    .optional  { color: #999; font-weight: 400; text-transform: none; letter-spacing: 0; }
-    .dialog-select {
-      width: 100%; border: 1px solid #d0d0d8; border-radius: 5px;
-      padding: 6px 10px; font-size: 12px; margin-bottom: 4px; outline: none; color: #333;
-    }
+    .required { color: #c62828; } .optional { color: #999; font-weight: 400; text-transform: none; letter-spacing: 0; }
+    .dialog-select { width: 100%; border: 1px solid #d0d0d8; border-radius: 5px; padding: 6px 10px; font-size: 12px; margin-bottom: 4px; outline: none; color: #333; }
     .dialog-select:focus { border-color: #0070d2; }
-    .dialog-textarea {
-      width: 100%; border: 1px solid #d0d0d8; border-radius: 5px;
-      padding: 8px 10px; font-size: 12px; font-family: inherit;
-      resize: vertical; outline: none; color: #222; line-height: 1.5;
-    }
+    .dialog-textarea { width: 100%; border: 1px solid #d0d0d8; border-radius: 5px; padding: 8px 10px; font-size: 12px; font-family: inherit; resize: vertical; outline: none; color: #222; line-height: 1.5; }
     .dialog-textarea:focus { border-color: #0070d2; }
     .dialog-actions { display: flex; gap: 8px; margin-top: 14px; }
     .copy-confirm { font-size: 12px; color: #2e7d32; font-weight: 600; margin-top: 6px; }
 
-    .toast {
-      position: fixed; bottom: 20px; left: 50%;
-      transform: translateX(-50%) translateY(12px);
-      background: #1a1a2e; color: white; font-size: 12px; padding: 8px 20px;
-      border-radius: 20px; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s; z-index: 300; white-space: nowrap;
-    }
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(12px); background: #1a1a2e; color: white; font-size: 12px; padding: 8px 20px; border-radius: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; z-index: 300; white-space: nowrap; }
     .toast.toast-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="header-left">
-      <span class="header-logo">&#9632;</span>
-      <div>
-        <div class="header-title">Architect Engagement Signals</div>
-        <div class="header-sub">Industry Cloud &amp; Revenue Cloud · Signature customers only</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <span id="last-refreshed" class="timestamp">Loading…</span>
-      <a href="reviews.html" class="header-nav-btn">
-        &#10003; Reviews <span class="reviews-badge" id="reviews-count">0</span>
-      </a>
-      <button id="refresh-btn" class="refresh-btn" title="Refresh data">&#8635; Refresh</button>
+<div class="header">
+  <div class="header-left">
+    <span class="header-logo">&#9632;</span>
+    <div>
+      <div class="header-title">Architect Engagement Signals</div>
+      <div class="header-sub">Industry Cloud &amp; Revenue Cloud · Signature customers only</div>
     </div>
   </div>
-
-  <div class="stats-bar">
-    <div class="stat-card total"><span id="stat-total" class="stat-num">—</span><span class="stat-label">Total</span></div>
-    <div class="stat-card high"><span id="stat-high" class="stat-num">—</span><span class="stat-label">HIGH</span></div>
-    <div class="stat-card medium"><span id="stat-medium" class="stat-num">—</span><span class="stat-label">MEDIUM</span></div>
-    <div class="stat-card low"><span id="stat-low" class="stat-num">—</span><span class="stat-label">LOW</span></div>
+  <div class="header-right">
+    <span id="last-refreshed" class="timestamp">Loading…</span>
+    <a href="reviews.html" class="header-nav-btn">&#10003; Reviews <span class="reviews-badge" id="reviews-count">0</span></a>
+    <button id="refresh-btn" class="refresh-btn" title="Refresh data">&#8635; Refresh</button>
   </div>
+</div>
 
-  <div class="filter-area">
-    <div class="filter-group">
-      <span class="filter-label">Priority</span>
-      <button class="filter-btn active" data-filter="ALL">All</button>
-      <button class="filter-btn" data-filter="HIGH">HIGH</button>
-      <button class="filter-btn" data-filter="MEDIUM">MEDIUM</button>
-      <button class="filter-btn" data-filter="LOW">LOW</button>
-    </div>
-    <div class="divider"></div>
-    <div class="filter-group">
-      <span class="filter-label">Product</span>
-      <select id="product-filter" class="filter-select">
-        <option value="ALL">All Products</option>
-        <option value="Industry">Industry</option>
-        <option value="Revenue">Revenue</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Topic</span>
-      <select id="topic-filter" class="filter-select">
-        <option value="ALL">All Topics</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Success Plan</span>
-      <select id="success-plan-filter" class="filter-select">
-        <option value="ALL">All Signature</option>
-        <option value="Signature">Signature</option>
-        <option value="Premier Priority">Premier Priority</option>
-        <option value="Signature Success">Signature Success</option>
-        <option value="Gov Signature Success">Gov Signature Success</option>
-        <option value="US Signature Success">US Signature Success</option>
-      </select>
-    </div>
-    <input id="search-input" class="search-input" type="text" placeholder="&#128269; Search account…" />
+<div class="stats-bar">
+  <div class="stat-card total"><span id="stat-total" class="stat-num">—</span><span class="stat-label">Accounts</span></div>
+  <div class="stat-card high"><span id="stat-high" class="stat-num">—</span><span class="stat-label">HIGH</span></div>
+  <div class="stat-card medium"><span id="stat-medium" class="stat-num">—</span><span class="stat-label">MEDIUM</span></div>
+  <div class="stat-card low"><span id="stat-low" class="stat-num">—</span><span class="stat-label">LOW</span></div>
+  <div class="stat-card" style="border-color:#ef9a9a"><span id="stat-sev1" class="stat-num" style="color:#b71c1c">—</span><span class="stat-label">Sev 1</span></div>
+  <div class="stat-card" style="border-color:#ffcc80"><span id="stat-sev2" class="stat-num" style="color:#e65100">—</span><span class="stat-label">Sev 2</span></div>
+  <div class="stat-card" style="border-color:#fff176"><span id="stat-sev3" class="stat-num" style="color:#f57f17">—</span><span class="stat-label">Sev 3</span></div>
+  <div class="stat-card" style="border-color:#ce93d8"><span id="stat-sev4" class="stat-num" style="color:#6a1b9a">—</span><span class="stat-label">Sev 4</span></div>
+</div>
+
+<!-- Product × Topic × Severity heatmap -->
+<div class="trends-panel" id="trends-panel">
+  <div class="trends-title">
+    Product &amp; Topic Case Pattern — Last 30 Days
+    <button class="trends-toggle" id="trends-toggle">Hide ▲</button>
   </div>
-
-  <div id="error-banner" class="error-banner hidden"></div>
-
-  <div class="table-wrapper">
-    <div id="result-count" class="result-count"></div>
-    <table id="accounts-table">
-      <thead>
-        <tr>
-          <th style="width:28px"></th>
-          <th data-col="account">Account <span class="sort-icon">↕</span></th>
-          <th data-col="case_count" class="sorted">Cases (3M) <span class="sort-icon">↓</span></th>
-          <th data-col="product_topic_feature">Product → Topic → Feature <span class="sort-icon">↕</span></th>
-          <th data-col="success_plan">Success Plan <span class="sort-icon">↕</span></th>
-          <th data-col="engagement_status">Engagement <span class="sort-icon">↕</span></th>
-          <th data-col="recommendation">Recommendation <span class="sort-icon">↕</span></th>
-          <th data-col="priority">Priority <span class="sort-icon">↕</span></th>
-          <th style="width:80px"></th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-        <tr><td colspan="9" class="loading">Loading data…</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Detail Modal -->
-  <div id="detail-modal" class="modal hidden">
-    <div class="modal-content">
-      <button id="modal-close" class="modal-close">&times;</button>
-      <div class="modal-header">
-        <h2 id="modal-account"></h2>
-        <div class="modal-chips" id="modal-chips"></div>
-      </div>
-      <div class="modal-grid">
-        <div class="modal-field"><label>Success Plan</label><span id="modal-success-plan">—</span></div>
-        <div class="modal-field"><label>Engagement Status</label><span id="modal-engagement-status">—</span></div>
-        <div class="modal-field"><label>Engagement Name</label><span id="modal-engagement-name">—</span></div>
-        <div class="modal-field"><label>Closure Date</label><span id="modal-closure-date">—</span></div>
-      </div>
-      <div class="modal-section">
-        <h3>Product → Topic → Feature</h3>
-        <p id="modal-ptf"></p>
-      </div>
-      <div class="modal-section">
-        <h3>Recurring Themes</h3>
-        <p id="modal-themes"></p>
-      </div>
-      <div class="modal-section">
-        <h3>Reasoning</h3>
-        <p id="modal-reasoning"></p>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title-row">
-          <h3>Case Breakdown</h3>
-          <span id="modal-case-badge" class="case-count-badge"></span>
-        </div>
-        <div class="instance-filter-bar" id="instance-filter-bar">
-          <button class="inst-chip active" data-instance="ALL">All</button>
-          <button class="inst-chip" data-instance="Production">Production</button>
-          <button class="inst-chip" data-instance="Sandbox">Sandbox</button>
-          <button class="inst-chip" data-instance="Staging">Staging</button>
-        </div>
-        <div class="case-table-wrapper">
-          <table class="case-breakdown-table">
-            <thead>
-              <tr>
-                <th>Case #</th><th>Subject</th><th>Status</th><th>Instance</th><th>Product → Topic → Feature</th>
-              </tr>
-            </thead>
-            <tbody id="modal-cases-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button id="btn-valid" class="action-btn btn-valid">&#10003; Valid — Draft CSM Message</button>
-        <button id="btn-invalid" class="action-btn btn-invalid">&#10007; Invalid — Submit Feedback</button>
-        <span id="already-reviewed-note" class="already-reviewed-note hidden"></span>
+  <div class="trends-body" id="trends-body">
+    <div class="heatmap-section">
+      <h4>Top Topics by Severity</h4>
+      <table class="heatmap-table" id="heatmap-table">
+        <thead>
+          <tr>
+            <th>Topic</th>
+            <th class="sev-col">Sev 1</th>
+            <th class="sev-col">Sev 2</th>
+            <th class="sev-col">Sev 3</th>
+            <th class="sev-col">Sev 4</th>
+            <th class="sev-col">Total</th>
+          </tr>
+        </thead>
+        <tbody id="heatmap-tbody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:16px">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="heatmap-section">
+      <h4>Overall Severity Distribution</h4>
+      <div id="sev-summary-bar" class="sev-summary"></div>
+      <div style="margin-top:16px">
+        <h4>Daily Volume (Last 30 Days)</h4>
+        <canvas id="trend-chart" height="120" style="width:100%;margin-top:8px"></canvas>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Draft CSM Message Dialog -->
-  <div id="slack-dialog" class="dialog-overlay hidden">
-    <div class="dialog-box">
-      <h3 class="dialog-title">Draft Message to CSM / Lead SM</h3>
-      <p id="slack-csm-meta" class="dialog-meta"></p>
-      <textarea id="slack-draft-text" class="dialog-textarea" rows="10" spellcheck="false"></textarea>
-      <p id="slack-copied-msg" class="copy-confirm hidden">&#10003; Copied to clipboard!</p>
-      <div class="dialog-actions">
-        <button id="btn-copy-slack" class="action-btn btn-valid">Copy to Clipboard</button>
-        <button id="btn-close-slack" class="action-btn btn-secondary">Close</button>
+<div class="filter-area">
+  <div class="filter-group">
+    <span class="filter-label">Priority</span>
+    <button class="filter-btn active" data-filter="ALL">All</button>
+    <button class="filter-btn" data-filter="HIGH">HIGH</button>
+    <button class="filter-btn" data-filter="MEDIUM">MEDIUM</button>
+    <button class="filter-btn" data-filter="LOW">LOW</button>
+  </div>
+  <div class="divider"></div>
+  <div class="filter-group">
+    <span class="filter-label">Product</span>
+    <select id="product-filter" class="filter-select"><option value="ALL">All Products</option><option value="Industry">Industry</option><option value="Revenue">Revenue</option></select>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Topic</span>
+    <select id="topic-filter" class="filter-select"><option value="ALL">All Topics</option></select>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Success Plan</span>
+    <select id="success-plan-filter" class="filter-select">
+      <option value="ALL">All Signature</option>
+      <option value="Signature">Signature</option>
+      <option value="Premier Priority">Premier Priority</option>
+      <option value="Signature Success">Signature Success</option>
+      <option value="Gov Signature Success">Gov Signature Success</option>
+      <option value="US Signature Success">US Signature Success</option>
+    </select>
+  </div>
+  <input id="search-input" class="search-input" type="text" placeholder="&#128269; Search account…" />
+</div>
+
+<div id="error-banner" class="error-banner hidden"></div>
+
+<div class="table-wrapper">
+  <div id="result-count" class="result-count"></div>
+  <table id="accounts-table">
+    <thead>
+      <tr>
+        <th style="width:28px"></th>
+        <th data-col="account">Account <span class="sort-icon">↕</span></th>
+        <th data-col="case_count" class="sorted">Cases <span class="sort-icon">↓</span></th>
+        <th data-col="severity">Sev 1-4 <span class="sort-icon">↕</span></th>
+        <th data-col="product_topic_feature">Product → Topic → Feature <span class="sort-icon">↕</span></th>
+        <th data-col="success_plan">Success Plan <span class="sort-icon">↕</span></th>
+        <th data-col="engagement_status">Engagement <span class="sort-icon">↕</span></th>
+        <th data-col="recommendation">Recommendation <span class="sort-icon">↕</span></th>
+        <th data-col="priority">Priority <span class="sort-icon">↕</span></th>
+        <th style="width:80px"></th>
+      </tr>
+    </thead>
+    <tbody id="table-body"><tr><td colspan="10" class="loading">Loading data…</td></tr></tbody>
+  </table>
+</div>
+
+<!-- Detail Modal -->
+<div id="detail-modal" class="modal hidden">
+  <div class="modal-content">
+    <button id="modal-close" class="modal-close">&times;</button>
+    <div class="modal-header">
+      <h2 id="modal-account"></h2>
+      <div class="modal-chips" id="modal-chips"></div>
+    </div>
+    <div class="modal-grid">
+      <div class="modal-field"><label>Success Plan</label><span id="modal-success-plan">—</span></div>
+      <div class="modal-field"><label>Engagement Status</label><span id="modal-engagement-status">—</span></div>
+      <div class="modal-field"><label>Engagement Name</label><span id="modal-engagement-name">—</span></div>
+      <div class="modal-field"><label>Closure Date</label><span id="modal-closure-date">—</span></div>
+    </div>
+
+    <div class="modal-section">
+      <h3>Severity Breakdown</h3>
+      <div id="modal-sev-breakdown" class="sev-breakdown"></div>
+    </div>
+
+    <div class="modal-section">
+      <h3>Product → Topic → Feature</h3>
+      <p id="modal-ptf"></p>
+    </div>
+    <div class="modal-section">
+      <h3>Recurring Themes</h3>
+      <p id="modal-themes"></p>
+    </div>
+    <div class="modal-section">
+      <h3>Technical Analysis</h3>
+      <div class="tech-block"><p id="modal-tech-analysis">—</p></div>
+    </div>
+    <div class="modal-section" id="modal-top-issues-section">
+      <h3>Top Issue Patterns</h3>
+      <ul class="top-issues-list" id="modal-top-issues"></ul>
+    </div>
+    <div class="modal-section">
+      <h3>Reasoning</h3>
+      <p id="modal-reasoning"></p>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title-row">
+        <h3>Case Breakdown</h3>
+        <span id="modal-case-badge" class="case-count-badge"></span>
+      </div>
+      <div class="instance-filter-bar" id="instance-filter-bar">
+        <button class="inst-chip active" data-instance="ALL">All</button>
+        <button class="inst-chip" data-instance="Production">Production</button>
+        <button class="inst-chip" data-instance="Sandbox">Sandbox</button>
+        <button class="inst-chip" data-instance="Staging">Staging</button>
+      </div>
+      <div class="case-table-wrapper">
+        <table class="case-breakdown-table">
+          <thead><tr><th>Case #</th><th>Subject &amp; Technical Summary</th><th>Sev</th><th>Status</th><th>Instance</th><th>Product → Topic → Feature</th></tr></thead>
+          <tbody id="modal-cases-tbody"></tbody>
+        </table>
       </div>
     </div>
-  </div>
 
-  <!-- Feedback Dialog -->
-  <div id="feedback-dialog" class="dialog-overlay hidden">
-    <div class="dialog-box">
-      <h3 class="dialog-title">Mark as Invalid</h3>
-      <p id="feedback-account-meta" class="dialog-meta"></p>
-      <label class="dialog-label">Reason <span class="required">*</span></label>
-      <select id="feedback-reason" class="dialog-select">
-        <option value="Incorrect account">Incorrect account</option>
-        <option value="Already engaged">Already engaged</option>
-        <option value="Low impact">Low impact</option>
-        <option value="Other">Other</option>
-      </select>
-      <label class="dialog-label" style="margin-top:12px">Additional notes <span class="optional">(optional)</span></label>
-      <textarea id="feedback-notes" class="dialog-textarea" rows="3" placeholder="Any additional context…"></textarea>
-      <div class="dialog-actions">
-        <button id="btn-submit-feedback" class="action-btn btn-invalid">Submit Feedback</button>
-        <button id="btn-cancel-feedback" class="action-btn btn-secondary">Cancel</button>
-      </div>
+    <div class="modal-actions">
+      <button id="btn-valid" class="action-btn btn-valid">&#10003; Valid — Draft CSM Message</button>
+      <button id="btn-invalid" class="action-btn btn-invalid">&#10007; Invalid — Submit Feedback</button>
+      <span id="already-reviewed-note" class="already-reviewed-note hidden"></span>
     </div>
   </div>
+</div>
 
-  <div id="toast" class="toast"></div>
+<!-- Draft CSM Dialog -->
+<div id="slack-dialog" class="dialog-overlay hidden">
+  <div class="dialog-box">
+    <h3 class="dialog-title">Draft Message to CSM / Lead SM</h3>
+    <p id="slack-csm-meta" class="dialog-meta"></p>
+    <textarea id="slack-draft-text" class="dialog-textarea" rows="12" spellcheck="false"></textarea>
+    <p id="slack-copied-msg" class="copy-confirm hidden">&#10003; Copied to clipboard!</p>
+    <div class="dialog-actions">
+      <button id="btn-copy-slack" class="action-btn btn-valid">Copy to Clipboard</button>
+      <button id="btn-close-slack" class="action-btn btn-secondary">Close</button>
+    </div>
+  </div>
+</div>
 
-  <script>
-    const DATA_URL = "recommendations.json";
-    const STORAGE_KEY = "orgcs_reviews";
+<!-- Feedback Dialog -->
+<div id="feedback-dialog" class="dialog-overlay hidden">
+  <div class="dialog-box">
+    <h3 class="dialog-title">Mark as Invalid</h3>
+    <p id="feedback-account-meta" class="dialog-meta"></p>
+    <label class="dialog-label">Reason <span class="required">*</span></label>
+    <select id="feedback-reason" class="dialog-select">
+      <option value="Incorrect account">Incorrect account</option>
+      <option value="Already engaged">Already engaged</option>
+      <option value="Low impact">Low impact</option>
+      <option value="Other">Other</option>
+    </select>
+    <label class="dialog-label" style="margin-top:12px">Additional notes <span class="optional">(optional)</span></label>
+    <textarea id="feedback-notes" class="dialog-textarea" rows="3" placeholder="Any additional context…"></textarea>
+    <div class="dialog-actions">
+      <button id="btn-submit-feedback" class="action-btn btn-invalid">Submit Feedback</button>
+      <button id="btn-cancel-feedback" class="action-btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div>
 
-    let allAccounts = [];
-    let reviews = {};
-    let activeFilter = "ALL", activeProduct = "ALL", activeTopic = "ALL", activeSuccessPlan = "ALL";
-    let sortCol = "priority_order", sortDir = 1;
-    let currentModalAccount = null, modalInstanceFilter = "ALL";
-    const PRIORITY_ORDER = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+<div id="toast" class="toast"></div>
 
-    function loadReviews() {
-      try { reviews = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
-      catch (_) { reviews = {}; }
+<script>
+const DATA_URL = "recommendations.json";
+const AGG_URL  = "aggregates.json";
+const STORAGE_KEY = "orgcs_reviews";
+
+let allAccounts = [], reviews = {}, aggregates = null;
+let activeFilter = "ALL", activeProduct = "ALL", activeTopic = "ALL", activeSuccessPlan = "ALL";
+let sortCol = "priority_order", sortDir = 1;
+let currentModalAccount = null, modalInstanceFilter = "ALL";
+let expandedCaseNumber = null;
+let trendsCollapsed = false;
+const PRIORITY_ORDER = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+const SEV_MAP = { "Level 1 - Critical": "sev1", "Level 2 - Urgent": "sev2", "Level 3 - High": "sev3", "Level 4 - Medium": "sev4", "Level 5 - Low": "sev5" };
+
+function loadReviews() { try { reviews = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(_) { reviews = {}; } }
+function saveReviews() { localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews)); updateReviewsBadge(); }
+function updateReviewsBadge() { document.getElementById("reviews-count").textContent = Object.keys(reviews).length; }
+
+function recClass(rec) {
+  if (!rec) return "rec-none";
+  const r = rec.toLowerCase();
+  if (r.includes("new")) return "rec-new";
+  if (r.includes("follow")) return "rec-followup";
+  if (r.includes("flag") || r.includes("active")) return "rec-active";
+  return "rec-none";
+}
+function extractProduct(ptf) {
+  if (!ptf) return "";
+  const f = ptf.split("→")[0].trim().toLowerCase();
+  if (f.startsWith("industry")) return "Industry";
+  if (f.startsWith("revenue"))  return "Revenue";
+  return ptf.split("→")[0].trim();
+}
+function extractTopic(ptf) { if (!ptf) return ""; const p = ptf.split("→"); return p.length >= 2 ? p[1].trim() : ""; }
+function truncate(str, n) { if (!str) return "—"; return str.length > n ? str.slice(0, n) + "…" : str; }
+function formatTimestamp(iso) { if (!iso) return "Never"; const d = new Date(iso); return d.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }); }
+function instanceChipClass(inst) { if (!inst || inst === "—") return "inst-unknown"; const v = inst.toLowerCase(); if (v === "production") return "inst-prod"; if (v === "sandbox") return "inst-sandbox"; if (v === "staging") return "inst-staging"; return "inst-unknown"; }
+function showToast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("toast-visible"); setTimeout(() => t.classList.remove("toast-visible"), 2500); }
+
+function sevKey(raw) { return SEV_MAP[raw] || "unknown"; }
+function sevLabel(key) { return { sev1: "Sev 1", sev2: "Sev 2", sev3: "Sev 3", sev4: "Sev 4", sev5: "Sev 5", unknown: "?" }[key] || key; }
+function sevPillClass(key) { return { sev1: "sev1-chip", sev2: "sev2-chip", sev3: "sev3-chip", sev4: "sev4-chip", sev5: "sev5-chip" }[key] || "sev5-chip"; }
+
+function computeSevBreakdown(cases) {
+  const b = { sev1: 0, sev2: 0, sev3: 0, sev4: 0, sev5: 0, unknown: 0 };
+  (cases || []).forEach(c => { const k = sevKey(c.severity); b[k] = (b[k] || 0) + 1; });
+  return b;
+}
+
+function updateStats() {
+  document.getElementById("stat-total").textContent  = allAccounts.length;
+  document.getElementById("stat-high").textContent   = allAccounts.filter(a => a.priority === "HIGH").length;
+  document.getElementById("stat-medium").textContent = allAccounts.filter(a => a.priority === "MEDIUM").length;
+  document.getElementById("stat-low").textContent    = allAccounts.filter(a => a.priority === "LOW").length;
+  let s1 = 0, s2 = 0, s3 = 0, s4 = 0;
+  allAccounts.forEach(a => {
+    const b = a.severity_breakdown || {};
+    s1 += b.sev1 || 0; s2 += b.sev2 || 0; s3 += b.sev3 || 0; s4 += b.sev4 || 0;
+  });
+  document.getElementById("stat-sev1").textContent = s1 || "—";
+  document.getElementById("stat-sev2").textContent = s2 || "—";
+  document.getElementById("stat-sev3").textContent = s3 || "—";
+  document.getElementById("stat-sev4").textContent = s4 || "—";
+}
+
+// ── Heatmap ──────────────────────────────────────────────────────────────────
+function renderHeatmap(agg) {
+  if (!agg || !agg.productTopicSeverity) return;
+  const rows = agg.productTopicSeverity;
+
+  // Aggregate by topic
+  const topicMap = {};
+  rows.forEach(r => {
+    const topic = r.topic || r.product || "Unknown";
+    if (!topicMap[topic]) topicMap[topic] = { product: r.product, sev1: 0, sev2: 0, sev3: 0, sev4: 0, total: 0 };
+    const k = sevKey(r.severity);
+    if (k === "sev1") topicMap[topic].sev1 += r.total;
+    else if (k === "sev2") topicMap[topic].sev2 += r.total;
+    else if (k === "sev3") topicMap[topic].sev3 += r.total;
+    else if (k === "sev4") topicMap[topic].sev4 += r.total;
+    topicMap[topic].total += r.total;
+  });
+
+  const sorted = Object.entries(topicMap).sort((a, b) => b[1].total - a[1].total).slice(0, 20);
+  const tbody = document.getElementById("heatmap-tbody");
+  tbody.innerHTML = sorted.map(([topic, d]) => `
+    <tr>
+      <td class="topic-cell">
+        <div>${truncate(topic.replace(/^(Industry|Revenue)-?\s*/i, ""), 36)}</div>
+        <div class="product-label">${d.product || ""}</div>
+      </td>
+      <td class="sev-cell">${d.sev1 ? `<span class="sev-pill sev1-pill">${d.sev1}</span>` : `<span class="sev-zero">—</span>`}</td>
+      <td class="sev-cell">${d.sev2 ? `<span class="sev-pill sev2-pill">${d.sev2}</span>` : `<span class="sev-zero">—</span>`}</td>
+      <td class="sev-cell">${d.sev3 ? `<span class="sev-pill sev3-pill">${d.sev3}</span>` : `<span class="sev-zero">—</span>`}</td>
+      <td class="sev-cell">${d.sev4 ? `<span class="sev-pill sev4-pill">${d.sev4}</span>` : `<span class="sev-zero">—</span>`}</td>
+      <td class="sev-cell" style="font-weight:700;color:#333">${d.total}</td>
+    </tr>`).join("");
+
+  // Overall sev summary
+  const totals = { sev1: 0, sev2: 0, sev3: 0, sev4: 0, sev5: 0 };
+  rows.forEach(r => { const k = sevKey(r.severity); if (totals[k] !== undefined) totals[k] += r.total; });
+  document.getElementById("sev-summary-bar").innerHTML = Object.entries(totals)
+    .filter(([,v]) => v > 0)
+    .map(([k, v]) => `<span class="sev-chip ${sevPillClass(k)}">${sevLabel(k)}: ${v}</span>`).join("");
+
+  // Draw simple bar chart for daily trend
+  if (agg.dailyByProduct) renderTrendChart(agg.dailyByProduct);
+}
+
+function renderTrendChart(data) {
+  const canvas = document.getElementById("trend-chart");
+  const ctx = canvas.getContext("2d");
+  canvas.width = canvas.offsetWidth || 500;
+  canvas.height = 120;
+
+  const dayMap = {};
+  data.forEach(r => {
+    const d = r.day ? r.day.split("T")[0] : r.day;
+    dayMap[d] = (dayMap[d] || 0) + r.total;
+  });
+  const days = Object.keys(dayMap).sort();
+  if (!days.length) return;
+  const vals = days.map(d => dayMap[d]);
+  const max = Math.max(...vals, 1);
+  const w = canvas.width, h = canvas.height;
+  const pad = { l: 32, r: 8, t: 8, b: 24 };
+  const bw = Math.max(2, (w - pad.l - pad.r) / days.length - 2);
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "#f4f6fb";
+  ctx.fillRect(0, 0, w, h);
+
+  // Grid lines
+  ctx.strokeStyle = "#e4e6f0"; ctx.lineWidth = 1;
+  [0, 0.25, 0.5, 0.75, 1].forEach(f => {
+    const y = pad.t + (1 - f) * (h - pad.t - pad.b);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+    if (f > 0) { ctx.fillStyle = "#aaa"; ctx.font = "9px sans-serif"; ctx.textAlign = "right"; ctx.fillText(Math.round(max * f), pad.l - 2, y + 3); }
+  });
+
+  // Bars
+  days.forEach((d, i) => {
+    const x = pad.l + i * (w - pad.l - pad.r) / days.length;
+    const bh = (vals[i] / max) * (h - pad.t - pad.b);
+    const y = pad.t + (h - pad.t - pad.b) - bh;
+    ctx.fillStyle = "#0070d2";
+    ctx.globalAlpha = 0.75;
+    ctx.fillRect(x, y, bw, bh);
+    ctx.globalAlpha = 1;
+  });
+
+  // Date labels (every 7 days)
+  ctx.fillStyle = "#888"; ctx.font = "9px sans-serif"; ctx.textAlign = "center";
+  days.forEach((d, i) => {
+    if (i % 7 === 0) {
+      const x = pad.l + i * (w - pad.l - pad.r) / days.length + bw / 2;
+      ctx.fillText(d.slice(5), x, h - 4);
     }
-    function saveReviews() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
-      updateReviewsBadge();
-    }
-    function updateReviewsBadge() {
-      document.getElementById("reviews-count").textContent = Object.keys(reviews).length;
-    }
+  });
+}
 
-    function recClass(rec) {
-      if (!rec) return "rec-none";
-      const r = rec.toLowerCase();
-      if (r.includes("new")) return "rec-new";
-      if (r.includes("follow")) return "rec-followup";
-      if (r.includes("flag") || r.includes("active")) return "rec-active";
-      return "rec-none";
-    }
-    function extractProduct(ptf) {
-      if (!ptf) return "";
-      const f = ptf.split("→")[0].trim().toLowerCase();
-      if (f.startsWith("industry")) return "Industry";
-      if (f.startsWith("revenue"))  return "Revenue";
-      return ptf.split("→")[0].trim();
-    }
-    function extractTopic(ptf) {
-      if (!ptf) return "";
-      const p = ptf.split("→");
-      return p.length >= 2 ? p[1].trim() : "";
-    }
-    function truncate(str, n) {
-      if (!str) return "—";
-      return str.length > n ? str.slice(0, n) + "…" : str;
-    }
-    function formatTimestamp(iso) {
-      if (!iso) return "Never";
-      const d = new Date(iso);
-      return d.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-    }
-    function instanceChipClass(inst) {
-      if (!inst || inst === "—") return "inst-unknown";
-      const v = inst.toLowerCase();
-      if (v === "production") return "inst-prod";
-      if (v === "sandbox")    return "inst-sandbox";
-      if (v === "staging")    return "inst-staging";
-      return "inst-unknown";
-    }
-    function showToast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.classList.add("toast-visible");
-      setTimeout(() => t.classList.remove("toast-visible"), 2500);
-    }
+// ── Topic dropdown ────────────────────────────────────────────────────────────
+function populateTopics() {
+  const sel = document.getElementById("topic-filter");
+  const current = sel.value;
+  const topics = [...new Set(allAccounts.filter(a => activeProduct === "ALL" || extractProduct(a.product_topic_feature) === activeProduct).map(a => extractTopic(a.product_topic_feature)).filter(Boolean))].sort();
+  sel.innerHTML = `<option value="ALL">All Topics</option>` + topics.map(t => `<option value="${t}">${t}</option>`).join("");
+  if (topics.includes(current)) sel.value = current; else { sel.value = "ALL"; activeTopic = "ALL"; }
+}
 
-    function updateStats() {
-      document.getElementById("stat-total").textContent  = allAccounts.length;
-      document.getElementById("stat-high").textContent   = allAccounts.filter(a => a.priority === "HIGH").length;
-      document.getElementById("stat-medium").textContent = allAccounts.filter(a => a.priority === "MEDIUM").length;
-      document.getElementById("stat-low").textContent    = allAccounts.filter(a => a.priority === "LOW").length;
-    }
+// ── Filters & Table ───────────────────────────────────────────────────────────
+function applyFilters() {
+  const search = document.getElementById("search-input").value.toLowerCase();
+  let filtered = allAccounts;
+  if (activeFilter !== "ALL")      filtered = filtered.filter(a => a.priority === activeFilter);
+  if (activeProduct !== "ALL")     filtered = filtered.filter(a => extractProduct(a.product_topic_feature) === activeProduct);
+  if (activeTopic !== "ALL")       filtered = filtered.filter(a => extractTopic(a.product_topic_feature) === activeTopic);
+  if (activeSuccessPlan !== "ALL") filtered = filtered.filter(a => a.success_plan === activeSuccessPlan);
+  if (search) filtered = filtered.filter(a => a.account.toLowerCase().includes(search));
 
-    function populateTopics() {
-      const sel = document.getElementById("topic-filter");
-      const current = sel.value;
-      const topics = [...new Set(
-        allAccounts
-          .filter(a => activeProduct === "ALL" || extractProduct(a.product_topic_feature) === activeProduct)
-          .map(a => extractTopic(a.product_topic_feature)).filter(Boolean)
-      )].sort();
-      sel.innerHTML = `<option value="ALL">All Topics</option>` +
-        topics.map(t => `<option value="${t}">${t}</option>`).join("");
-      if (topics.includes(current)) sel.value = current;
-      else { sel.value = "ALL"; activeTopic = "ALL"; }
-    }
+  filtered = [...filtered].sort((a, b) => {
+    let va, vb;
+    if (sortCol === "priority_order") { va = PRIORITY_ORDER[a.priority] ?? 3; vb = PRIORITY_ORDER[b.priority] ?? 3; if (va === vb) return (b.case_count || 0) - (a.case_count || 0); }
+    else if (sortCol === "case_count") { va = a.case_count || 0; vb = b.case_count || 0; }
+    else if (sortCol === "severity") { va = (a.severity_breakdown || {}).sev1 || 0; vb = (b.severity_breakdown || {}).sev1 || 0; if (va === vb) { va = (a.severity_breakdown || {}).sev2 || 0; vb = (b.severity_breakdown || {}).sev2 || 0; } }
+    else { va = (a[sortCol] || "").toString().toLowerCase(); vb = (b[sortCol] || "").toString().toLowerCase(); }
+    if (va < vb) return -sortDir; if (va > vb) return sortDir; return 0;
+  });
 
-    function applyFilters() {
-      const search = document.getElementById("search-input").value.toLowerCase();
-      let filtered = allAccounts;
-      if (activeFilter !== "ALL")      filtered = filtered.filter(a => a.priority === activeFilter);
-      if (activeProduct !== "ALL")     filtered = filtered.filter(a => extractProduct(a.product_topic_feature) === activeProduct);
-      if (activeTopic !== "ALL")       filtered = filtered.filter(a => extractTopic(a.product_topic_feature) === activeTopic);
-      if (activeSuccessPlan !== "ALL") filtered = filtered.filter(a => a.success_plan === activeSuccessPlan);
-      if (search) filtered = filtered.filter(a => a.account.toLowerCase().includes(search));
+  renderTable(filtered);
+  document.getElementById("result-count").textContent = `Showing ${filtered.length} of ${allAccounts.length} accounts`;
+}
 
-      filtered = [...filtered].sort((a, b) => {
-        let va, vb;
-        if (sortCol === "priority_order") {
-          va = PRIORITY_ORDER[a.priority] ?? 3; vb = PRIORITY_ORDER[b.priority] ?? 3;
-          if (va === vb) return (b.case_count || 0) - (a.case_count || 0);
-        } else if (sortCol === "case_count") {
-          va = a.case_count || 0; vb = b.case_count || 0;
-        } else {
-          va = (a[sortCol] || "").toString().toLowerCase();
-          vb = (b[sortCol] || "").toString().toLowerCase();
-        }
-        if (va < vb) return -sortDir;
-        if (va > vb) return  sortDir;
-        return 0;
-      });
+function renderTable(accounts) {
+  const tbody = document.getElementById("table-body");
+  if (!accounts || !accounts.length) { tbody.innerHTML = `<tr><td colspan="10" class="loading">No matching accounts.</td></tr>`; return; }
+  tbody.innerHTML = accounts.map(a => {
+    const rev = reviews[a.account];
+    const icon = rev ? (rev.verdict === "valid" ? `<span class="reviewed-icon" title="Valid">&#9989;</span>` : `<span class="reviewed-icon" title="Invalid">&#10060;</span>`) : "";
+    const sb = a.severity_breakdown || {};
+    const sevMini = [
+      sb.sev1 ? `<span class="sev-dot s1">S1:${sb.sev1}</span>` : "",
+      sb.sev2 ? `<span class="sev-dot s2">S2:${sb.sev2}</span>` : "",
+      sb.sev3 ? `<span class="sev-dot s3">S3:${sb.sev3}</span>` : "",
+      sb.sev4 ? `<span class="sev-dot s4">S4:${sb.sev4}</span>` : "",
+    ].filter(Boolean).join(" ");
+    return `<tr data-account="${encodeURIComponent(JSON.stringify(a))}">
+      <td style="text-align:center">${icon}</td>
+      <td class="account-name">${a.account}</td>
+      <td class="case-count-col">${a.case_count}</td>
+      <td><div class="sev-mini">${sevMini || '<span style="color:#ccc;font-size:11px">—</span>'}</div></td>
+      <td class="feature-text" title="${a.product_topic_feature || ""}">${truncate(a.product_topic_feature, 52)}</td>
+      <td>${a.success_plan || "—"}</td>
+      <td>${a.engagement_status || "—"}</td>
+      <td><span class="rec ${recClass(a.recommendation)}">${a.recommendation || "—"}</span></td>
+      <td><span class="priority priority-${a.priority}">${a.priority}</span></td>
+      <td style="text-align:center"><button class="view-btn" data-account-name="${encodeURIComponent(a.account)}">View →</button></td>
+    </tr>`;
+  }).join("");
 
-      renderTable(filtered);
-      document.getElementById("result-count").textContent =
-        `Showing ${filtered.length} of ${allAccounts.length} accounts`;
-    }
+  tbody.querySelectorAll(".view-btn").forEach(btn => {
+    btn.addEventListener("click", e => { e.stopPropagation(); const found = allAccounts.find(a => a.account === decodeURIComponent(btn.dataset.accountName)); if (found) openModal(found); });
+  });
+  tbody.querySelectorAll("tr").forEach(row => {
+    row.addEventListener("click", e => { if (e.target.closest(".view-btn")) return; try { openModal(JSON.parse(decodeURIComponent(row.dataset.account))); } catch(_) {} });
+  });
+}
 
-    function renderTable(accounts) {
-      const tbody = document.getElementById("table-body");
-      if (!accounts || accounts.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="loading">No matching accounts.</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = accounts.map(a => {
-        const rev = reviews[a.account];
-        const icon = rev
-          ? (rev.verdict === "valid"
-              ? `<span class="reviewed-icon" title="Marked Valid">&#9989;</span>`
-              : `<span class="reviewed-icon" title="Marked Invalid">&#10060;</span>`)
-          : "";
-        return `
-          <tr data-account="${encodeURIComponent(JSON.stringify(a))}">
-            <td style="text-align:center">${icon}</td>
-            <td class="account-name">${a.account}</td>
-            <td class="case-count-col">${a.case_count}</td>
-            <td class="feature-text" title="${a.product_topic_feature || ""}">${truncate(a.product_topic_feature, 55)}</td>
-            <td>${a.success_plan || "—"}</td>
-            <td>${a.engagement_status || "—"}</td>
-            <td><span class="rec ${recClass(a.recommendation)}">${a.recommendation || "—"}</span></td>
-            <td><span class="priority priority-${a.priority}">${a.priority}</span></td>
-            <td style="text-align:center">
-              <button class="view-btn" data-account-name="${encodeURIComponent(a.account)}">View →</button>
-            </td>
-          </tr>`;
-      }).join("");
+// ── Modal ─────────────────────────────────────────────────────────────────────
+function renderModalCases(cases, filter) {
+  const tbody = document.getElementById("modal-cases-tbody");
+  const badge = document.getElementById("modal-case-badge");
+  const visible = filter === "ALL" ? cases : cases.filter(c => (c.instance_type || "").toLowerCase() === filter.toLowerCase());
+  badge.textContent = `${visible.length} of ${cases.length}`;
+  if (!visible.length) { tbody.innerHTML = `<tr><td colspan="6" class="case-table-empty">No cases match this filter.</td></tr>`; return; }
+  expandedCaseNumber = null;
 
-      tbody.querySelectorAll(".view-btn").forEach(btn => {
-        btn.addEventListener("click", e => {
-          e.stopPropagation();
-          const found = allAccounts.find(a => a.account === decodeURIComponent(btn.dataset.accountName));
-          if (found) openModal(found);
-        });
-      });
-      tbody.querySelectorAll("tr").forEach(row => {
-        row.addEventListener("click", e => {
-          if (e.target.closest(".view-btn")) return;
-          openModal(JSON.parse(decodeURIComponent(row.dataset.account)));
-        });
-      });
-    }
+  const rows = visible.map(c => {
+    const inst = c.instance_type || "—";
+    const ptf  = c.product_topic_feature || (currentModalAccount && currentModalAccount.product_topic_feature) || "—";
+    const sevK = sevKey(c.severity);
+    const sevBadge = c.severity ? `<span class="sev-pill ${sevK === "sev1" ? "sev1-pill" : sevK === "sev2" ? "sev2-pill" : sevK === "sev3" ? "sev3-pill" : "sev4-pill"}">${sevLabel(sevK)}</span>` : `<span class="sev-zero">—</span>`;
+    const hasTech = c.technical_summary || c.root_cause;
+    return `
+      <tr class="case-main-row" data-case-num="${encodeURIComponent(c.case_number || "")}">
+        <td class="ct-num">${c.case_number || "—"}</td>
+        <td class="ct-subject">
+          <span class="ct-subject-main" title="${(c.subject || "").replace(/"/g,"&quot;")}">${truncate(c.subject, 50)}</span>
+          ${hasTech ? `<span class="ct-tech" title="${(c.technical_summary || "").replace(/"/g,"&quot;")}">${truncate(c.technical_summary, 60)}</span>` : ""}
+        </td>
+        <td>${sevBadge}</td>
+        <td><span class="status-chip status-${(c.status || "open").toLowerCase()}">${c.status || "—"}</span></td>
+        <td><span class="inst-inline ${instanceChipClass(inst)}">${inst}</span></td>
+        <td class="ct-ptf" title="${ptf}">${truncate(ptf, 38)}</td>
+      </tr>
+      <tr class="case-detail-row hidden" data-detail-for="${encodeURIComponent(c.case_number || "")}">
+        <td colspan="6">
+          <div class="case-detail-grid">
+            <div class="case-detail-field"><label>Root Cause</label><span>${c.root_cause || "—"}</span></div>
+            <div class="case-detail-field"><label>Technical Summary</label><span>${c.technical_summary || "—"}</span></div>
+            <div class="case-detail-field"><label>Resolution</label><span>${c.resolution_summary || "—"}</span></div>
+          </div>
+        </td>
+      </tr>`;
+  }).join("");
+  tbody.innerHTML = rows;
 
-    function renderModalCases(cases, filter) {
-      const tbody = document.getElementById("modal-cases-tbody");
-      const badge = document.getElementById("modal-case-badge");
-      const visible = filter === "ALL"
-        ? cases
-        : cases.filter(c => (c.instance_type || "").toLowerCase() === filter.toLowerCase());
-      badge.textContent = `${visible.length} of ${cases.length}`;
-      if (!visible.length) {
-        tbody.innerHTML = `<tr><td colspan="5" class="case-table-empty">No cases match this filter.</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = visible.map(c => {
-        const inst = c.instance_type || "—";
-        const ptf  = c.product_topic_feature || (currentModalAccount && currentModalAccount.product_topic_feature) || "—";
-        return `<tr>
-          <td class="ct-num">${c.case_number || "—"}</td>
-          <td class="ct-subject" title="${(c.subject || "").replace(/"/g,"&quot;")}">${truncate(c.subject, 55)}</td>
-          <td><span class="status-chip status-${(c.status || "open").toLowerCase()}">${c.status || "—"}</span></td>
-          <td><span class="inst-inline ${instanceChipClass(inst)}">${inst}</span></td>
-          <td class="ct-ptf" title="${ptf}">${truncate(ptf, 42)}</td>
-        </tr>`;
-      }).join("");
-    }
-
-    function openModal(a) {
-      currentModalAccount = a;
-      modalInstanceFilter = "ALL";
-      document.querySelectorAll(".inst-chip").forEach(b => b.classList.remove("active"));
-      document.querySelector(".inst-chip[data-instance='ALL']").classList.add("active");
-
-      document.getElementById("modal-account").textContent = a.account;
-      document.getElementById("modal-ptf").textContent = a.product_topic_feature || "—";
-      document.getElementById("modal-themes").textContent = a.recurring_themes || "—";
-      document.getElementById("modal-reasoning").textContent = a.reasoning || "—";
-      document.getElementById("modal-success-plan").textContent = a.success_plan || "—";
-      document.getElementById("modal-engagement-status").textContent = a.engagement_status || "—";
-      document.getElementById("modal-engagement-name").textContent = a.engagement_name || "—";
-      document.getElementById("modal-closure-date").textContent = a.engagement_closure_date || "—";
-
-      document.getElementById("modal-chips").innerHTML =
-        `<span class="priority priority-${a.priority}">${a.priority}</span>
-         <span class="rec ${recClass(a.recommendation)}">${a.recommendation || "—"}</span>`;
-
-      renderModalCases(a.cases || [], "ALL");
-
-      const rev = reviews[a.account];
-      const noteEl = document.getElementById("already-reviewed-note");
-      if (rev) {
-        noteEl.className = "already-reviewed-note " + (rev.verdict === "valid" ? "already-valid" : "already-invalid");
-        noteEl.textContent = rev.verdict === "valid"
-          ? "✅ Already marked Valid"
-          : `❌ Marked Invalid — ${rev.reason || ""}`;
-        noteEl.classList.remove("hidden");
-      } else {
-        noteEl.classList.add("hidden");
-      }
-
-      document.getElementById("detail-modal").classList.remove("hidden");
-    }
-
-    document.getElementById("instance-filter-bar").addEventListener("click", e => {
-      const chip = e.target.closest(".inst-chip");
-      if (!chip) return;
-      document.querySelectorAll(".inst-chip").forEach(b => b.classList.remove("active"));
-      chip.classList.add("active");
-      modalInstanceFilter = chip.dataset.instance;
-      if (currentModalAccount) renderModalCases(currentModalAccount.cases || [], modalInstanceFilter);
+  tbody.querySelectorAll(".case-main-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const cn = row.dataset.caseNum;
+      const detailRow = tbody.querySelector(`.case-detail-row[data-detail-for="${cn}"]`);
+      if (!detailRow) return;
+      const isOpen = !detailRow.classList.contains("hidden");
+      tbody.querySelectorAll(".case-detail-row").forEach(r => r.classList.add("hidden"));
+      if (!isOpen) detailRow.classList.remove("hidden");
     });
-    document.getElementById("modal-close").addEventListener("click", () =>
-      document.getElementById("detail-modal").classList.add("hidden"));
-    document.getElementById("detail-modal").addEventListener("click", e => {
-      if (e.target === document.getElementById("detail-modal"))
-        document.getElementById("detail-modal").classList.add("hidden");
-    });
+  });
+}
 
-    function buildDraft(a) {
-      const csm = a.lead_csm;
-      const csmFirst = csm && csm.name ? csm.name.split(" ")[0] : "Team";
-      const product = extractProduct(a.product_topic_feature) || "Industry/Revenue";
-      const themesFirst = (a.recurring_themes || "—").split(". ")[0];
-      const topCases = (a.cases || []).slice(0, 3)
-        .map(c => `• ${c.case_number}: ${truncate(c.subject, 70)}`).join("\n");
-      return `Hi ${csmFirst},
+function openModal(a) {
+  currentModalAccount = a;
+  modalInstanceFilter = "ALL";
+  document.querySelectorAll(".inst-chip").forEach(b => b.classList.remove("active"));
+  document.querySelector(".inst-chip[data-instance='ALL']").classList.add("active");
+
+  document.getElementById("modal-account").textContent = a.account;
+  document.getElementById("modal-ptf").textContent = a.product_topic_feature || "—";
+  document.getElementById("modal-themes").textContent = a.recurring_themes || "—";
+  document.getElementById("modal-tech-analysis").textContent = a.technical_analysis || "—";
+  document.getElementById("modal-reasoning").textContent = a.reasoning || "—";
+  document.getElementById("modal-success-plan").textContent = a.success_plan || "—";
+  document.getElementById("modal-engagement-status").textContent = a.engagement_status || "—";
+  document.getElementById("modal-engagement-name").textContent = a.engagement_name || "—";
+  document.getElementById("modal-closure-date").textContent = a.engagement_closure_date || "—";
+
+  document.getElementById("modal-chips").innerHTML =
+    `<span class="priority priority-${a.priority}">${a.priority}</span>
+     <span class="rec ${recClass(a.recommendation)}">${a.recommendation || "—"}</span>`;
+
+  // Severity breakdown
+  const sb = a.severity_breakdown || computeSevBreakdown(a.cases || []);
+  const sevEl = document.getElementById("modal-sev-breakdown");
+  sevEl.innerHTML = [
+    ["sev1", "Sev 1 Critical"], ["sev2", "Sev 2 Urgent"], ["sev3", "Sev 3 High"], ["sev4", "Sev 4 Medium"], ["sev5", "Sev 5 Low"]
+  ].filter(([k]) => sb[k] > 0).map(([k, label]) =>
+    `<span class="sev-breakdown-chip ${sevPillClass(k)}">${label}: <strong>${sb[k]}</strong></span>`
+  ).join("") || `<span style="color:#aaa;font-size:12px">No severity data</span>`;
+
+  // Top issues
+  const topIssues = a.top_issues || [];
+  const tiSection = document.getElementById("modal-top-issues-section");
+  if (topIssues.length) {
+    document.getElementById("modal-top-issues").innerHTML = topIssues.map(i =>
+      `<li><span class="issue-count">${i.count}</span>${i.label}</li>`).join("");
+    tiSection.classList.remove("hidden");
+  } else { tiSection.classList.add("hidden"); }
+
+  renderModalCases(a.cases || [], "ALL");
+
+  const rev = reviews[a.account];
+  const noteEl = document.getElementById("already-reviewed-note");
+  if (rev) {
+    noteEl.className = "already-reviewed-note " + (rev.verdict === "valid" ? "already-valid" : "already-invalid");
+    noteEl.textContent = rev.verdict === "valid" ? "✅ Already marked Valid" : `❌ Marked Invalid — ${rev.reason || ""}`;
+    noteEl.classList.remove("hidden");
+  } else { noteEl.classList.add("hidden"); }
+
+  document.getElementById("detail-modal").classList.remove("hidden");
+}
+
+document.getElementById("instance-filter-bar").addEventListener("click", e => {
+  const chip = e.target.closest(".inst-chip");
+  if (!chip) return;
+  document.querySelectorAll(".inst-chip").forEach(b => b.classList.remove("active"));
+  chip.classList.add("active");
+  modalInstanceFilter = chip.dataset.instance;
+  if (currentModalAccount) renderModalCases(currentModalAccount.cases || [], modalInstanceFilter);
+});
+document.getElementById("modal-close").addEventListener("click", () => document.getElementById("detail-modal").classList.add("hidden"));
+document.getElementById("detail-modal").addEventListener("click", e => { if (e.target === document.getElementById("detail-modal")) document.getElementById("detail-modal").classList.add("hidden"); });
+
+// ── Valid / Invalid actions ───────────────────────────────────────────────────
+function buildDraft(a) {
+  const csm = a.lead_csm;
+  const csmFirst = csm && csm.name ? csm.name.split(" ")[0] : "Team";
+  const product = extractProduct(a.product_topic_feature) || "Industry/Revenue";
+  const sb = a.severity_breakdown || {};
+  const sevLine = [sb.sev1 && `${sb.sev1} Sev 1`, sb.sev2 && `${sb.sev2} Sev 2`, sb.sev3 && `${sb.sev3} Sev 3`].filter(Boolean).join(", ");
+  const topCases = (a.cases || []).slice(0, 3).map(c => `• ${c.case_number}: ${truncate(c.subject, 70)}`).join("\n");
+  const techSnippet = a.technical_analysis ? `\n*Technical pattern:* ${truncate(a.technical_analysis, 200)}` : "";
+  return `Hi ${csmFirst},
 
 I'm flagging *${a.account}* for an Architecture Design Review based on recent support patterns.
 
-Over the past 90 days, ${a.case_count} ${product} Cloud case${a.case_count === 1 ? "" : "s"} have been logged. ${themesFirst}.
+Over the past 90 days, ${a.case_count} ${product} Cloud case${a.case_count === 1 ? "" : "s"} have been logged${sevLine ? ` (${sevLine})` : ""}.${techSnippet}
 
 *Recommendation:* ${a.recommendation} (Priority: ${a.priority})
 *Success Plan:* ${a.success_plan || "—"}
@@ -698,136 +801,111 @@ ${topCases || "• See dashboard for full case list"}
 Please let me know if you'd like to discuss further or prioritize this account for an upcoming ADR slot.
 
 — Chaten (via OrgCS Dashboard)`;
+}
+
+document.getElementById("btn-valid").addEventListener("click", () => {
+  if (!currentModalAccount) return;
+  const a = currentModalAccount;
+  const csm = a.lead_csm;
+  document.getElementById("slack-csm-meta").textContent = csm && csm.name ? `Lead SM: ${csm.name}${csm.email ? ` · ${csm.email}` : ""}` : "Lead SM: Not found — please route manually";
+  document.getElementById("slack-draft-text").value = buildDraft(a);
+  document.getElementById("slack-copied-msg").classList.add("hidden");
+  document.getElementById("slack-dialog").classList.remove("hidden");
+  reviews[a.account] = { verdict: "valid", ts: new Date().toISOString(), recommendation: a.recommendation, priority: a.priority, case_count: a.case_count, success_plan: a.success_plan, product_topic_feature: a.product_topic_feature, recurring_themes: a.recurring_themes, reasoning: a.reasoning };
+  saveReviews(); applyFilters();
+});
+document.getElementById("btn-copy-slack").addEventListener("click", () => {
+  navigator.clipboard.writeText(document.getElementById("slack-draft-text").value).then(() => {
+    const m = document.getElementById("slack-copied-msg"); m.classList.remove("hidden"); setTimeout(() => m.classList.add("hidden"), 2500);
+  });
+});
+document.getElementById("btn-close-slack").addEventListener("click", () => document.getElementById("slack-dialog").classList.add("hidden"));
+
+document.getElementById("btn-invalid").addEventListener("click", () => {
+  if (!currentModalAccount) return;
+  document.getElementById("feedback-account-meta").textContent = `${currentModalAccount.account} · ${currentModalAccount.recommendation}`;
+  document.getElementById("feedback-reason").value = "Incorrect account";
+  document.getElementById("feedback-notes").value = "";
+  document.getElementById("feedback-dialog").classList.remove("hidden");
+});
+document.getElementById("btn-cancel-feedback").addEventListener("click", () => document.getElementById("feedback-dialog").classList.add("hidden"));
+document.getElementById("btn-submit-feedback").addEventListener("click", () => {
+  if (!currentModalAccount) return;
+  const a = currentModalAccount;
+  reviews[a.account] = { verdict: "invalid", reason: document.getElementById("feedback-reason").value, notes: document.getElementById("feedback-notes").value.trim(), ts: new Date().toISOString(), recommendation: a.recommendation, priority: a.priority, case_count: a.case_count, success_plan: a.success_plan, product_topic_feature: a.product_topic_feature, recurring_themes: a.recurring_themes, reasoning: a.reasoning };
+  saveReviews();
+  document.getElementById("feedback-dialog").classList.add("hidden");
+  document.getElementById("detail-modal").classList.add("hidden");
+  showToast(`Feedback saved for ${a.account}`);
+  applyFilters();
+});
+
+// ── Filter wiring ─────────────────────────────────────────────────────────────
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => { document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); activeFilter = btn.dataset.filter; applyFilters(); });
+});
+document.getElementById("product-filter").addEventListener("change", e => { activeProduct = e.target.value; activeTopic = "ALL"; populateTopics(); applyFilters(); });
+document.getElementById("topic-filter").addEventListener("change", e => { activeTopic = e.target.value; applyFilters(); });
+document.getElementById("success-plan-filter").addEventListener("change", e => { activeSuccessPlan = e.target.value; applyFilters(); });
+document.getElementById("search-input").addEventListener("input", applyFilters);
+
+document.querySelectorAll("thead th[data-col]").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = col === "case_count" || col === "severity" ? -1 : 1; }
+    document.querySelectorAll("thead th").forEach(t => { t.classList.remove("sorted"); const i = t.querySelector(".sort-icon"); if (i) i.textContent = "↕"; });
+    th.classList.add("sorted");
+    const icon = th.querySelector(".sort-icon"); if (icon) icon.textContent = sortDir === 1 ? "↓" : "↑";
+    applyFilters();
+  });
+});
+
+// Trends toggle
+document.getElementById("trends-toggle").addEventListener("click", () => {
+  trendsCollapsed = !trendsCollapsed;
+  document.getElementById("trends-body").classList.toggle("collapsed", trendsCollapsed);
+  document.getElementById("trends-toggle").textContent = trendsCollapsed ? "Show ▼" : "Hide ▲";
+});
+
+document.getElementById("refresh-btn").addEventListener("click", loadData);
+setInterval(loadData, 15 * 60 * 1000);
+
+async function loadData() {
+  const btn = document.getElementById("refresh-btn");
+  btn.classList.add("spinning");
+  try {
+    const [recRes, aggRes] = await Promise.all([
+      fetch(DATA_URL + "?t=" + Date.now()),
+      fetch(AGG_URL  + "?t=" + Date.now()).catch(() => null)
+    ]);
+    if (!recRes.ok) throw new Error(`HTTP ${recRes.status}`);
+    const data = await recRes.json();
+    allAccounts = (data.accounts || []).sort((a, b) => {
+      const pa = PRIORITY_ORDER[a.priority] ?? 3, pb = PRIORITY_ORDER[b.priority] ?? 3;
+      if (pa !== pb) return pa - pb;
+      return (b.case_count || 0) - (a.case_count || 0);
+    });
+    document.getElementById("last-refreshed").textContent = "Last updated: " + formatTimestamp(data.generated_at);
+    document.getElementById("error-banner").classList.add("hidden");
+
+    if (aggRes && aggRes.ok) {
+      aggregates = await aggRes.json();
+      renderHeatmap(aggregates);
     }
 
-    document.getElementById("btn-valid").addEventListener("click", () => {
-      if (!currentModalAccount) return;
-      const a = currentModalAccount;
-      const csm = a.lead_csm;
-      document.getElementById("slack-csm-meta").textContent = csm && csm.name
-        ? `Lead SM: ${csm.name}${csm.email ? ` · ${csm.email}` : ""}`
-        : "Lead SM: Not found — please route manually";
-      document.getElementById("slack-draft-text").value = buildDraft(a);
-      document.getElementById("slack-copied-msg").classList.add("hidden");
-      document.getElementById("slack-dialog").classList.remove("hidden");
-      reviews[a.account] = {
-        verdict: "valid", ts: new Date().toISOString(),
-        recommendation: a.recommendation, priority: a.priority,
-        case_count: a.case_count, success_plan: a.success_plan,
-        product_topic_feature: a.product_topic_feature,
-        recurring_themes: a.recurring_themes, reasoning: a.reasoning
-      };
-      saveReviews();
-      applyFilters();
-    });
+    updateStats(); populateTopics(); applyFilters();
+  } catch (err) {
+    const banner = document.getElementById("error-banner");
+    banner.textContent = "Could not load data: " + err.message;
+    banner.classList.remove("hidden");
+  } finally {
+    btn.classList.remove("spinning");
+  }
+}
 
-    document.getElementById("btn-copy-slack").addEventListener("click", () => {
-      navigator.clipboard.writeText(document.getElementById("slack-draft-text").value).then(() => {
-        const m = document.getElementById("slack-copied-msg");
-        m.classList.remove("hidden");
-        setTimeout(() => m.classList.add("hidden"), 2500);
-      });
-    });
-    document.getElementById("btn-close-slack").addEventListener("click", () =>
-      document.getElementById("slack-dialog").classList.add("hidden"));
-
-    document.getElementById("btn-invalid").addEventListener("click", () => {
-      if (!currentModalAccount) return;
-      document.getElementById("feedback-account-meta").textContent =
-        `${currentModalAccount.account} · ${currentModalAccount.recommendation}`;
-      document.getElementById("feedback-reason").value = "Incorrect account";
-      document.getElementById("feedback-notes").value = "";
-      document.getElementById("feedback-dialog").classList.remove("hidden");
-    });
-    document.getElementById("btn-cancel-feedback").addEventListener("click", () =>
-      document.getElementById("feedback-dialog").classList.add("hidden"));
-    document.getElementById("btn-submit-feedback").addEventListener("click", () => {
-      if (!currentModalAccount) return;
-      const a = currentModalAccount;
-      reviews[a.account] = {
-        verdict: "invalid",
-        reason: document.getElementById("feedback-reason").value,
-        notes:  document.getElementById("feedback-notes").value.trim(),
-        ts: new Date().toISOString(),
-        recommendation: a.recommendation, priority: a.priority,
-        case_count: a.case_count, success_plan: a.success_plan,
-        product_topic_feature: a.product_topic_feature,
-        recurring_themes: a.recurring_themes, reasoning: a.reasoning
-      };
-      saveReviews();
-      document.getElementById("feedback-dialog").classList.add("hidden");
-      document.getElementById("detail-modal").classList.add("hidden");
-      showToast(`Feedback saved for ${a.account}`);
-      applyFilters();
-    });
-
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        activeFilter = btn.dataset.filter;
-        applyFilters();
-      });
-    });
-    document.getElementById("product-filter").addEventListener("change", e => {
-      activeProduct = e.target.value; activeTopic = "ALL"; populateTopics(); applyFilters();
-    });
-    document.getElementById("topic-filter").addEventListener("change", e => {
-      activeTopic = e.target.value; applyFilters();
-    });
-    document.getElementById("success-plan-filter").addEventListener("change", e => {
-      activeSuccessPlan = e.target.value; applyFilters();
-    });
-    document.getElementById("search-input").addEventListener("input", applyFilters);
-
-    document.querySelectorAll("thead th[data-col]").forEach(th => {
-      th.addEventListener("click", () => {
-        const col = th.dataset.col;
-        if (sortCol === col) sortDir *= -1;
-        else { sortCol = col; sortDir = col === "case_count" ? -1 : 1; }
-        document.querySelectorAll("thead th").forEach(t => {
-          t.classList.remove("sorted");
-          const icon = t.querySelector(".sort-icon");
-          if (icon) icon.textContent = "↕";
-        });
-        th.classList.add("sorted");
-        const icon = th.querySelector(".sort-icon");
-        if (icon) icon.textContent = sortDir === 1 ? "↓" : "↑";
-        applyFilters();
-      });
-    });
-
-    document.getElementById("refresh-btn").addEventListener("click", loadData);
-    setInterval(loadData, 15 * 60 * 1000);
-
-    async function loadData() {
-      const btn = document.getElementById("refresh-btn");
-      btn.classList.add("spinning");
-      try {
-        const res = await fetch(DATA_URL + "?t=" + Date.now());
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        allAccounts = (data.accounts || []).sort((a, b) => {
-          const pa = PRIORITY_ORDER[a.priority] ?? 3, pb = PRIORITY_ORDER[b.priority] ?? 3;
-          if (pa !== pb) return pa - pb;
-          return (b.case_count || 0) - (a.case_count || 0);
-        });
-        document.getElementById("last-refreshed").textContent =
-          "Last updated: " + formatTimestamp(data.generated_at);
-        document.getElementById("error-banner").classList.add("hidden");
-        updateStats(); populateTopics(); applyFilters();
-      } catch (err) {
-        const banner = document.getElementById("error-banner");
-        banner.textContent = "Could not load data: " + err.message;
-        banner.classList.remove("hidden");
-      } finally {
-        btn.classList.remove("spinning");
-      }
-    }
-
-    loadReviews();
-    updateReviewsBadge();
-    loadData();
-  </script>
+loadReviews();
+updateReviewsBadge();
+loadData();
+</script>
 </body>
 </html>
