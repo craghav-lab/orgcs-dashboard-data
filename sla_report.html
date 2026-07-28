@@ -141,11 +141,10 @@
 
 <!-- Heatmap by week/account -->
 <div class="section">
-  <div class="section-title">Case Creation Heatmap — Hour of Day (UTC) × Account × Breach Severity</div>
-  <div style="font-size:11px;color:#888;margin-bottom:10px">X-axis: hour the case was logged (00–23 UTC) &nbsp;·&nbsp; Y-axis: impacted account &nbsp;·&nbsp; Color: breach severity</div>
+  <div class="section-title">SLA Miss Heatmap — Hour of Day (UTC)</div>
+  <div style="font-size:11px;color:#888;margin-bottom:10px">Each cell = one UTC hour (00–23) &nbsp;·&nbsp; Number = SLA misses in that hour &nbsp;·&nbsp; Hover for case details</div>
   <div style="background:white;border:1px solid #dde0ea;border-radius:8px;padding:16px;overflow-x:auto">
-    <div class="heatmap-x-labels" id="heatmap-x-labels"></div>
-    <div class="heatmap-grid" id="heatmap-grid"></div>
+    <div id="hour-heatmap-wrap" style="overflow-x:auto"></div>
   </div>
 </div>
 
@@ -226,76 +225,111 @@ document.getElementById('kpi-avg').textContent = avg;
 document.getElementById('kpi-worst').textContent = worst;
 document.getElementById('kpi-under5').textContent = under5;
 
-// ── Heatmap — Hour of Day (UTC) ───────────────────────────────────────────────
-// All 24 hours on X axis; accounts on Y axis
-const HOURS = Array.from({length:24}, (_,i) => i);  // 0..23
-
-// Build hour → account → cases map
-const grid = {};
-CASES.forEach(c => {
-  const h = new Date(c.created_utc).getUTCHours();
-  if (!grid[h]) grid[h] = {};
-  if (!grid[h][c.account]) grid[h][c.account] = [];
-  grid[h][c.account].push(c);
-});
-
-// Only show hours that have at least one case
-const activeHours = HOURS.filter(h => grid[h]);
-
-// Accounts sorted by the hour they logged (earliest first)
-const accts = [...new Set(CASES.sort((a,b)=>a.created_utc.localeCompare(b.created_utc)).map(c=>c.account))];
-
-// X-labels (hour blocks)
-const xlEl = document.getElementById('heatmap-x-labels');
-// We'll show all 24 hours so pattern is clear (empty hours show as grey)
-HOURS.forEach(h => {
-  const d = document.createElement('div');
-  d.className = 'heatmap-x-label';
-  d.textContent = String(h).padStart(2,'0');
-  xlEl.appendChild(d);
-});
-
+// ── Hour-of-Day Heatmap ───────────────────────────────────────────────────────
+// One row of 24 cells. Each cell = count of SLA misses in that UTC hour.
 const tooltip = document.getElementById('tooltip');
 function showTip(e, html) { tooltip.innerHTML = html; tooltip.style.display = 'block'; moveTip(e); }
-function moveTip(e) { tooltip.style.left = (e.clientX + 12) + 'px'; tooltip.style.top = (e.clientY + 12) + 'px'; }
+function moveTip(e) { tooltip.style.left = (e.clientX + 14) + 'px'; tooltip.style.top  = (e.clientY + 14) + 'px'; }
 function hideTip() { tooltip.style.display = 'none'; }
 
-const gridEl = document.getElementById('heatmap-grid');
-accts.forEach(acct => {
-  const row = document.createElement('div');
-  row.className = 'heatmap-row';
+// Group cases by UTC hour
+const byHour = {};
+for (let h = 0; h < 24; h++) byHour[h] = [];
+CASES.forEach(c => { byHour[new Date(c.created_utc).getUTCHours()].push(c); });
 
+const maxCount = Math.max(...Object.values(byHour).map(a => a.length), 1);
+
+// Color scale: 0 = light grey, 1 = light amber, 2 = orange, 3+ = red shades
+function hourCellColor(count) {
+  if (count === 0) return { bg: '#eef0f6', fg: '#aaa', border: '#dde0ea' };
+  if (count === 1) return { bg: '#fff3e0', fg: '#bf360c', border: '#ffcc80' };
+  if (count === 2) return { bg: '#ff8f00', fg: '#fff',   border: '#e65100' };
+  if (count === 3) return { bg: '#d84315', fg: '#fff',   border: '#bf360c' };
+  return                  { bg: '#7f0000', fg: '#fff',   border: '#4e0000' };
+}
+
+const wrap = document.getElementById('hour-heatmap-wrap');
+const CELL = 54;   // px per cell
+const GAP  = 6;
+
+// Outer flex container
+const outer = document.createElement('div');
+outer.style.cssText = 'display:flex;align-items:flex-end;gap:' + GAP + 'px;padding:8px 0 4px';
+
+for (let h = 0; h < 24; h++) {
+  const cases = byHour[h];
+  const count = cases.length;
+  const col   = hourCellColor(count);
+
+  const col_wrap = document.createElement('div');
+  col_wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:5px';
+
+  // Bar (height proportional to count)
+  const barH = count === 0 ? 6 : Math.max(24, Math.round((count / maxCount) * 90));
+  const bar = document.createElement('div');
+  bar.style.cssText = `width:${CELL}px;height:${barH}px;background:${col.bg};border:1px solid ${col.border};border-radius:5px 5px 3px 3px;transition:opacity 0.1s;cursor:${count>0?'pointer':'default'}`;
+
+  // Count label inside bar
+  if (count > 0) {
+    bar.style.display = 'flex';
+    bar.style.alignItems = 'center';
+    bar.style.justifyContent = 'center';
+    bar.style.fontSize = '15px';
+    bar.style.fontWeight = '800';
+    bar.style.color = col.fg;
+    bar.textContent = count;
+  }
+
+  // Hour label below
   const lbl = document.createElement('div');
-  lbl.className = 'heatmap-label';
-  const shortName = acct.length > 32 ? acct.slice(0,30)+'…' : acct;
-  lbl.textContent = shortName;
-  lbl.title = acct;
-  row.appendChild(lbl);
+  lbl.style.cssText = `font-size:10px;font-weight:700;color:${count>0?'#333':'#aaa'};width:${CELL}px;text-align:center`;
+  lbl.textContent = String(h).padStart(2,'0') + ':00';
 
-  const cells = document.createElement('div');
-  cells.className = 'heatmap-cells';
-  HOURS.forEach(h => {
-    const cell = document.createElement('div');
-    cell.className = 'heatmap-cell';
-    const cs = (grid[h] || {})[acct] || [];
-    if (cs.length === 0) {
-      cell.classList.add('cell-none');
-    } else {
-      const c = cs[0];
-      cell.classList.add(breachClass(c.late_mins));
-      cell.textContent = cs.length > 1 ? cs.length : '';
-      cell.addEventListener('mouseenter', e => {
-        const late = c.late_mins !== null ? `${fmtLate(c.late_mins)} late` : '<span style="color:#ef5350">NEVER RESPONDED</span>';
-        showTip(e, `<strong>${c.case_number}</strong><br>${acct}<br>Logged at: ${String(h).padStart(2,'0')}:xx UTC<br>Created: ${fmtDT(c.created_utc)}<br>SLA: ${c.sla_window_mins} min window<br>Breach: ${late}<br><em>${c.subject}</em>`);
-      });
-      cell.addEventListener('mousemove', moveTip);
-      cell.addEventListener('mouseleave', hideTip);
-    }
-    cells.appendChild(cell);
-  });
-  row.appendChild(cells);
-  gridEl.appendChild(row);
-});
+  // Tooltip on hover
+  if (count > 0) {
+    bar.addEventListener('mouseenter', e => {
+      const lines = cases.map(c =>
+        `<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.15)">
+           <strong>${c.case_number}</strong> &nbsp;<span style="opacity:0.75">${c.account.slice(0,30)}${c.account.length>30?'…':''}</span><br>
+           Created: ${fmtDT(c.created_utc)}<br>
+           Breach: ${c.late_mins !== null ? fmtLate(c.late_mins)+' late' : '<span style="color:#ff7373">NEVER RESPONDED</span>'}
+         </div>`
+      ).join('');
+      showTip(e,
+        `<div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#7ec8e3">
+           ${String(h).padStart(2,'0')}:00 UTC — ${count} SLA miss${count>1?'es':''}
+         </div>${lines}`
+      );
+    });
+    bar.addEventListener('mousemove', moveTip);
+    bar.addEventListener('mouseleave', hideTip);
+    bar.addEventListener('mouseenter', e => { bar.style.opacity='0.82'; });  // subtle highlight
+    // re-attach both events cleanly
+    bar.onmouseenter = e => {
+      bar.style.opacity = '0.82';
+      const lines = cases.map(c =>
+        `<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.12)">
+           <strong>${c.case_number}</strong>&nbsp;<span style="opacity:0.75">${c.account.slice(0,32)}${c.account.length>32?'…':''}</span><br>
+           Created: ${fmtDT(c.created_utc)}<br>
+           Breach: ${c.late_mins !== null ? fmtLate(c.late_mins)+' late' : '<span style="color:#ff7373">NEVER RESPONDED</span>'}
+         </div>`
+      ).join('');
+      showTip(e,
+        `<div style="font-size:12px;font-weight:700;margin-bottom:6px;color:#7ec8e3">
+           ${String(h).padStart(2,'0')}:00–${String(h+1).padStart(2,'0')}:00 UTC &nbsp;·&nbsp; ${count} SLA miss${count>1?'es':''}
+         </div>${lines}`
+      );
+    };
+    bar.onmousemove  = moveTip;
+    bar.onmouseleave = e => { bar.style.opacity = '1'; hideTip(); };
+  }
+
+  col_wrap.appendChild(bar);
+  col_wrap.appendChild(lbl);
+  outer.appendChild(col_wrap);
+}
+
+wrap.appendChild(outer);
 
 // ── Timeline bar chart ────────────────────────────────────────────────────────
 (function() {
