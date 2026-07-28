@@ -1,0 +1,3532 @@
+{
+  "productTopicSeverity": [
+    {
+      "product": "Industry",
+      "topic": "Life Sciences",
+      "severity": "Level 3 - High",
+      "total": 191
+    },
+    {
+      "product": "Industry",
+      "topic": "CPQ / Order Management / Digital Commerce",
+      "severity": "Level 2 - Urgent",
+      "total": 168
+    },
+    {
+      "product": "Industry",
+      "topic": "Omnistudio",
+      "severity": "Level 2 - Urgent",
+      "total": 145
+    },
+    {
+      "product": "Industry",
+      "topic": "Life Sciences",
+      "severity": "Level 2 - Urgent",
+      "total": 137
+    },
+    {
+      "product": "Industry",
+      "topic": "Omnistudio",
+      "severity": "Level 3 - High",
+      "total": 74
+    },
+    {
+      "product": "Industry",
+      "topic": "CPQ / Order Management / Digital Commerce",
+      "severity": "Level 3 - High",
+      "total": 61
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce CPQ",
+      "severity": "Level 2 - Urgent",
+      "total": 59
+    },
+    {
+      "product": "Industry",
+      "topic": "Omnistudio",
+      "severity": "Level 4 - Medium",
+      "total": 58
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Configurator",
+      "severity": "Level 2 - Urgent",
+      "total": 46
+    },
+    {
+      "product": "Industry",
+      "topic": "Life Sciences",
+      "severity": "Level 4 - Medium",
+      "total": 46
+    },
+    {
+      "product": "Industry",
+      "topic": "Retail and Consumer Goods",
+      "severity": "Level 2 - Urgent",
+      "total": 46
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Configurator",
+      "severity": "Level 3 - High",
+      "total": 29
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce CPQ",
+      "severity": "Level 3 - High",
+      "total": 29
+    },
+    {
+      "product": "Industry",
+      "topic": "Financial Services",
+      "severity": "Level 3 - High",
+      "total": 28
+    },
+    {
+      "product": "Industry",
+      "topic": "Financial Services",
+      "severity": "Level 2 - Urgent",
+      "total": 28
+    },
+    {
+      "product": "Industry",
+      "topic": "Retail and Consumer Goods",
+      "severity": "Level 3 - High",
+      "total": 27
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Transaction Management",
+      "severity": "Level 2 - Urgent",
+      "total": 26
+    },
+    {
+      "product": "Industry",
+      "topic": "Document Generation",
+      "severity": "Level 3 - High",
+      "total": 24
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce CPQ",
+      "severity": "Level 4 - Medium",
+      "total": 24
+    },
+    {
+      "product": "Industry",
+      "topic": "Financial Services",
+      "severity": "Level 4 - Medium",
+      "total": 24
+    },
+    {
+      "product": "Industry",
+      "topic": "CPQ / Order Management / Digital Commerce",
+      "severity": "Level 1 - Critical",
+      "total": 22
+    },
+    {
+      "product": "Industry",
+      "topic": "Loyalty Management",
+      "severity": "Level 3 - High",
+      "total": 22
+    },
+    {
+      "product": "Industry",
+      "topic": "Communication Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 21
+    },
+    {
+      "product": "Industry",
+      "topic": "Health Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 21
+    },
+    {
+      "product": "Industry",
+      "topic": "Loyalty Management",
+      "severity": "Level 2 - Urgent",
+      "total": 20
+    },
+    {
+      "product": "Revenue",
+      "topic": "CPQ Developer Support",
+      "severity": "Level 2 - Urgent",
+      "total": 18
+    },
+    {
+      "product": "Industry",
+      "topic": "Security & Activations",
+      "severity": "Level 2 - Urgent",
+      "total": 18
+    },
+    {
+      "product": "Industry",
+      "topic": "Retail and Consumer Goods",
+      "severity": "Level 4 - Medium",
+      "total": 18
+    },
+    {
+      "product": "Industry",
+      "topic": "Developer Support",
+      "severity": "Level 2 - Urgent",
+      "total": 17
+    },
+    {
+      "product": "Industry",
+      "topic": "Security & Activations",
+      "severity": "Level 4 - Medium",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "topic": "Public Sector Solutions",
+      "severity": "Level 2 - Urgent",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "topic": "CPQ / Order Management / Digital Commerce",
+      "severity": "Level 4 - Medium",
+      "total": 15
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Configurator",
+      "severity": null,
+      "total": 15
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Configurator",
+      "severity": "Level 4 - Medium",
+      "total": 15
+    },
+    {
+      "product": "Industry",
+      "topic": "Omnistudio",
+      "severity": "Level 1 - Critical",
+      "total": 15
+    },
+    {
+      "product": "Industry",
+      "topic": "Security & Activations",
+      "severity": "Level 3 - High",
+      "total": 14
+    },
+    {
+      "product": "Industry",
+      "topic": "Document Generation",
+      "severity": "Level 2 - Urgent",
+      "total": 14
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Price Management",
+      "severity": "Level 2 - Urgent",
+      "total": 14
+    },
+    {
+      "product": "Revenue",
+      "topic": "CPQ Developer Support",
+      "severity": "Level 3 - High",
+      "total": 14
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Transaction Management",
+      "severity": "Level 3 - High",
+      "total": 14
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Billing & Invoicing",
+      "severity": "Level 2 - Urgent",
+      "total": 12
+    },
+    {
+      "product": "Industry",
+      "topic": "Developer Support",
+      "severity": "Level 3 - High",
+      "total": 12
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Price Management",
+      "severity": "Level 3 - High",
+      "total": 12
+    },
+    {
+      "product": "Industry",
+      "topic": "Financial Services",
+      "severity": null,
+      "total": 11
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Developer Support - Product to Order",
+      "severity": "Level 2 - Urgent",
+      "total": 10
+    },
+    {
+      "product": "Industry",
+      "topic": "Public Sector Solutions",
+      "severity": "Level 4 - Medium",
+      "total": 10
+    },
+    {
+      "product": "Industry",
+      "topic": "Health & Insurance",
+      "severity": "Level 2 - Urgent",
+      "total": 10
+    },
+    {
+      "product": "Industry",
+      "topic": "Nonprofit Cloud",
+      "severity": null,
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "topic": "Loyalty Management",
+      "severity": "Level 4 - Medium",
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "topic": "Public Sector Solutions",
+      "severity": null,
+      "total": 9
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce CPQ",
+      "severity": "Level 1 - Critical",
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "topic": "Omnistudio",
+      "severity": null,
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "topic": "Public Sector Solutions",
+      "severity": "Level 3 - High",
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "topic": "Health Cloud",
+      "severity": "Level 4 - Medium",
+      "total": 8
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Contract Lifecycle Management with DocGen",
+      "severity": "Level 3 - High",
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "topic": "Developer Support",
+      "severity": "Level 4 - Medium",
+      "total": 8
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Price Management",
+      "severity": "Level 4 - Medium",
+      "total": 7
+    },
+    {
+      "product": "Revenue",
+      "topic": "CPQ Developer Support",
+      "severity": "Level 4 - Medium",
+      "total": 7
+    },
+    {
+      "product": "Revenue",
+      "topic": "CPQ Developer Support",
+      "severity": "Level 1 - Critical",
+      "total": 7
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce CPQ",
+      "severity": null,
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "topic": "Financial Services",
+      "severity": "Level 1 - Critical",
+      "total": 7
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Contract Lifecycle Management with DocGen",
+      "severity": "Level 2 - Urgent",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "topic": "CRM Analytics",
+      "severity": null,
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Communication Cloud",
+      "severity": null,
+      "total": 6
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Configurator",
+      "severity": "Level 1 - Critical",
+      "total": 6
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Transaction Management",
+      "severity": "Level 1 - Critical",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Developer Support",
+      "severity": null,
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Health & Insurance",
+      "severity": null,
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Health Cloud",
+      "severity": "Level 3 - High",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Manufacturing Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Retail and Consumer Goods",
+      "severity": "Level 1 - Critical",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Net Zero Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "topic": "Health & Insurance",
+      "severity": "Level 3 - High",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "topic": "Life Sciences",
+      "severity": "Level 1 - Critical",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "topic": "Loyalty Management",
+      "severity": "Level 1 - Critical",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "topic": "Public Sector Solutions",
+      "severity": "Level 1 - Critical",
+      "total": 5
+    },
+    {
+      "product": "Revenue",
+      "topic": "Document Generation",
+      "severity": "Level 2 - Urgent",
+      "total": 5
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Contract Lifecycle Management with DocGen",
+      "severity": "Level 4 - Medium",
+      "total": 5
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Product Catalog Management",
+      "severity": "Level 2 - Urgent",
+      "total": 5
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce Billing",
+      "severity": "Level 2 - Urgent",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "topic": "Media Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "topic": "Automotive Cloud",
+      "severity": null,
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "topic": "Loyalty Management",
+      "severity": null,
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "topic": "Communication Cloud",
+      "severity": "Level 3 - High",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "topic": "Health Cloud",
+      "severity": null,
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "topic": "Retail and Consumer Goods",
+      "severity": null,
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "topic": "Education Cloud",
+      "severity": "Level 4 - Medium",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Product Catalog Management",
+      "severity": null,
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Billing & Invoicing",
+      "severity": "Level 1 - Critical",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Transaction Management",
+      "severity": "Level 4 - Medium",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Dynamic Revenue Orchestration",
+      "severity": "Level 3 - High",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "topic": "Network Infrastructure and Core Maintenance",
+      "severity": "Level 2 - Urgent",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Billing & Invoicing",
+      "severity": "Level 3 - High",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "topic": "Energy & Utilities Cloud",
+      "severity": "Level 3 - High",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Product Catalog Management",
+      "severity": "Level 4 - Medium",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "How-to, Setup, Configuration, Reports & Dashboards",
+      "severity": "Level 4 - Medium",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "CRM Analytics",
+      "severity": "Level 2 - Urgent",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Business Rules Engine (BRE)",
+      "severity": "Level 2 - Urgent",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Product Catalog Management",
+      "severity": "Level 3 - High",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Dynamic Revenue Orchestration",
+      "severity": "Level 2 - Urgent",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce Billing",
+      "severity": "Level 3 - High",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "CRM Analytics",
+      "severity": "Level 3 - High",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Net Zero Cloud",
+      "severity": "Level 4 - Medium",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Health & Insurance",
+      "severity": "Level 4 - Medium",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Manufacturing Cloud",
+      "severity": "Level 4 - Medium",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Advanced Approvals",
+      "severity": "Level 3 - High",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Life Sciences",
+      "severity": null,
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Health Cloud",
+      "severity": "Level 1 - Critical",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Developer Support - Product to Order",
+      "severity": "Level 3 - High",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Education Cloud",
+      "severity": null,
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "topic": "Document Generation",
+      "severity": "Level 1 - Critical",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce Billing",
+      "severity": "Level 4 - Medium",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "topic": "Rebate Management",
+      "severity": "Level 2 - Urgent",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Communication Cloud",
+      "severity": "Level 4 - Medium",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Disability and Product Accessibility",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Advanced Approvals",
+      "severity": "Level 4 - Medium",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Health & Insurance",
+      "severity": "Level 1 - Critical",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Price Management",
+      "severity": "Level 1 - Critical",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Usage & Ratings",
+      "severity": "Level 2 - Urgent",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Developer Support",
+      "severity": "Level 1 - Critical",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce Contracts",
+      "severity": null,
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Media Cloud",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "topic": "Document Generation",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Business Rules Engine",
+      "severity": "Level 2 - Urgent",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Usage & Ratings",
+      "severity": "Level 4 - Medium",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Usage & Ratings",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "CRM Analytics",
+      "severity": "Level 4 - Medium",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Rebate Management",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Energy & Utilities Cloud",
+      "severity": "Level 1 - Critical",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Dynamic Revenue Orchestration",
+      "severity": "Level 1 - Critical",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Dynamic Revenue Orchestration",
+      "severity": "Level 4 - Medium",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Education Cloud",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Network Infrastructure and Core Maintenance",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Manufacturing Cloud",
+      "severity": null,
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Security & Activations",
+      "severity": "Level 1 - Critical",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Automotive Cloud",
+      "severity": "Level 3 - High",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "topic": "Customer Success Score / Success Review",
+      "severity": null,
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Developer Support - Product to Order",
+      "severity": "Level 4 - Medium",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "topic": "Document Generation",
+      "severity": "Level 4 - Medium",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Net Zero Cloud",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Price Management",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Nonprofit Cloud",
+      "severity": "Level 3 - High",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Security & Activations",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Education Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Developer Support - Product to Order",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Media Cloud",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Nonprofit Cloud",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "CPQ / Order Management / Digital Commerce",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Network Infrastructure and Core Maintenance",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Email Delivery & Desktop Integrations",
+      "severity": "Level 4 - Medium",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Email Delivery & Desktop Integrations",
+      "severity": "Level 2 - Urgent",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Automotive Cloud",
+      "severity": "Level 4 - Medium",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Non Security - DORA",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Product Catalog Management",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Scalability Tools",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Document Generation",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "How-to, Setup, Configuration, Reports & Dashboards",
+      "severity": "Level 2 - Urgent",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Nonprofit Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Nonprofit Cloud",
+      "severity": "Level 4 - Medium",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Contract Lifecycle Management with DocGen",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Manufacturing Cloud",
+      "severity": "Level 3 - High",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Customer Success Score / Success Review",
+      "severity": "Level 3 - High",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce Subscription Management",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "topic": "Salesforce Subscription Management",
+      "severity": "Level 2 - Urgent",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Net Zero Cloud",
+      "severity": null,
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Energy & Utilities Cloud",
+      "severity": "Level 2 - Urgent",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Disability and Product Accessibility",
+      "severity": "Level 2 - Urgent",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Disability and Product Accessibility",
+      "severity": "Level 4 - Medium",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Document Generation",
+      "severity": "Level 4 - Medium",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "topic": "Email Delivery & Desktop Integrations",
+      "severity": "Level 3 - High",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "topic": "Business Rules Engine",
+      "severity": "Level 1 - Critical",
+      "total": 1
+    }
+  ],
+  "dailyByProduct": [
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-27",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-27",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-28",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-28",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-06-28",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-28",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 23
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 19
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 8
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-06-29",
+      "total": 7
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-29",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 5
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-06-29",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-29",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-29",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-29",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-29",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 15
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 10
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-06-30",
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 5
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-06-30",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-06-30",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-06-30",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-06-30",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 6
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-01",
+      "total": 5
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-01",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-01",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-01",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-01",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-01",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-01",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-01",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 17
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 15
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 10
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-02",
+      "total": 8
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-02",
+      "total": 7
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-02",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-02",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-02",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-02",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 10
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 6
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-03",
+      "total": 5
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-03",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-03",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-03",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-03",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-03",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-03",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-03",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-03",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-04",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-04",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-05",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-05",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-05",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-05",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-05",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 14
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 8
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-06",
+      "total": 8
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-06",
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-06",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-06",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 24
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 14
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 12
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-07",
+      "total": 10
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-07",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 6
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-07",
+      "total": 5
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-07",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-07",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-07",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 17
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 9
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-08",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-08",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-08",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-08",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 11
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 11
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-09",
+      "total": 9
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-09",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-09",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-09",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-09",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 14
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 7
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-10",
+      "total": 6
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-10",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-10",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-10",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-10",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-10",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-11",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-11",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-11",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-12",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-12",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-12",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-12",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-12",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 17
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 14
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 12
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-13",
+      "total": 10
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 6
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-13",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 4
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-13",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-13",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-13",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-13",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 22
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 18
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 15
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-14",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-14",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 18
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 15
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 15
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 6
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-15",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-15",
+      "total": 2
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-15",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-15",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 18
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 18
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 10
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-16",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 5
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-16",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-16",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-16",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-16",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-16",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-16",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-16",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-16",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 19
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 14
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 13
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-17",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-17",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-17",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-18",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-18",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-18",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-18",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-19",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-19",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-19",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 16
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 12
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 8
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-20",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-20",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 30
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 15
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-21",
+      "total": 11
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 9
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-21",
+      "total": 4
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-21",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 4
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-21",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-21",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-21",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 22
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 17
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-22",
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 8
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 6
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 5
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-22",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 3
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-22",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-22",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-22",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-22",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-22",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-22",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-22",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-22",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 31
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 17
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 11
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-23",
+      "total": 7
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 6
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-23",
+      "total": 5
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-23",
+      "total": 4
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-23",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 4
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 3
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 3
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-23",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-23",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 2
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-23",
+      "total": 2
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 1
+    },
+    {
+      "product": "Revenue Cloud (Core)",
+      "day": "2026-07-23",
+      "total": 1
+    },
+    {
+      "product": "Revenue",
+      "day": "2026-07-23",
+      "total": 1
+    },
+    {
+      "product": "Industry",
+      "day": "2026-07-23",
+      "total": 1
+    }
+  ]
+}
