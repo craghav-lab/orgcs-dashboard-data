@@ -6,27 +6,14 @@
   <title>OrgCS Architect Engagement Dashboard</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 13px;
-      background: #f4f6fb;
-      color: #1a1a2e;
-      min-height: 100vh;
+      font-size: 13px; background: #f4f6fb; color: #1a1a2e; min-height: 100vh;
     }
-
-    /* ── Header ── */
     .header {
-      background: #0070d2;
-      color: white;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      background: #0070d2; color: white; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.18);
     }
     .header-left { display: flex; align-items: center; gap: 10px; }
     .header-logo { font-size: 22px; color: #7ec8e3; }
@@ -34,158 +21,99 @@
     .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
     .header-right { display: flex; align-items: center; gap: 12px; }
     .timestamp { font-size: 11px; opacity: 0.85; }
+    .header-nav-btn {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
+      color: white; border-radius: 6px; padding: 5px 14px; cursor: pointer;
+      font-size: 12px; font-weight: 500; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s;
+    }
+    .header-nav-btn:hover { background: rgba(255,255,255,0.28); }
+    .reviews-badge {
+      background: white; color: #0070d2; font-size: 10px; font-weight: 700;
+      padding: 1px 6px; border-radius: 8px; min-width: 18px; text-align: center;
+    }
     .refresh-btn {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.4);
-      color: white;
-      border-radius: 6px;
-      padding: 5px 12px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 500;
-      transition: background 0.15s;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
+      color: white; border-radius: 6px; padding: 5px 12px; cursor: pointer;
+      font-size: 12px; font-weight: 500; transition: background 0.15s;
     }
     .refresh-btn:hover { background: rgba(255,255,255,0.28); }
     .refresh-btn.spinning { animation: spin 1s linear infinite; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-    /* ── Stats bar ── */
     .stats-bar {
-      display: flex;
-      gap: 12px;
-      padding: 12px 24px;
-      background: white;
-      border-bottom: 1px solid #e0e0e8;
+      display: flex; gap: 12px; padding: 12px 24px;
+      background: white; border-bottom: 1px solid #e0e0e8;
     }
     .stat-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 8px 20px;
-      border-radius: 8px;
-      border: 1px solid #e8e8f0;
-      background: #fafafa;
-      min-width: 90px;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 8px 20px; border-radius: 8px; border: 1px solid #e8e8f0;
+      background: #fafafa; min-width: 90px;
     }
     .stat-card .stat-num { font-size: 22px; font-weight: 700; }
     .stat-card .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-top: 2px; }
-    .stat-card.high .stat-num  { color: #d32f2f; }
+    .stat-card.high .stat-num   { color: #d32f2f; }
     .stat-card.medium .stat-num { color: #f57c00; }
-    .stat-card.low .stat-num   { color: #388e3c; }
+    .stat-card.low .stat-num    { color: #388e3c; }
     .stat-card.total .stat-num  { color: #0070d2; }
 
-    /* ── Filters ── */
     .filter-area {
-      background: white;
-      border-bottom: 1px solid #e0e0e8;
-      padding: 10px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+      background: white; border-bottom: 1px solid #e0e0e8;
+      padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
     }
     .filter-group { display: flex; align-items: center; gap: 6px; }
     .filter-label { font-size: 11px; font-weight: 600; color: #666; white-space: nowrap; }
     .filter-btn {
-      border: 1px solid #d0d0d8;
-      background: #f0f0f5;
-      color: #444;
-      border-radius: 14px;
-      padding: 4px 13px;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 500;
-      transition: all 0.15s;
+      border: 1px solid #d0d0d8; background: #f0f0f5; color: #444;
+      border-radius: 14px; padding: 4px 13px; cursor: pointer;
+      font-size: 12px; font-weight: 500; transition: all 0.15s;
     }
-    .filter-btn.active, .filter-btn:hover {
-      background: #0070d2; color: white; border-color: #0070d2;
-    }
+    .filter-btn.active, .filter-btn:hover { background: #0070d2; color: white; border-color: #0070d2; }
     .filter-select {
-      border: 1px solid #d0d0d8;
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 12px;
-      color: #333;
-      background: #f8f8fb;
-      outline: none;
-      cursor: pointer;
-      max-width: 220px;
+      border: 1px solid #d0d0d8; border-radius: 6px; padding: 4px 10px;
+      font-size: 12px; color: #333; background: #f8f8fb; outline: none; cursor: pointer; max-width: 220px;
     }
     .filter-select:focus, .filter-select:hover { border-color: #0070d2; }
     .search-input {
-      border: 1px solid #d0d0d8;
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-size: 12px;
-      outline: none;
-      width: 220px;
-      margin-left: auto;
+      border: 1px solid #d0d0d8; border-radius: 6px; padding: 5px 12px;
+      font-size: 12px; outline: none; width: 220px; margin-left: auto;
     }
     .search-input:focus { border-color: #0070d2; }
     .divider { width: 1px; height: 20px; background: #e0e0e8; }
 
-    /* ── Error banner ── */
     .error-banner {
       background: #fff3cd; border: 1px solid #ffc107;
       color: #856404; padding: 10px 24px; font-size: 12px;
     }
     .hidden { display: none !important; }
 
-    /* ── Table ── */
-    .table-wrapper {
-      padding: 16px 24px;
-    }
-    .result-count {
-      font-size: 12px; color: #888; margin-bottom: 8px;
-    }
+    .table-wrapper { padding: 16px 24px; }
+    .result-count { font-size: 12px; color: #888; margin-bottom: 8px; }
     table {
-      width: 100%; border-collapse: collapse;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      width: 100%; border-collapse: collapse; background: white;
+      border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     }
     thead th {
-      background: #f0f2f8;
-      text-align: left;
-      padding: 10px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      color: #555;
-      border-bottom: 2px solid #dde0ea;
-      white-space: nowrap;
-      cursor: pointer;
-      user-select: none;
+      background: #f0f2f8; text-align: left; padding: 10px 12px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.4px; color: #555; border-bottom: 2px solid #dde0ea;
+      white-space: nowrap; cursor: pointer; user-select: none;
     }
     thead th:hover { background: #e4e8f4; }
     thead th .sort-icon { margin-left: 4px; opacity: 0.4; }
     thead th.sorted .sort-icon { opacity: 1; }
-    tbody tr {
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-      transition: background 0.1s;
-    }
+    tbody tr { border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.1s; }
     tbody tr:hover { background: #f0f6ff; }
     tbody td { padding: 9px 12px; vertical-align: middle; }
     .loading { text-align: center; color: #888; padding: 60px !important; font-size: 14px; }
 
-    /* ── Chips ── */
-    .badge-new {
-      background: #ff4d4f; color: white;
-      font-size: 9px; font-weight: 700;
-      padding: 2px 6px; border-radius: 8px;
-      letter-spacing: 0.5px; text-transform: uppercase;
-    }
     .priority {
-      display: inline-block; padding: 2px 10px;
-      border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+      display: inline-block; padding: 2px 10px; border-radius: 10px;
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
     }
     .priority-HIGH   { background: #fff0f0; color: #d32f2f; border: 1px solid #ffb3b3; }
     .priority-MEDIUM { background: #fff8e1; color: #f57c00; border: 1px solid #ffe082; }
     .priority-LOW    { background: #f0faf0; color: #388e3c; border: 1px solid #a5d6a7; }
-
     .rec { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 500; }
     .rec-new      { background: #e3f2fd; color: #1565c0; }
     .rec-followup { background: #fce4ec; color: #c62828; }
@@ -194,45 +122,141 @@
 
     .account-name { font-weight: 600; color: #0070d2; }
     .feature-text { color: #555; font-size: 12px; max-width: 240px; }
-    .case-count   { font-weight: 700; text-align: center; font-size: 14px; }
+    .case-count-col { font-weight: 700; text-align: center; font-size: 14px; }
 
-    /* ── Modal / Detail panel ── */
+    .view-btn {
+      background: #0070d2; color: white; border: none; border-radius: 4px;
+      padding: 4px 12px; font-size: 11px; font-weight: 600;
+      cursor: pointer; white-space: nowrap; transition: background 0.12s;
+    }
+    .view-btn:hover { background: #005bb5; }
+    .reviewed-icon { font-size: 14px; }
+
+    /* Modal */
     .modal {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 100;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center; z-index: 100;
     }
     .modal-content {
-      background: white; border-radius: 10px;
-      padding: 28px 32px;
-      max-width: 760px; width: 92%;
-      max-height: 85vh; overflow-y: auto;
-      position: relative;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+      background: white; border-radius: 10px; padding: 28px 32px 20px;
+      max-width: 820px; width: 94%; max-height: 88vh; overflow-y: auto;
+      position: relative; box-shadow: 0 12px 40px rgba(0,0,0,0.22);
     }
     .modal-close {
-      position: absolute; top: 14px; right: 18px;
-      background: none; border: none; font-size: 22px;
-      cursor: pointer; color: #aaa; line-height: 1;
+      position: absolute; top: 14px; right: 18px; background: none;
+      border: none; font-size: 22px; cursor: pointer; color: #aaa; line-height: 1;
     }
     .modal-close:hover { color: #222; }
-    .modal-header { margin-bottom: 20px; padding-right: 28px; }
+    .modal-header { margin-bottom: 18px; padding-right: 28px; }
     .modal-header h2 { font-size: 18px; color: #0070d2; }
-    .modal-chips { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-    .modal-section { margin-bottom: 18px; }
+    .modal-chips { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+    .modal-section { margin-bottom: 16px; }
     .modal-section h3 {
       font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
       color: #888; margin-bottom: 8px; font-weight: 700;
     }
-    .modal-section p, .modal-section li {
-      font-size: 13px; line-height: 1.65; color: #333;
-    }
-    .modal-section ul { padding-left: 18px; }
-    .modal-section li { margin-bottom: 4px; }
+    .modal-section p { font-size: 13px; line-height: 1.65; color: #333; }
     .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
-    .modal-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; font-weight: 700; display: block; margin-bottom: 3px; }
+    .modal-field label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #888; font-weight: 700; display: block; margin-bottom: 3px;
+    }
     .modal-field span { font-size: 13px; color: #222; }
+
+    .modal-section-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+    .modal-section-title-row h3 { margin-bottom: 0; }
+    .case-count-badge {
+      background: #e8ecf4; color: #555; font-size: 11px;
+      font-weight: 600; padding: 1px 8px; border-radius: 10px;
+    }
+    .instance-filter-bar { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+    .inst-chip {
+      border: 1px solid #d0d0d8; background: #f0f0f5; color: #555;
+      border-radius: 10px; padding: 2px 11px; cursor: pointer;
+      font-size: 11px; font-weight: 500; transition: all 0.12s;
+    }
+    .inst-chip.active, .inst-chip:hover { background: #0070d2; color: white; border-color: #0070d2; }
+    .case-table-wrapper {
+      max-height: 200px; overflow-y: auto;
+      border: 1px solid #e4e6f0; border-radius: 5px;
+    }
+    .case-breakdown-table { width: 100%; border-collapse: collapse; font-size: 12px; background: white; }
+    .case-breakdown-table thead th {
+      background: #f5f6fa; font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.3px; color: #777; padding: 5px 8px;
+      border-bottom: 1px solid #e4e6f0; position: sticky; top: 0; z-index: 1;
+    }
+    .case-breakdown-table tbody tr { border-bottom: 1px solid #f0f0f5; }
+    .case-breakdown-table tbody tr:hover { background: #f7f9ff; }
+    .case-breakdown-table tbody td { padding: 5px 8px; vertical-align: middle; }
+    .ct-num { font-weight: 600; color: #0070d2; white-space: nowrap; font-size: 11px; }
+    .ct-subject { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #333; }
+    .ct-ptf { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #666; font-size: 11px; }
+    .case-table-empty { text-align: center; color: #aaa; padding: 16px !important; font-style: italic; }
+
+    .status-chip { display: inline-block; padding: 1px 7px; border-radius: 8px; font-size: 10px; font-weight: 600; text-transform: capitalize; white-space: nowrap; }
+    .status-open   { background: #e3f2fd; color: #1565c0; }
+    .status-closed { background: #f5f5f5; color: #757575; }
+    .inst-inline { display: inline-block; padding: 1px 7px; border-radius: 8px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+    .inst-prod    { background: #fff3e0; color: #e65100; }
+    .inst-sandbox { background: #e8f5e9; color: #2e7d32; }
+    .inst-staging { background: #f3e5f5; color: #6a1b9a; }
+    .inst-unknown { background: #f5f5f5; color: #9e9e9e; }
+
+    .modal-actions {
+      display: flex; gap: 10px; padding-top: 16px;
+      border-top: 1px solid #eee; margin-top: 6px; align-items: center; flex-wrap: wrap;
+    }
+    .action-btn {
+      padding: 8px 20px; border-radius: 5px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none; transition: filter 0.12s, transform 0.08s;
+    }
+    .action-btn:hover  { filter: brightness(0.93); }
+    .action-btn:active { transform: scale(0.97); }
+    .btn-valid     { background: #2e7d32; color: white; }
+    .btn-invalid   { background: #c62828; color: white; }
+    .btn-secondary { background: #e0e0e6; color: #444; }
+    .already-reviewed-note { font-size: 12px; margin-left: auto; }
+    .already-valid   { color: #2e7d32; font-weight: 600; }
+    .already-invalid { color: #c62828; font-weight: 600; }
+
+    /* Dialogs */
+    .dialog-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      display: flex; align-items: center; justify-content: center; z-index: 200;
+    }
+    .dialog-box {
+      background: white; border-radius: 8px; padding: 22px 26px 18px;
+      width: 580px; max-height: 560px; overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.28);
+    }
+    .dialog-title { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .dialog-meta { font-size: 12px; color: #666; margin-bottom: 14px; line-height: 1.4; }
+    .dialog-label { display: block; font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 5px; }
+    .required { color: #c62828; }
+    .optional  { color: #999; font-weight: 400; text-transform: none; letter-spacing: 0; }
+    .dialog-select {
+      width: 100%; border: 1px solid #d0d0d8; border-radius: 5px;
+      padding: 6px 10px; font-size: 12px; margin-bottom: 4px; outline: none; color: #333;
+    }
+    .dialog-select:focus { border-color: #0070d2; }
+    .dialog-textarea {
+      width: 100%; border: 1px solid #d0d0d8; border-radius: 5px;
+      padding: 8px 10px; font-size: 12px; font-family: inherit;
+      resize: vertical; outline: none; color: #222; line-height: 1.5;
+    }
+    .dialog-textarea:focus { border-color: #0070d2; }
+    .dialog-actions { display: flex; gap: 8px; margin-top: 14px; }
+    .copy-confirm { font-size: 12px; color: #2e7d32; font-weight: 600; margin-top: 6px; }
+
+    .toast {
+      position: fixed; bottom: 20px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #1a1a2e; color: white; font-size: 12px; padding: 8px 20px;
+      border-radius: 20px; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s; z-index: 300; white-space: nowrap;
+    }
+    .toast.toast-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -247,6 +271,9 @@
     </div>
     <div class="header-right">
       <span id="last-refreshed" class="timestamp">Loading…</span>
+      <a href="reviews.html" class="header-nav-btn">
+        &#10003; Reviews <span class="reviews-badge" id="reviews-count">0</span>
+      </a>
       <button id="refresh-btn" class="refresh-btn" title="Refresh data">&#8635; Refresh</button>
     </div>
   </div>
@@ -302,7 +329,7 @@
     <table id="accounts-table">
       <thead>
         <tr>
-          <th></th>
+          <th style="width:28px"></th>
           <th data-col="account">Account <span class="sort-icon">↕</span></th>
           <th data-col="case_count" class="sorted">Cases (3M) <span class="sort-icon">↓</span></th>
           <th data-col="product_topic_feature">Product → Topic → Feature <span class="sort-icon">↕</span></th>
@@ -310,15 +337,16 @@
           <th data-col="engagement_status">Engagement <span class="sort-icon">↕</span></th>
           <th data-col="recommendation">Recommendation <span class="sort-icon">↕</span></th>
           <th data-col="priority">Priority <span class="sort-icon">↕</span></th>
+          <th style="width:80px"></th>
         </tr>
       </thead>
       <tbody id="table-body">
-        <tr><td colspan="8" class="loading">Loading data…</td></tr>
+        <tr><td colspan="9" class="loading">Loading data…</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Detail modal -->
+  <!-- Detail Modal -->
   <div id="detail-modal" class="modal hidden">
     <div class="modal-content">
       <button id="modal-close" class="modal-close">&times;</button>
@@ -345,24 +373,94 @@
         <p id="modal-reasoning"></p>
       </div>
       <div class="modal-section">
-        <h3>Cases</h3>
-        <ul id="modal-cases"></ul>
+        <div class="modal-section-title-row">
+          <h3>Case Breakdown</h3>
+          <span id="modal-case-badge" class="case-count-badge"></span>
+        </div>
+        <div class="instance-filter-bar" id="instance-filter-bar">
+          <button class="inst-chip active" data-instance="ALL">All</button>
+          <button class="inst-chip" data-instance="Production">Production</button>
+          <button class="inst-chip" data-instance="Sandbox">Sandbox</button>
+          <button class="inst-chip" data-instance="Staging">Staging</button>
+        </div>
+        <div class="case-table-wrapper">
+          <table class="case-breakdown-table">
+            <thead>
+              <tr>
+                <th>Case #</th><th>Subject</th><th>Status</th><th>Instance</th><th>Product → Topic → Feature</th>
+              </tr>
+            </thead>
+            <tbody id="modal-cases-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-valid" class="action-btn btn-valid">&#10003; Valid — Draft CSM Message</button>
+        <button id="btn-invalid" class="action-btn btn-invalid">&#10007; Invalid — Submit Feedback</button>
+        <span id="already-reviewed-note" class="already-reviewed-note hidden"></span>
       </div>
     </div>
   </div>
 
+  <!-- Draft CSM Message Dialog -->
+  <div id="slack-dialog" class="dialog-overlay hidden">
+    <div class="dialog-box">
+      <h3 class="dialog-title">Draft Message to CSM / Lead SM</h3>
+      <p id="slack-csm-meta" class="dialog-meta"></p>
+      <textarea id="slack-draft-text" class="dialog-textarea" rows="10" spellcheck="false"></textarea>
+      <p id="slack-copied-msg" class="copy-confirm hidden">&#10003; Copied to clipboard!</p>
+      <div class="dialog-actions">
+        <button id="btn-copy-slack" class="action-btn btn-valid">Copy to Clipboard</button>
+        <button id="btn-close-slack" class="action-btn btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Dialog -->
+  <div id="feedback-dialog" class="dialog-overlay hidden">
+    <div class="dialog-box">
+      <h3 class="dialog-title">Mark as Invalid</h3>
+      <p id="feedback-account-meta" class="dialog-meta"></p>
+      <label class="dialog-label">Reason <span class="required">*</span></label>
+      <select id="feedback-reason" class="dialog-select">
+        <option value="Incorrect account">Incorrect account</option>
+        <option value="Already engaged">Already engaged</option>
+        <option value="Low impact">Low impact</option>
+        <option value="Other">Other</option>
+      </select>
+      <label class="dialog-label" style="margin-top:12px">Additional notes <span class="optional">(optional)</span></label>
+      <textarea id="feedback-notes" class="dialog-textarea" rows="3" placeholder="Any additional context…"></textarea>
+      <div class="dialog-actions">
+        <button id="btn-submit-feedback" class="action-btn btn-invalid">Submit Feedback</button>
+        <button id="btn-cancel-feedback" class="action-btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
   <script>
     const DATA_URL = "recommendations.json";
+    const STORAGE_KEY = "orgcs_reviews";
 
     let allAccounts = [];
-    let activeFilter = "ALL";
-    let activeProduct = "ALL";
-    let activeTopic   = "ALL";
-    let activeSuccessPlan = "ALL";
-    let sortCol = "priority_order";
-    let sortDir = 1;
-
+    let reviews = {};
+    let activeFilter = "ALL", activeProduct = "ALL", activeTopic = "ALL", activeSuccessPlan = "ALL";
+    let sortCol = "priority_order", sortDir = 1;
+    let currentModalAccount = null, modalInstanceFilter = "ALL";
     const PRIORITY_ORDER = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+
+    function loadReviews() {
+      try { reviews = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
+      catch (_) { reviews = {}; }
+    }
+    function saveReviews() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+      updateReviewsBadge();
+    }
+    function updateReviewsBadge() {
+      document.getElementById("reviews-count").textContent = Object.keys(reviews).length;
+    }
 
     function recClass(rec) {
       if (!rec) return "rec-none";
@@ -372,19 +470,47 @@
       if (r.includes("flag") || r.includes("active")) return "rec-active";
       return "rec-none";
     }
-
     function extractProduct(ptf) {
       if (!ptf) return "";
-      const first = ptf.split("→")[0].trim();
-      if (first.toLowerCase().startsWith("industry")) return "Industry";
-      if (first.toLowerCase().startsWith("revenue"))  return "Revenue";
-      return first;
+      const f = ptf.split("→")[0].trim().toLowerCase();
+      if (f.startsWith("industry")) return "Industry";
+      if (f.startsWith("revenue"))  return "Revenue";
+      return ptf.split("→")[0].trim();
     }
-
     function extractTopic(ptf) {
       if (!ptf) return "";
-      const parts = ptf.split("→");
-      return parts.length >= 2 ? parts[1].trim() : "";
+      const p = ptf.split("→");
+      return p.length >= 2 ? p[1].trim() : "";
+    }
+    function truncate(str, n) {
+      if (!str) return "—";
+      return str.length > n ? str.slice(0, n) + "…" : str;
+    }
+    function formatTimestamp(iso) {
+      if (!iso) return "Never";
+      const d = new Date(iso);
+      return d.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+    function instanceChipClass(inst) {
+      if (!inst || inst === "—") return "inst-unknown";
+      const v = inst.toLowerCase();
+      if (v === "production") return "inst-prod";
+      if (v === "sandbox")    return "inst-sandbox";
+      if (v === "staging")    return "inst-staging";
+      return "inst-unknown";
+    }
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("toast-visible");
+      setTimeout(() => t.classList.remove("toast-visible"), 2500);
+    }
+
+    function updateStats() {
+      document.getElementById("stat-total").textContent  = allAccounts.length;
+      document.getElementById("stat-high").textContent   = allAccounts.filter(a => a.priority === "HIGH").length;
+      document.getElementById("stat-medium").textContent = allAccounts.filter(a => a.priority === "MEDIUM").length;
+      document.getElementById("stat-low").textContent    = allAccounts.filter(a => a.priority === "LOW").length;
     }
 
     function populateTopics() {
@@ -393,8 +519,7 @@
       const topics = [...new Set(
         allAccounts
           .filter(a => activeProduct === "ALL" || extractProduct(a.product_topic_feature) === activeProduct)
-          .map(a => extractTopic(a.product_topic_feature))
-          .filter(Boolean)
+          .map(a => extractTopic(a.product_topic_feature)).filter(Boolean)
       )].sort();
       sel.innerHTML = `<option value="ALL">All Topics</option>` +
         topics.map(t => `<option value="${t}">${t}</option>`).join("");
@@ -402,34 +527,19 @@
       else { sel.value = "ALL"; activeTopic = "ALL"; }
     }
 
-    function updateStats(accounts) {
-      document.getElementById("stat-total").textContent  = allAccounts.length;
-      document.getElementById("stat-high").textContent   = allAccounts.filter(a => a.priority === "HIGH").length;
-      document.getElementById("stat-medium").textContent = allAccounts.filter(a => a.priority === "MEDIUM").length;
-      document.getElementById("stat-low").textContent    = allAccounts.filter(a => a.priority === "LOW").length;
-    }
-
     function applyFilters() {
       const search = document.getElementById("search-input").value.toLowerCase();
       let filtered = allAccounts;
+      if (activeFilter !== "ALL")      filtered = filtered.filter(a => a.priority === activeFilter);
+      if (activeProduct !== "ALL")     filtered = filtered.filter(a => extractProduct(a.product_topic_feature) === activeProduct);
+      if (activeTopic !== "ALL")       filtered = filtered.filter(a => extractTopic(a.product_topic_feature) === activeTopic);
+      if (activeSuccessPlan !== "ALL") filtered = filtered.filter(a => a.success_plan === activeSuccessPlan);
+      if (search) filtered = filtered.filter(a => a.account.toLowerCase().includes(search));
 
-      if (activeFilter !== "ALL")
-        filtered = filtered.filter(a => a.priority === activeFilter);
-      if (activeProduct !== "ALL")
-        filtered = filtered.filter(a => extractProduct(a.product_topic_feature) === activeProduct);
-      if (activeTopic !== "ALL")
-        filtered = filtered.filter(a => extractTopic(a.product_topic_feature) === activeTopic);
-      if (activeSuccessPlan !== "ALL")
-        filtered = filtered.filter(a => a.success_plan === activeSuccessPlan);
-      if (search)
-        filtered = filtered.filter(a => a.account.toLowerCase().includes(search));
-
-      // Sort
       filtered = [...filtered].sort((a, b) => {
         let va, vb;
         if (sortCol === "priority_order") {
-          va = PRIORITY_ORDER[a.priority] ?? 3;
-          vb = PRIORITY_ORDER[b.priority] ?? 3;
+          va = PRIORITY_ORDER[a.priority] ?? 3; vb = PRIORITY_ORDER[b.priority] ?? 3;
           if (va === vb) return (b.case_count || 0) - (a.case_count || 0);
         } else if (sortCol === "case_count") {
           va = a.case_count || 0; vb = b.case_count || 0;
@@ -450,32 +560,77 @@
     function renderTable(accounts) {
       const tbody = document.getElementById("table-body");
       if (!accounts || accounts.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="loading">No matching accounts.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="loading">No matching accounts.</td></tr>`;
         return;
       }
       tbody.innerHTML = accounts.map(a => {
-        const ptfShort = a.product_topic_feature
-          ? (a.product_topic_feature.length > 55 ? a.product_topic_feature.slice(0, 52) + "…" : a.product_topic_feature)
-          : "—";
+        const rev = reviews[a.account];
+        const icon = rev
+          ? (rev.verdict === "valid"
+              ? `<span class="reviewed-icon" title="Marked Valid">&#9989;</span>`
+              : `<span class="reviewed-icon" title="Marked Invalid">&#10060;</span>`)
+          : "";
         return `
-          <tr data-idx="${allAccounts.indexOf(a)}">
-            <td style="width:36px;text-align:center"></td>
+          <tr data-account="${encodeURIComponent(JSON.stringify(a))}">
+            <td style="text-align:center">${icon}</td>
             <td class="account-name">${a.account}</td>
-            <td class="case-count">${a.case_count}</td>
-            <td class="feature-text" title="${a.product_topic_feature || ""}">${ptfShort}</td>
+            <td class="case-count-col">${a.case_count}</td>
+            <td class="feature-text" title="${a.product_topic_feature || ""}">${truncate(a.product_topic_feature, 55)}</td>
             <td>${a.success_plan || "—"}</td>
             <td>${a.engagement_status || "—"}</td>
             <td><span class="rec ${recClass(a.recommendation)}">${a.recommendation || "—"}</span></td>
             <td><span class="priority priority-${a.priority}">${a.priority}</span></td>
+            <td style="text-align:center">
+              <button class="view-btn" data-account-name="${encodeURIComponent(a.account)}">View →</button>
+            </td>
           </tr>`;
       }).join("");
 
+      tbody.querySelectorAll(".view-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          e.stopPropagation();
+          const found = allAccounts.find(a => a.account === decodeURIComponent(btn.dataset.accountName));
+          if (found) openModal(found);
+        });
+      });
       tbody.querySelectorAll("tr").forEach(row => {
-        row.addEventListener("click", () => openModal(allAccounts[+row.dataset.idx]));
+        row.addEventListener("click", e => {
+          if (e.target.closest(".view-btn")) return;
+          openModal(JSON.parse(decodeURIComponent(row.dataset.account)));
+        });
       });
     }
 
+    function renderModalCases(cases, filter) {
+      const tbody = document.getElementById("modal-cases-tbody");
+      const badge = document.getElementById("modal-case-badge");
+      const visible = filter === "ALL"
+        ? cases
+        : cases.filter(c => (c.instance_type || "").toLowerCase() === filter.toLowerCase());
+      badge.textContent = `${visible.length} of ${cases.length}`;
+      if (!visible.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="case-table-empty">No cases match this filter.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = visible.map(c => {
+        const inst = c.instance_type || "—";
+        const ptf  = c.product_topic_feature || (currentModalAccount && currentModalAccount.product_topic_feature) || "—";
+        return `<tr>
+          <td class="ct-num">${c.case_number || "—"}</td>
+          <td class="ct-subject" title="${(c.subject || "").replace(/"/g,"&quot;")}">${truncate(c.subject, 55)}</td>
+          <td><span class="status-chip status-${(c.status || "open").toLowerCase()}">${c.status || "—"}</span></td>
+          <td><span class="inst-inline ${instanceChipClass(inst)}">${inst}</span></td>
+          <td class="ct-ptf" title="${ptf}">${truncate(ptf, 42)}</td>
+        </tr>`;
+      }).join("");
+    }
+
     function openModal(a) {
+      currentModalAccount = a;
+      modalInstanceFilter = "ALL";
+      document.querySelectorAll(".inst-chip").forEach(b => b.classList.remove("active"));
+      document.querySelector(".inst-chip[data-instance='ALL']").classList.add("active");
+
       document.getElementById("modal-account").textContent = a.account;
       document.getElementById("modal-ptf").textContent = a.product_topic_feature || "—";
       document.getElementById("modal-themes").textContent = a.recurring_themes || "—";
@@ -485,53 +640,127 @@
       document.getElementById("modal-engagement-name").textContent = a.engagement_name || "—";
       document.getElementById("modal-closure-date").textContent = a.engagement_closure_date || "—";
 
-      const chips = document.getElementById("modal-chips");
-      chips.innerHTML = `<span class="priority priority-${a.priority}">${a.priority}</span>
-        <span class="rec ${recClass(a.recommendation)}">${a.recommendation || "—"}</span>`;
+      document.getElementById("modal-chips").innerHTML =
+        `<span class="priority priority-${a.priority}">${a.priority}</span>
+         <span class="rec ${recClass(a.recommendation)}">${a.recommendation || "—"}</span>`;
 
-      const casesList = document.getElementById("modal-cases");
-      casesList.innerHTML = (a.cases || []).map(c =>
-        `<li><strong>${c.case_number}</strong>: ${c.subject} <em>(${c.status})</em></li>`
-      ).join("") || "<li>No case detail available.</li>";
+      renderModalCases(a.cases || [], "ALL");
+
+      const rev = reviews[a.account];
+      const noteEl = document.getElementById("already-reviewed-note");
+      if (rev) {
+        noteEl.className = "already-reviewed-note " + (rev.verdict === "valid" ? "already-valid" : "already-invalid");
+        noteEl.textContent = rev.verdict === "valid"
+          ? "✅ Already marked Valid"
+          : `❌ Marked Invalid — ${rev.reason || ""}`;
+        noteEl.classList.remove("hidden");
+      } else {
+        noteEl.classList.add("hidden");
+      }
 
       document.getElementById("detail-modal").classList.remove("hidden");
     }
 
-    function formatTimestamp(iso) {
-      if (!iso) return "Never";
-      const d = new Date(iso);
-      return d.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    document.getElementById("instance-filter-bar").addEventListener("click", e => {
+      const chip = e.target.closest(".inst-chip");
+      if (!chip) return;
+      document.querySelectorAll(".inst-chip").forEach(b => b.classList.remove("active"));
+      chip.classList.add("active");
+      modalInstanceFilter = chip.dataset.instance;
+      if (currentModalAccount) renderModalCases(currentModalAccount.cases || [], modalInstanceFilter);
+    });
+    document.getElementById("modal-close").addEventListener("click", () =>
+      document.getElementById("detail-modal").classList.add("hidden"));
+    document.getElementById("detail-modal").addEventListener("click", e => {
+      if (e.target === document.getElementById("detail-modal"))
+        document.getElementById("detail-modal").classList.add("hidden");
+    });
+
+    function buildDraft(a) {
+      const csm = a.lead_csm;
+      const csmFirst = csm && csm.name ? csm.name.split(" ")[0] : "Team";
+      const product = extractProduct(a.product_topic_feature) || "Industry/Revenue";
+      const themesFirst = (a.recurring_themes || "—").split(". ")[0];
+      const topCases = (a.cases || []).slice(0, 3)
+        .map(c => `• ${c.case_number}: ${truncate(c.subject, 70)}`).join("\n");
+      return `Hi ${csmFirst},
+
+I'm flagging *${a.account}* for an Architecture Design Review based on recent support patterns.
+
+Over the past 90 days, ${a.case_count} ${product} Cloud case${a.case_count === 1 ? "" : "s"} have been logged. ${themesFirst}.
+
+*Recommendation:* ${a.recommendation} (Priority: ${a.priority})
+*Success Plan:* ${a.success_plan || "—"}
+
+Representative cases:
+${topCases || "• See dashboard for full case list"}
+
+Please let me know if you'd like to discuss further or prioritize this account for an upcoming ADR slot.
+
+— Chaten (via OrgCS Dashboard)`;
     }
 
-    async function loadData() {
-      const btn = document.getElementById("refresh-btn");
-      btn.classList.add("spinning");
-      try {
-        const res = await fetch(DATA_URL + "?t=" + Date.now());
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        allAccounts = (data.accounts || []).sort((a, b) => {
-          const pa = PRIORITY_ORDER[a.priority] ?? 3;
-          const pb = PRIORITY_ORDER[b.priority] ?? 3;
-          if (pa !== pb) return pa - pb;
-          return (b.case_count || 0) - (a.case_count || 0);
-        });
-        document.getElementById("last-refreshed").textContent =
-          "Last updated: " + formatTimestamp(data.generated_at);
-        document.getElementById("error-banner").classList.add("hidden");
-        updateStats();
-        populateTopics();
-        applyFilters();
-      } catch (err) {
-        const banner = document.getElementById("error-banner");
-        banner.textContent = "Could not load data: " + err.message;
-        banner.classList.remove("hidden");
-      } finally {
-        btn.classList.remove("spinning");
-      }
-    }
+    document.getElementById("btn-valid").addEventListener("click", () => {
+      if (!currentModalAccount) return;
+      const a = currentModalAccount;
+      const csm = a.lead_csm;
+      document.getElementById("slack-csm-meta").textContent = csm && csm.name
+        ? `Lead SM: ${csm.name}${csm.email ? ` · ${csm.email}` : ""}`
+        : "Lead SM: Not found — please route manually";
+      document.getElementById("slack-draft-text").value = buildDraft(a);
+      document.getElementById("slack-copied-msg").classList.add("hidden");
+      document.getElementById("slack-dialog").classList.remove("hidden");
+      reviews[a.account] = {
+        verdict: "valid", ts: new Date().toISOString(),
+        recommendation: a.recommendation, priority: a.priority,
+        case_count: a.case_count, success_plan: a.success_plan,
+        product_topic_feature: a.product_topic_feature,
+        recurring_themes: a.recurring_themes, reasoning: a.reasoning
+      };
+      saveReviews();
+      applyFilters();
+    });
 
-    // Priority filter buttons
+    document.getElementById("btn-copy-slack").addEventListener("click", () => {
+      navigator.clipboard.writeText(document.getElementById("slack-draft-text").value).then(() => {
+        const m = document.getElementById("slack-copied-msg");
+        m.classList.remove("hidden");
+        setTimeout(() => m.classList.add("hidden"), 2500);
+      });
+    });
+    document.getElementById("btn-close-slack").addEventListener("click", () =>
+      document.getElementById("slack-dialog").classList.add("hidden"));
+
+    document.getElementById("btn-invalid").addEventListener("click", () => {
+      if (!currentModalAccount) return;
+      document.getElementById("feedback-account-meta").textContent =
+        `${currentModalAccount.account} · ${currentModalAccount.recommendation}`;
+      document.getElementById("feedback-reason").value = "Incorrect account";
+      document.getElementById("feedback-notes").value = "";
+      document.getElementById("feedback-dialog").classList.remove("hidden");
+    });
+    document.getElementById("btn-cancel-feedback").addEventListener("click", () =>
+      document.getElementById("feedback-dialog").classList.add("hidden"));
+    document.getElementById("btn-submit-feedback").addEventListener("click", () => {
+      if (!currentModalAccount) return;
+      const a = currentModalAccount;
+      reviews[a.account] = {
+        verdict: "invalid",
+        reason: document.getElementById("feedback-reason").value,
+        notes:  document.getElementById("feedback-notes").value.trim(),
+        ts: new Date().toISOString(),
+        recommendation: a.recommendation, priority: a.priority,
+        case_count: a.case_count, success_plan: a.success_plan,
+        product_topic_feature: a.product_topic_feature,
+        recurring_themes: a.recurring_themes, reasoning: a.reasoning
+      };
+      saveReviews();
+      document.getElementById("feedback-dialog").classList.add("hidden");
+      document.getElementById("detail-modal").classList.add("hidden");
+      showToast(`Feedback saved for ${a.account}`);
+      applyFilters();
+    });
+
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
@@ -540,36 +769,22 @@
         applyFilters();
       });
     });
-
     document.getElementById("product-filter").addEventListener("change", e => {
-      activeProduct = e.target.value;
-      activeTopic = "ALL";
-      populateTopics();
-      applyFilters();
+      activeProduct = e.target.value; activeTopic = "ALL"; populateTopics(); applyFilters();
     });
-
     document.getElementById("topic-filter").addEventListener("change", e => {
-      activeTopic = e.target.value;
-      applyFilters();
+      activeTopic = e.target.value; applyFilters();
     });
-
     document.getElementById("success-plan-filter").addEventListener("change", e => {
-      activeSuccessPlan = e.target.value;
-      applyFilters();
+      activeSuccessPlan = e.target.value; applyFilters();
     });
-
     document.getElementById("search-input").addEventListener("input", applyFilters);
 
-    // Column sort
     document.querySelectorAll("thead th[data-col]").forEach(th => {
       th.addEventListener("click", () => {
         const col = th.dataset.col;
-        if (sortCol === col) {
-          sortDir *= -1;
-        } else {
-          sortCol = col;
-          sortDir = col === "case_count" ? -1 : 1;
-        }
+        if (sortCol === col) sortDir *= -1;
+        else { sortCol = col; sortDir = col === "case_count" ? -1 : 1; }
         document.querySelectorAll("thead th").forEach(t => {
           t.classList.remove("sorted");
           const icon = t.querySelector(".sort-icon");
@@ -582,19 +797,36 @@
       });
     });
 
-    // Modal close
-    document.getElementById("modal-close").addEventListener("click", () =>
-      document.getElementById("detail-modal").classList.add("hidden"));
-    document.getElementById("detail-modal").addEventListener("click", e => {
-      if (e.target === document.getElementById("detail-modal"))
-        document.getElementById("detail-modal").classList.add("hidden");
-    });
-
     document.getElementById("refresh-btn").addEventListener("click", loadData);
-
-    // Auto-refresh every 15 min
     setInterval(loadData, 15 * 60 * 1000);
 
+    async function loadData() {
+      const btn = document.getElementById("refresh-btn");
+      btn.classList.add("spinning");
+      try {
+        const res = await fetch(DATA_URL + "?t=" + Date.now());
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        allAccounts = (data.accounts || []).sort((a, b) => {
+          const pa = PRIORITY_ORDER[a.priority] ?? 3, pb = PRIORITY_ORDER[b.priority] ?? 3;
+          if (pa !== pb) return pa - pb;
+          return (b.case_count || 0) - (a.case_count || 0);
+        });
+        document.getElementById("last-refreshed").textContent =
+          "Last updated: " + formatTimestamp(data.generated_at);
+        document.getElementById("error-banner").classList.add("hidden");
+        updateStats(); populateTopics(); applyFilters();
+      } catch (err) {
+        const banner = document.getElementById("error-banner");
+        banner.textContent = "Could not load data: " + err.message;
+        banner.classList.remove("hidden");
+      } finally {
+        btn.classList.remove("spinning");
+      }
+    }
+
+    loadReviews();
+    updateReviewsBadge();
     loadData();
   </script>
 </body>

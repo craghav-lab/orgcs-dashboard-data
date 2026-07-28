@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OrgCS — Recommendation Reviews</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px; background: #f4f6fb; color: #1a1a2e; min-height: 100vh;
+    }
+
+    .header {
+      background: #0070d2; color: white; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-logo { font-size: 22px; color: #7ec8e3; }
+    .header-title { font-size: 16px; font-weight: 700; letter-spacing: 0.3px; }
+    .header-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-nav-btn {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
+      color: white; border-radius: 6px; padding: 5px 14px; cursor: pointer;
+      font-size: 12px; font-weight: 500; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s;
+    }
+    .header-nav-btn:hover { background: rgba(255,255,255,0.28); }
+    .clear-btn {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
+      color: white; border-radius: 6px; padding: 5px 12px; cursor: pointer;
+      font-size: 12px; font-weight: 500; transition: background 0.15s;
+    }
+    .clear-btn:hover { background: rgba(200,40,40,0.5); border-color: rgba(255,255,255,0.6); }
+
+    /* Summary bar */
+    .summary-bar {
+      display: flex; gap: 12px; padding: 12px 24px;
+      background: white; border-bottom: 1px solid #e0e0e8; flex-wrap: wrap;
+    }
+    .summary-card {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 8px 20px; border-radius: 8px; border: 1px solid #e8e8f0;
+      background: #fafafa; min-width: 90px;
+    }
+    .summary-card .s-num { font-size: 22px; font-weight: 700; }
+    .summary-card .s-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-top: 2px; }
+    .summary-card.total  .s-num { color: #0070d2; }
+    .summary-card.valid  .s-num { color: #2e7d32; }
+    .summary-card.invalid .s-num { color: #c62828; }
+
+    /* Filter tabs */
+    .filter-bar {
+      background: white; border-bottom: 1px solid #e0e0e8;
+      padding: 10px 24px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    }
+    .tab-btn {
+      border: 1px solid #d0d0d8; background: #f0f0f5; color: #444;
+      border-radius: 14px; padding: 4px 14px; cursor: pointer;
+      font-size: 12px; font-weight: 500; transition: all 0.15s;
+    }
+    .tab-btn.active, .tab-btn:hover { background: #0070d2; color: white; border-color: #0070d2; }
+    .tab-btn.valid-tab.active   { background: #2e7d32; border-color: #2e7d32; }
+    .tab-btn.invalid-tab.active { background: #c62828; border-color: #c62828; }
+
+    .hidden { display: none !important; }
+
+    /* Table */
+    .table-wrapper { padding: 16px 24px; }
+    .result-count { font-size: 12px; color: #888; margin-bottom: 8px; }
+    table {
+      width: 100%; border-collapse: collapse; background: white;
+      border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    thead th {
+      background: #f0f2f8; text-align: left; padding: 10px 12px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.4px; color: #555; border-bottom: 2px solid #dde0ea;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #eee; transition: background 0.1s; }
+    tbody tr:hover { background: #f7f9ff; }
+    tbody td { padding: 10px 12px; vertical-align: middle; }
+    .empty-row td { text-align: center; color: #aaa; padding: 60px 12px !important; font-size: 14px; font-style: italic; }
+
+    .account-name { font-weight: 600; color: #0070d2; }
+    .feature-text { color: #555; font-size: 12px; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .verdict-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 11px; border-radius: 10px; font-size: 11px; font-weight: 700;
+    }
+    .verdict-valid   { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .verdict-invalid { background: #fce4ec; color: #c62828; border: 1px solid #f48fb1; }
+
+    .priority {
+      display: inline-block; padding: 2px 10px; border-radius: 10px;
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+    }
+    .priority-HIGH   { background: #fff0f0; color: #d32f2f; border: 1px solid #ffb3b3; }
+    .priority-MEDIUM { background: #fff8e1; color: #f57c00; border: 1px solid #ffe082; }
+    .priority-LOW    { background: #f0faf0; color: #388e3c; border: 1px solid #a5d6a7; }
+
+    .rec { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .rec-new      { background: #e3f2fd; color: #1565c0; }
+    .rec-followup { background: #fce4ec; color: #c62828; }
+    .rec-active   { background: #e8f5e9; color: #2e7d32; }
+    .rec-none     { background: #f5f5f5; color: #757575; }
+
+    .reason-cell { color: #444; font-size: 12px; }
+    .notes-cell  { color: #666; font-size: 12px; font-style: italic; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .no-notes    { color: #bbb; font-style: normal; }
+    .ts-cell     { color: #888; font-size: 11px; white-space: nowrap; }
+
+    .undo-btn {
+      background: none; border: 1px solid #d0d0d8; color: #666;
+      border-radius: 4px; padding: 3px 9px; font-size: 11px;
+      cursor: pointer; transition: all 0.12s; white-space: nowrap;
+    }
+    .undo-btn:hover { background: #f0f0f5; border-color: #888; color: #333; }
+
+    /* Detail panel (expandable row) */
+    .detail-row td {
+      background: #f8f9fe; border-bottom: 2px solid #dde0ea;
+      padding: 14px 24px;
+    }
+    .detail-row.hidden { display: none; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; }
+    .detail-field label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #888; font-weight: 700; display: block; margin-bottom: 2px;
+    }
+    .detail-field span { font-size: 12px; color: #222; line-height: 1.5; }
+
+    .toast {
+      position: fixed; bottom: 20px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #1a1a2e; color: white; font-size: 12px; padding: 8px 20px;
+      border-radius: 20px; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s; z-index: 300; white-space: nowrap;
+    }
+    .toast.toast-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <span class="header-logo">&#9632;</span>
+      <div>
+        <div class="header-title">Recommendation Reviews</div>
+        <div class="header-sub">Valid &amp; Invalid decisions logged from the dashboard</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="header-nav-btn">&#8592; Back to Dashboard</a>
+      <button id="clear-all-btn" class="clear-btn">Clear All</button>
+    </div>
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-card total"><span id="s-total" class="s-num">0</span><span class="s-label">Total</span></div>
+    <div class="summary-card valid"><span id="s-valid" class="s-num">0</span><span class="s-label">Valid</span></div>
+    <div class="summary-card invalid"><span id="s-invalid" class="s-num">0</span><span class="s-label">Invalid</span></div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="tab-btn active" data-tab="ALL">All</button>
+    <button class="tab-btn valid-tab" data-tab="valid">&#10003; Valid</button>
+    <button class="tab-btn invalid-tab" data-tab="invalid">&#10007; Invalid</button>
+  </div>
+
+  <div class="table-wrapper">
+    <div id="result-count" class="result-count"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th>Verdict</th>
+          <th>Priority</th>
+          <th>Recommendation</th>
+          <th>Cases</th>
+          <th>Product → Topic → Feature</th>
+          <th>Reason (if invalid)</th>
+          <th>Notes</th>
+          <th>Reviewed</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="reviews-tbody"></tbody>
+    </table>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const STORAGE_KEY = "orgcs_reviews";
+    let reviews = {};
+    let activeTab = "ALL";
+    let expandedAccount = null;
+
+    function loadReviews() {
+      try { reviews = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
+      catch (_) { reviews = {}; }
+    }
+    function saveReviews() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+    }
+
+    function recClass(rec) {
+      if (!rec) return "rec-none";
+      const r = rec.toLowerCase();
+      if (r.includes("new")) return "rec-new";
+      if (r.includes("follow")) return "rec-followup";
+      if (r.includes("flag") || r.includes("active")) return "rec-active";
+      return "rec-none";
+    }
+    function truncate(str, n) {
+      if (!str) return "—";
+      return str.length > n ? str.slice(0, n) + "…" : str;
+    }
+    function formatTs(iso) {
+      if (!iso) return "—";
+      const d = new Date(iso);
+      return d.toLocaleDateString([], { month: "short", day: "numeric", year: "2-digit" }) +
+        " " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("toast-visible");
+      setTimeout(() => t.classList.remove("toast-visible"), 2500);
+    }
+
+    function render() {
+      const entries = Object.entries(reviews)
+        .map(([account, r]) => ({ account, ...r }))
+        .sort((a, b) => new Date(b.ts) - new Date(a.ts));
+
+      const total   = entries.length;
+      const nValid  = entries.filter(e => e.verdict === "valid").length;
+      const nInvalid = entries.filter(e => e.verdict === "invalid").length;
+      document.getElementById("s-total").textContent   = total;
+      document.getElementById("s-valid").textContent   = nValid;
+      document.getElementById("s-invalid").textContent = nInvalid;
+
+      const filtered = activeTab === "ALL" ? entries : entries.filter(e => e.verdict === activeTab);
+      document.getElementById("result-count").textContent =
+        `Showing ${filtered.length} of ${total} review${total !== 1 ? "s" : ""}`;
+
+      const tbody = document.getElementById("reviews-tbody");
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="10">${
+          total === 0 ? "No reviews yet — use the dashboard to mark recommendations Valid or Invalid."
+                      : "No " + activeTab + " reviews."
+        }</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(e => {
+        const isExpanded = expandedAccount === e.account;
+        const mainRow = `
+          <tr class="main-row" data-account="${encodeURIComponent(e.account)}" style="cursor:pointer">
+            <td class="account-name">${e.account}</td>
+            <td>
+              <span class="verdict-badge verdict-${e.verdict}">
+                ${e.verdict === "valid" ? "&#10003; Valid" : "&#10007; Invalid"}
+              </span>
+            </td>
+            <td><span class="priority priority-${e.priority || "LOW"}">${e.priority || "—"}</span></td>
+            <td><span class="rec ${recClass(e.recommendation)}">${e.recommendation || "—"}</span></td>
+            <td style="text-align:center;font-weight:600">${e.case_count || "—"}</td>
+            <td class="feature-text" title="${e.product_topic_feature || ""}">${truncate(e.product_topic_feature, 48)}</td>
+            <td class="reason-cell">${e.verdict === "invalid" ? (e.reason || "—") : '<span style="color:#bbb">—</span>'}</td>
+            <td class="notes-cell" title="${e.notes || ""}">${e.notes
+              ? truncate(e.notes, 40)
+              : '<span class="no-notes">—</span>'}</td>
+            <td class="ts-cell">${formatTs(e.ts)}</td>
+            <td style="white-space:nowrap">
+              <button class="undo-btn" data-account="${encodeURIComponent(e.account)}">Remove</button>
+            </td>
+          </tr>`;
+
+        const detailRow = `
+          <tr class="detail-row ${isExpanded ? "" : "hidden"}" data-detail-for="${encodeURIComponent(e.account)}">
+            <td colspan="10">
+              <div class="detail-grid">
+                <div class="detail-field"><label>Recurring Themes</label><span>${e.recurring_themes || "—"}</span></div>
+                <div class="detail-field"><label>Reasoning</label><span>${e.reasoning || "—"}</span></div>
+                <div class="detail-field"><label>Success Plan</label><span>${e.success_plan || "—"}</span></div>
+                <div class="detail-field"><label>Full Product → Topic → Feature</label><span>${e.product_topic_feature || "—"}</span></div>
+              </div>
+            </td>
+          </tr>`;
+
+        return mainRow + detailRow;
+      }).join("");
+
+      // Row expand/collapse
+      tbody.querySelectorAll(".main-row").forEach(row => {
+        row.addEventListener("click", e => {
+          if (e.target.closest(".undo-btn")) return;
+          const account = decodeURIComponent(row.dataset.account);
+          expandedAccount = expandedAccount === account ? null : account;
+          render();
+        });
+      });
+
+      // Undo/remove
+      tbody.querySelectorAll(".undo-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          e.stopPropagation();
+          const account = decodeURIComponent(btn.dataset.account);
+          delete reviews[account];
+          if (expandedAccount === account) expandedAccount = null;
+          saveReviews();
+          render();
+          showToast(`Review removed for ${account}`);
+        });
+      });
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeTab = btn.dataset.tab;
+        render();
+      });
+    });
+
+    document.getElementById("clear-all-btn").addEventListener("click", () => {
+      if (!Object.keys(reviews).length) return;
+      if (!confirm("Remove all reviews? This cannot be undone.")) return;
+      reviews = {};
+      expandedAccount = null;
+      saveReviews();
+      render();
+      showToast("All reviews cleared.");
+    });
+
+    loadReviews();
+    render();
+  </script>
+</body>
+</html>
