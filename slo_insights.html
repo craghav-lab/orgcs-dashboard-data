@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IND SLO Miss — Where to Focus</title>
+<style>
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface-2: #faf9f6;
+  --ink: #1a1917;
+  --ink-2: #4a4844;
+  --ink-3: #8a8784;
+  --rule: #e5e3db;
+  --accent: #2a78d6;
+  --red: #d03b3b;
+  --orange: #e06020;
+  --yellow: #c98500;
+  --green: #1a9e5e;
+  --teal: #1a7a8a;
+  --series: #2a78d6;
+  --sev1: #d03b3b;
+  --sev2: #e06020;
+  --sev3: #c98500;
+  --sev4: #1a9e5e;
+  --badge-r: #fce8e8;
+  --badge-r-ink: #a82828;
+  --badge-o: #fdf0e6;
+  --badge-o-ink: #944010;
+  --badge-y: #fdf6e3;
+  --badge-y-ink: #7a5200;
+  --badge-g: #e8f7ef;
+  --badge-g-ink: #15693d;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ── layout ── */
+.page { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+
+/* ── header ── */
+.report-header { margin-bottom: 36px; }
+.report-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
+}
+.report-title { font-size: 30px; font-weight: 800; line-height: 1.2; color: var(--ink); margin-bottom: 10px; }
+.report-subtitle { font-size: 15px; color: var(--ink-2); max-width: 680px; line-height: 1.6; }
+.report-meta { margin-top: 14px; font-size: 12px; color: var(--ink-3); }
+
+/* ── section heading ── */
+.section-heading {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-3);
+  margin: 40px 0 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-heading::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+
+/* ── KPI row ── */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 8px; }
+.kpi {
+  background: var(--surface); border-radius: 10px; padding: 16px 18px;
+  border: 1px solid var(--rule);
+}
+.kpi .k-label { font-size: 11px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.kpi .k-value { font-size: 28px; font-weight: 800; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
+.kpi .k-sub { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.kpi.accent .k-value { color: var(--accent); }
+.kpi.red .k-value { color: var(--red); }
+.kpi.orange .k-value { color: var(--orange); }
+
+/* ── insight cards ── */
+.insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.insight-grid.wide { grid-template-columns: 1fr; }
+.insight-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+
+.card {
+  background: var(--surface); border-radius: 12px; padding: 22px 24px;
+  border: 1px solid var(--rule); position: relative; overflow: hidden;
+}
+.card.highlight { border-left: 4px solid var(--red); }
+.card.highlight-orange { border-left: 4px solid var(--orange); }
+.card.highlight-yellow { border-left: 4px solid var(--yellow); }
+.card.highlight-green { border-left: 4px solid var(--green); }
+
+.card-priority {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 20px; display: inline-block; margin-bottom: 10px;
+}
+.p1 { background: var(--badge-r); color: var(--badge-r-ink); }
+.p2 { background: var(--badge-o); color: var(--badge-o-ink); }
+.p3 { background: var(--badge-y); color: var(--badge-y-ink); }
+.p4 { background: var(--badge-g); color: var(--badge-g-ink); }
+
+.card-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+.card-body { font-size: 13px; color: var(--ink-2); line-height: 1.65; margin-bottom: 14px; }
+.card-body strong { color: var(--ink); }
+
+.stat-inline {
+  display: inline-flex; align-items: baseline; gap: 4px;
+  background: var(--surface-2); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 3px 10px; margin: 2px 3px;
+  font-size: 13px;
+}
+.stat-inline .si-num { font-weight: 700; font-size: 15px; color: var(--ink); }
+.stat-inline .si-label { color: var(--ink-3); font-size: 12px; }
+
+/* ── chart base ── */
+.chart-area { margin-top: 14px; }
+.chart-label { font-size: 11px; color: var(--ink-3); margin-bottom: 6px; }
+svg.chart text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+/* ── bar row ── */
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bar-row .br-label { font-size: 12px; color: var(--ink-2); width: 160px; flex-shrink: 0; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-row .br-track { flex: 1; background: #f0efe9; border-radius: 3px; height: 18px; position: relative; overflow: hidden; }
+.bar-row .br-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.bar-row .br-val { font-size: 12px; color: var(--ink-3); width: 40px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+/* ── heat row ── */
+.heat-row { display: flex; align-items: center; gap: 1px; margin-bottom: 2px; }
+.heat-row .hl { font-size: 10px; color: var(--ink-3); width: 28px; flex-shrink: 0; text-align: right; padding-right: 4px; }
+.heat-cell { flex: 1; height: 22px; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; cursor: default; }
+
+/* ── pill bar ── */
+.pill-bar { display: flex; height: 28px; border-radius: 6px; overflow: hidden; gap: 1px; }
+.pill-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; min-width: 20px; }
+
+/* ── monthly spark ── */
+.spark-wrap { display: flex; align-items: flex-end; gap: 5px; height: 50px; }
+.spark-bar { flex: 1; border-radius: 3px 3px 0 0; min-width: 6px; }
+
+/* ── focus action ── */
+.action-list { list-style: none; margin-top: 10px; }
+.action-list li {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid var(--rule); font-size: 13px;
+}
+.action-list li:last-child { border-bottom: none; }
+.action-icon { font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+.action-text { color: var(--ink-2); line-height: 1.5; }
+.action-text strong { color: var(--ink); display: block; margin-bottom: 2px; font-size: 13.5px; }
+
+/* ── callout box ── */
+.callout {
+  background: #eef4fd; border: 1px solid #bdd4f5; border-radius: 8px;
+  padding: 12px 16px; font-size: 13px; color: #1a3d6e; margin-top: 14px;
+  line-height: 1.6;
+}
+.callout.warning { background: #fdf6e3; border-color: #f0d080; color: #5a3f00; }
+.callout.green { background: #e8f7ef; border-color: #8dd5b2; color: #0f4c2a; }
+
+/* ── trend line area ── */
+.trend-labels { display: flex; justify-content: space-between; margin-top: 4px; }
+.trend-labels span { font-size: 10px; color: var(--ink-3); }
+
+/* ── two-col text ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* resp */
+@media (max-width: 720px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .insight-grid, .insight-grid.three { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<div class="report-header">
+  <div class="report-eyebrow">ORGCS · Industry Cloud · SLO Analysis</div>
+  <h1 class="report-title">IND SLO Miss — Where to Focus</h1>
+  <p class="report-subtitle">
+    520 SLO misses across Feb–Jul 2026. The backlog is concentrated: five products, one time window, and one GEO account for the majority of the problem. This report shows you exactly where to act.
+  </p>
+  <div class="report-meta">520 cases · 26 Jan – 28 Jul 2026 · Source: ORGCS IND queue</div>
+</div>
+
+<!-- ══ KPIs ════════════════════════════════════════════════ -->
+<div class="section-heading">Snapshot</div>
+<div class="kpi-row">
+  <div class="kpi red">
+    <div class="k-label">Total Misses</div>
+    <div class="k-value">520</div>
+    <div class="k-sub">Feb – Jul 2026</div>
+  </div>
+  <div class="kpi orange">
+    <div class="k-label">Crit + Urgent</div>
+    <div class="k-value">76%</div>
+    <div class="k-sub">393 of 520 cases</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">Peak Window</div>
+    <div class="k-value" style="font-size:20px;color:var(--orange)">13–17 UTC</div>
+    <div class="k-sub">42% of all misses</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">AMER Share</div>
+    <div class="k-value" style="font-size:22px;color:var(--accent)">57.7%</div>
+    <div class="k-sub">300 cases</div>
+  </div>
+  <div class="kpi">
+    <div class="k-label">Top 5 Products</div>
+    <div class="k-value" style="font-size:22px;color:var(--teal)">39%</div>
+    <div class="k-sub">203 of 520 cases</div>
+  </div>
+</div>
+
+<!-- ══ MONTHLY TREND ═══════════════════════════════════════ -->
+<div class="section-heading">Monthly Trend</div>
+<div class="card" style="margin-bottom:0">
+  <div class="card-title" style="margin-bottom:4px">Feb–Mar was the peak. Jun bounced. Jul is improving — but volume is still high.</div>
+  <div class="card-body" style="margin-bottom:16px">
+    The high watermark was <strong>Feb (110) and Mar (115)</strong>. A significant drop came in Apr (–28% MoM) and May (–11%). June bounced +14% — watch closely. July is tracking low at 52 with the month incomplete.
+  </div>
+
+  <!-- Monthly trend bars with MoM annotation -->
+  <div style="display:flex;gap:0;align-items:flex-end;height:90px;margin-bottom:4px">
+    <!-- bars: Feb=110,Mar=115,Apr=83,May=74,Jun=84,Jul=52 (partial) -->
+    <!-- max = 115 -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--ink-2)">110</span>
+      <div style="width:100%;height:86px;background:#d03b3b;border-radius:4px 4px 0 0"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;margin-left:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--ink-2)">115</span>
+      <div style="width:100%;height:90px;background:#d03b3b;border-radius:4px 4px 0 0"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;margin-left:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--ink-2)">83</span>
+      <div style="width:100%;height:65px;background:#e06020;border-radius:4px 4px 0 0"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;margin-left:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--ink-2)">74</span>
+      <div style="width:100%;height:58px;background:#c98500;border-radius:4px 4px 0 0"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;margin-left:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--ink-2)">84</span>
+      <div style="width:100%;height:66px;background:#e06020;border-radius:4px 4px 0 0"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;margin-left:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--ink-2)">52*</span>
+      <div style="width:100%;height:40px;background:#2a78d6;border-radius:4px 4px 0 0;opacity:0.75"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:4px">
+    <div style="flex:1;text-align:center;font-size:11px;color:var(--ink-3)">Feb</div>
+    <div style="flex:1;text-align:center;font-size:11px;color:var(--ink-3)">Mar</div>
+    <div style="flex:1;text-align:center;font-size:11px;color:var(--ink-3)">Apr</div>
+    <div style="flex:1;text-align:center;font-size:11px;color:var(--ink-3)">May</div>
+    <div style="flex:1;text-align:center;font-size:11px;color:var(--ink-3)">Jun</div>
+    <div style="flex:1;text-align:center;font-size:11px;color:var(--ink-3)">Jul*</div>
+  </div>
+  <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap">
+    <span style="font-size:12px;color:var(--ink-3)">MoM changes:</span>
+    <span style="font-size:12px;color:var(--orange)">Mar +5%</span>
+    <span style="font-size:12px;color:var(--green)">Apr −28% ↓</span>
+    <span style="font-size:12px;color:var(--green)">May −11% ↓</span>
+    <span style="font-size:12px;color:var(--red)">Jun +14% ↑</span>
+    <span style="font-size:12px;color:var(--green)">Jul −38% ↓</span>
+    <span style="font-size:12px;color:var(--ink-3)">* Jul partial</span>
+  </div>
+</div>
+
+<!-- ══ PRIORITY FOCUS AREAS ════════════════════════════════ -->
+<div class="section-heading">Priority Focus Areas</div>
+<div class="insight-grid">
+
+  <!-- ── F1: Time Window ── -->
+  <div class="card highlight">
+    <span class="card-priority p1">Focus #1 · Immediate</span>
+    <div class="card-title">42% of all misses happen in a 5-hour window: 13–17 UTC</div>
+    <div class="card-body">
+      <strong>221 of 520 cases</strong> were opened between 13:00–17:00 UTC. That is 9am–1pm EST — AMER business hours opening — and the time when EMEA afternoon cases also pile in simultaneously. The queue simply cannot absorb this peak rate.
+      <br><br>Hour 14 UTC is the single worst hour (<strong>59 cases</strong>), followed by 16 (51) and 15 (45).
+    </div>
+    <!-- hour bar chart -->
+    <div class="chart-label">Cases by hour (UTC) — all 520</div>
+    <div style="display:flex;align-items:flex-end;gap:2px;height:60px;margin-bottom:4px">
+      <!-- hours 0-23, values: 5,5,2,3,9,5,10,10,14,28,26,20,15,30,59,45,51,36,28,28,35,26,17,13 -->
+      <!-- max=59, scale to 56px -->
+      <script>
+      // Will render inline via inline approach below
+      </script>
+      <!-- rendered as inline divs -->
+      <!-- 0=5,1=5,2=2,3=3,4=9,5=5,6=10,7=10,8=14,9=28,10=26,11=20,12=15,13=30,14=59,15=45,16=51,17=36,18=28,19=28,20=35,21=26,22=17,23=13 -->
+      <div style="flex:1;height:5px;background:#e0ded4;border-radius:2px 2px 0 0" title="0:00 · 5"></div>
+      <div style="flex:1;height:5px;background:#e0ded4;border-radius:2px 2px 0 0" title="1:00 · 5"></div>
+      <div style="flex:1;height:2px;background:#e0ded4;border-radius:2px 2px 0 0" title="2:00 · 2"></div>
+      <div style="flex:1;height:3px;background:#e0ded4;border-radius:2px 2px 0 0" title="3:00 · 3"></div>
+      <div style="flex:1;height:9px;background:#e0ded4;border-radius:2px 2px 0 0" title="4:00 · 9"></div>
+      <div style="flex:1;height:5px;background:#e0ded4;border-radius:2px 2px 0 0" title="5:00 · 5"></div>
+      <div style="flex:1;height:10px;background:#e0ded4;border-radius:2px 2px 0 0" title="6:00 · 10"></div>
+      <div style="flex:1;height:10px;background:#e0ded4;border-radius:2px 2px 0 0" title="7:00 · 10"></div>
+      <div style="flex:1;height:13px;background:#e0ded4;border-radius:2px 2px 0 0" title="8:00 · 14"></div>
+      <div style="flex:1;height:27px;background:#c98500;border-radius:2px 2px 0 0" title="9:00 · 28"></div>
+      <div style="flex:1;height:25px;background:#c98500;border-radius:2px 2px 0 0" title="10:00 · 26"></div>
+      <div style="flex:1;height:19px;background:#c98500;border-radius:2px 2px 0 0" title="11:00 · 20"></div>
+      <div style="flex:1;height:14px;background:#c98500;border-radius:2px 2px 0 0" title="12:00 · 15"></div>
+      <div style="flex:1;height:29px;background:#d03b3b;border-radius:2px 2px 0 0" title="13:00 · 30"></div>
+      <div style="flex:1;height:56px;background:#d03b3b;border-radius:2px 2px 0 0" title="14:00 · 59 ← PEAK"></div>
+      <div style="flex:1;height:43px;background:#d03b3b;border-radius:2px 2px 0 0" title="15:00 · 45"></div>
+      <div style="flex:1;height:49px;background:#d03b3b;border-radius:2px 2px 0 0" title="16:00 · 51"></div>
+      <div style="flex:1;height:34px;background:#d03b3b;border-radius:2px 2px 0 0" title="17:00 · 36"></div>
+      <div style="flex:1;height:27px;background:#e06020;border-radius:2px 2px 0 0" title="18:00 · 28"></div>
+      <div style="flex:1;height:27px;background:#e06020;border-radius:2px 2px 0 0" title="19:00 · 28"></div>
+      <div style="flex:1;height:33px;background:#e06020;border-radius:2px 2px 0 0" title="20:00 · 35"></div>
+      <div style="flex:1;height:25px;background:#e06020;border-radius:2px 2px 0 0" title="21:00 · 26"></div>
+      <div style="flex:1;height:16px;background:#e0ded4;border-radius:2px 2px 0 0" title="22:00 · 17"></div>
+      <div style="flex:1;height:12px;background:#e0ded4;border-radius:2px 2px 0 0" title="23:00 · 13"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-3)">
+      <span>00</span><span>06</span><span>12</span><span style="color:var(--red);font-weight:700">Peak 14</span><span>18</span><span>23</span>
+    </div>
+    <div class="callout warning" style="margin-top:12px">
+      <strong>Action:</strong> Ensure dedicated coverage during 13–17 UTC. Consider a staggered shift that places an experienced engineer on-call specifically for this window. 210 "off-hours" misses (18–08 UTC) are a secondary concern.
+    </div>
+  </div>
+
+  <!-- ── F2: Omnistudio ── -->
+  <div class="card highlight-green">
+    <span class="card-priority p4">Focus #2 · Learn from success</span>
+    <div class="card-title">Omnistudio went from 24 misses/Feb to 3/month — what changed?</div>
+    <div class="card-body">
+      Industry-Omnistudio was the <strong>#1 product by volume in Feb–Mar</strong> with 24 and 19 misses respectively. From May onwards it collapsed to 3–4/month. Something worked — find out what and replicate it across the other top products.
+    </div>
+    <!-- Omnistudio monthly: Feb=24,Mar=19,Apr=14,May=3,Jun=4,Jul=3 -->
+    <div class="chart-label">Omnistudio misses by month</div>
+    <div style="display:flex;align-items:flex-end;gap:6px;height:50px;margin-bottom:4px">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:var(--ink-2)">24</span>
+        <div style="width:100%;height:50px;background:#d03b3b;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:var(--ink-2)">19</span>
+        <div style="width:100%;height:40px;background:#e06020;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:var(--ink-2)">14</span>
+        <div style="width:100%;height:29px;background:#c98500;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:var(--ink-2)">3</span>
+        <div style="width:100%;height:6px;background:#1a9e5e;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:var(--ink-2)">4</span>
+        <div style="width:100%;height:8px;background:#1a9e5e;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:var(--ink-2)">3</span>
+        <div style="width:100%;height:6px;background:#1a9e5e;border-radius:3px 3px 0 0"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Feb</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Mar</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Apr</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">May</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Jun</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Jul</div>
+    </div>
+    <div class="callout green" style="margin-top:12px">
+      <strong>Action:</strong> Interview the Omnistudio team. Was it a product fix, a knowledge base article, proactive triage, or better routing? The other 4 top products are still elevated — apply the same playbook to Life Sciences (36), Configurator (35), Transaction Mgmt (33).
+    </div>
+  </div>
+
+</div><!-- /insight-grid -->
+
+<!-- ── Row 2 insights ── -->
+<div class="insight-grid" style="margin-top:16px">
+
+  <!-- ── F3: Thursday overload ── -->
+  <div class="card highlight-orange">
+    <span class="card-priority p2">Focus #3 · Scheduling gap</span>
+    <div class="card-title">Thursday carries 22% of the weekly load — structurally the worst day</div>
+    <div class="card-body">
+      Thursday had <strong>115 misses</strong> — 24% more than the weekly average (88/day Mon–Fri). Wednesday (98) and Monday (93) follow. The weekend is near-zero (18, 14) confirming this is a business-hours queue problem, not an always-on issue.
+    </div>
+    <!-- Day of week bars: Mon=93,Tue=89,Wed=98,Thu=115,Fri=93,Sat=18,Sun=14 -->
+    <!-- max=115 -->
+    <div class="chart-label">Misses by day of week</div>
+    <div style="display:flex;align-items:flex-end;gap:4px;height:60px;margin-bottom:4px">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:10px;color:var(--ink-3)">93</span>
+        <div style="width:100%;height:48px;background:#2a78d6;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:10px;color:var(--ink-3)">89</span>
+        <div style="width:100%;height:46px;background:#2a78d6;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:10px;color:var(--ink-3)">98</span>
+        <div style="width:100%;height:51px;background:#e06020;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:10px;color:var(--ink-3);font-weight:700">115</span>
+        <div style="width:100%;height:60px;background:#d03b3b;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:10px;color:var(--ink-3)">93</span>
+        <div style="width:100%;height:48px;background:#2a78d6;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:10px;color:var(--ink-3)">18</span>
+        <div style="width:100%;height:9px;background:#e0ded4;border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <span style="font-size:10px;color:var(--ink-3)">14</span>
+        <div style="width:100%;height:7px;background:#e0ded4;border-radius:3px 3px 0 0"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Mon</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Tue</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Wed</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3);font-weight:700;color:var(--red)">Thu</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Fri</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Sat</div>
+      <div style="flex:1;text-align:center;font-size:10px;color:var(--ink-3)">Sun</div>
+    </div>
+    <div class="callout warning" style="margin-top:12px">
+      <strong>Action:</strong> Thursday's peak is 14:00–16:00 UTC (12 cases each). Reserve senior capacity for Thursdays — consider a 'Tiger Thursday' rotation where extra engineers are on standby for this window.
+    </div>
+  </div>
+
+  <!-- ── F4: Signature Success Critical rate ── -->
+  <div class="card highlight-orange">
+    <span class="card-priority p2">Focus #4 · Premium customer risk</span>
+    <div class="card-title">Signature Success has the highest Critical rate — 29% of their cases are Sev 1</div>
+    <div class="card-body">
+      Signature Success customers filed <strong>40 Level 1 Critical misses</strong> out of 137 total — a <strong>29% critical rate</strong>, significantly higher than Premier+ (9%) or Partner Premier (18%). These are your highest-tier customers and they're experiencing the most severe SLO failures.
+    </div>
+
+    <!-- Severity breakdown by success plan (pill bars) -->
+    <div class="chart-label" style="margin-bottom:8px">Severity mix by success plan</div>
+
+    <!-- Signature Success: Crit=40, Urg=77, High=15, Med=5 → total 137 -->
+    <div style="margin-bottom:6px">
+      <div style="font-size:11px;color:var(--ink-2);margin-bottom:3px">Signature Success (137)</div>
+      <div class="pill-bar">
+        <div class="pill-seg" style="width:29.2%;background:var(--sev1)">29%</div>
+        <div class="pill-seg" style="width:56.2%;background:var(--sev2)">56%</div>
+        <div class="pill-seg" style="width:10.9%;background:var(--sev3)">11%</div>
+        <div class="pill-seg" style="width:3.7%;background:var(--sev4)"></div>
+      </div>
+    </div>
+    <!-- Partner Premier: Crit=26, Urg=88, High=25, Med=6 → 145 -->
+    <div style="margin-bottom:6px">
+      <div style="font-size:11px;color:var(--ink-2);margin-bottom:3px">Partner Premier (145)</div>
+      <div class="pill-bar">
+        <div class="pill-seg" style="width:17.9%;background:var(--sev1)">18%</div>
+        <div class="pill-seg" style="width:60.7%;background:var(--sev2)">61%</div>
+        <div class="pill-seg" style="width:17.2%;background:var(--sev3)">17%</div>
+        <div class="pill-seg" style="width:4.1%;background:var(--sev4)"></div>
+      </div>
+    </div>
+    <!-- Premier+: Crit=14, Urg=92, High=35, Med=9 → 150 -->
+    <div style="margin-bottom:6px">
+      <div style="font-size:11px;color:var(--ink-2);margin-bottom:3px">Premier+ (150)</div>
+      <div class="pill-bar">
+        <div class="pill-seg" style="width:9.3%;background:var(--sev1)">9%</div>
+        <div class="pill-seg" style="width:61.3%;background:var(--sev2)">61%</div>
+        <div class="pill-seg" style="width:23.3%;background:var(--sev3)">23%</div>
+        <div class="pill-seg" style="width:6%;background:var(--sev4)"></div>
+      </div>
+    </div>
+    <!-- Premier: Crit=8, Urg=32, High=19, Med=7 → 66 -->
+    <div style="margin-bottom:6px">
+      <div style="font-size:11px;color:var(--ink-2);margin-bottom:3px">Premier (66)</div>
+      <div class="pill-bar">
+        <div class="pill-seg" style="width:12.1%;background:var(--sev1)">12%</div>
+        <div class="pill-seg" style="width:48.5%;background:var(--sev2)">49%</div>
+        <div class="pill-seg" style="width:28.8%;background:var(--sev3)">29%</div>
+        <div class="pill-seg" style="width:10.6%;background:var(--sev4)"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--sev1);border-radius:2px;display:inline-block"></span>L1 Critical</span>
+      <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--sev2);border-radius:2px;display:inline-block"></span>L2 Urgent</span>
+      <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--sev3);border-radius:2px;display:inline-block"></span>L3 High</span>
+      <span style="font-size:11px;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--sev4);border-radius:2px;display:inline-block"></span>L4 Medium</span>
+    </div>
+    <div class="callout" style="margin-top:12px">
+      <strong>Action:</strong> Signature Success SLO misses need a dedicated triage track. With a 29% critical rate, these customers have the least tolerance for missed SLOs. Consider a pre-escalation check specifically for Signature accounts.
+    </div>
+  </div>
+
+</div><!-- /insight-grid row 2 -->
+
+<!-- ── Row 3 insights ── -->
+<div class="insight-grid three" style="margin-top:16px">
+
+  <!-- ── F5: Product concentration ── -->
+  <div class="card highlight">
+    <span class="card-priority p1">Focus #5 · Volume reduction</span>
+    <div class="card-title">5 products drive 39% of all misses</div>
+    <div class="card-body">Fix these and the backlog shrinks by ~200 cases per 6 months.</div>
+
+    <div class="chart-area">
+      <!-- bar rows -->
+      <div class="bar-row">
+        <div class="br-label">Omnistudio</div>
+        <div class="br-track"><div class="br-fill" style="width:100%;background:var(--red)"></div></div>
+        <div class="br-val">67</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">Life Sciences</div>
+        <div class="br-track"><div class="br-fill" style="width:53.7%;background:var(--orange)"></div></div>
+        <div class="br-val">36</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">RCCore-Configurator</div>
+        <div class="br-track"><div class="br-fill" style="width:52.2%;background:var(--orange)"></div></div>
+        <div class="br-val">35</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">RCCore-Trans Mgmt</div>
+        <div class="br-track"><div class="br-fill" style="width:49.3%;background:var(--orange)"></div></div>
+        <div class="br-val">33</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">Industry-CPQ/OMS</div>
+        <div class="br-track"><div class="br-fill" style="width:47.8%;background:var(--yellow)"></div></div>
+        <div class="br-val">32</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label" style="color:var(--ink-3);font-style:italic">All others (18 topics)</div>
+        <div class="br-track"><div class="br-fill" style="width:100%;background:#e5e3db"></div></div>
+        <div class="br-val" style="color:var(--ink-3)">317</div>
+      </div>
+    </div>
+    <div class="callout warning" style="margin-top:10px">
+      <strong>Note:</strong> Omnistudio already resolved. Prioritize Life Sciences, Configurator, and Transaction Mgmt next.
+    </div>
+  </div>
+
+  <!-- ── F6: AMER breakdown ── -->
+  <div class="card highlight-orange">
+    <span class="card-priority p2">Focus #6 · GEO concentration</span>
+    <div class="card-title">AMER is 58% of volume — and mostly Urgent at AMER morning hours</div>
+    <div class="card-body">
+      300 AMER cases. <strong>60% are L2 Urgent</strong> and peak at 14:00–21:00 UTC (9am–4pm EST). EMEA is 25% with a secondary peak at 9–15 UTC. APAC (12%) peaks early at 04–08 UTC.
+    </div>
+
+    <!-- GEO bar chart -->
+    <div class="chart-area">
+      <div class="bar-row">
+        <div class="br-label">AMER</div>
+        <div class="br-track"><div class="br-fill" style="width:100%;background:var(--accent)"></div></div>
+        <div class="br-val">300</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">EMEA</div>
+        <div class="br-track"><div class="br-fill" style="width:43.7%;background:var(--accent);opacity:0.7"></div></div>
+        <div class="br-val">131</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">APAC</div>
+        <div class="br-track"><div class="br-fill" style="width:21%;background:var(--accent);opacity:0.45"></div></div>
+        <div class="br-val">63</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">Others + Japan</div>
+        <div class="br-track"><div class="br-fill" style="width:8.7%;background:#e0ded4"></div></div>
+        <div class="br-val">26</div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px">
+      <div style="font-size:11px;color:var(--ink-3);margin-bottom:4px">AMER severity mix</div>
+      <div class="pill-bar">
+        <div class="pill-seg" style="width:20.7%;background:var(--sev1)">21%</div>
+        <div class="pill-seg" style="width:60.3%;background:var(--sev2)">60%</div>
+        <div class="pill-seg" style="width:15.7%;background:var(--sev3)">16%</div>
+        <div class="pill-seg" style="width:3.3%;background:var(--sev4)"></div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:10px">
+      <strong>Action:</strong> AMER L2 Urgent at 14–17 UTC is the single largest bucket. Dedicated AMER morning response capacity is the highest-leverage fix.
+    </div>
+  </div>
+
+  <!-- ── F7: Engineer Geo gap ── -->
+  <div class="card highlight-yellow">
+    <span class="card-priority p3">Focus #7 · Coverage gap signal</span>
+    <div class="card-title">86% of cases have no named Engineer GEO — they sit in the "Others" queue</div>
+    <div class="card-body">
+      446 of 520 cases are tagged as Engineer GEO = "Others" — meaning they were handled by the <strong>Industry-queue</strong> (no individual assignment). Only 43 cases (8%) had an AMER engineer assigned. This is a routing/assignment visibility gap that may be masking under-staffing.
+    </div>
+
+    <div class="chart-area">
+      <div class="bar-row">
+        <div class="br-label">Others (queue)</div>
+        <div class="br-track"><div class="br-fill" style="width:100%;background:var(--yellow)"></div></div>
+        <div class="br-val">446</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">AMER</div>
+        <div class="br-track"><div class="br-fill" style="width:9.6%;background:var(--accent)"></div></div>
+        <div class="br-val">43</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">EMEA</div>
+        <div class="br-track"><div class="br-fill" style="width:3.6%;background:var(--accent);opacity:0.7"></div></div>
+        <div class="br-val">16</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">India</div>
+        <div class="br-track"><div class="br-fill" style="width:2%;background:var(--teal)"></div></div>
+        <div class="br-val">9</div>
+      </div>
+      <div class="bar-row">
+        <div class="br-label">APAC</div>
+        <div class="br-track"><div class="br-fill" style="width:1.3%;background:var(--accent);opacity:0.5"></div></div>
+        <div class="br-val">6</div>
+      </div>
+    </div>
+    <div class="callout warning" style="margin-top:10px">
+      <strong>Action:</strong> Investigate whether "Others" queue cases have higher SLO violation rates than individually-assigned ones. If yes, the fix is better auto-routing, not just headcount.
+    </div>
+  </div>
+
+</div><!-- /insight-grid three -->
+
+<!-- ══ HEATMAP ═══════════════════════════════════════════════ -->
+<div class="section-heading">Heatmap — Day × Hour (UTC)</div>
+<div class="card">
+  <div class="card-title" style="margin-bottom:4px">Thursday 14–16 UTC is the single hottest zone in the entire dataset</div>
+  <div class="card-body" style="margin-bottom:16px">
+    The deepest red cells are Thu 14:00 (12), Thu 15:00 (11), Thu 16:00 (12), and Wed 14:00 (10). Every weekday is dangerous at 13–17 UTC. Weekends and midnight hours are near-zero.
+  </div>
+
+  <div id="heatmap-container"></div>
+
+  <div style="display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap">
+    <span style="font-size:11px;color:var(--ink-3)">0</span>
+    <div style="display:flex;height:10px;width:160px;border-radius:3px;overflow:hidden">
+      <div style="flex:1;background:#f0eed8"></div>
+      <div style="flex:1;background:#f0c080"></div>
+      <div style="flex:1;background:#e06020"></div>
+      <div style="flex:1;background:#d03b3b"></div>
+      <div style="flex:1;background:#8b1a1a"></div>
+    </div>
+    <span style="font-size:11px;color:var(--ink-3)">High</span>
+    <span style="font-size:11px;color:var(--ink-3);margin-left:12px">Hover for count</span>
+  </div>
+</div>
+
+<!-- ══ RECOMMENDATIONS ════════════════════════════════════════ -->
+<div class="section-heading">Actionable Recommendations</div>
+<div class="card">
+  <ul class="action-list">
+    <li>
+      <span class="action-icon">🔥</span>
+      <div class="action-text">
+        <strong>Staff the 13–17 UTC window (highest ROI)</strong>
+        This 5-hour block contains 42% of all SLO misses. A dedicated response pod covering AMER morning + EMEA afternoon overlap will have the single largest impact on your miss rate. This is not a product fix — it's a coverage fix.
+      </div>
+    </li>
+    <li>
+      <span class="action-icon">📋</span>
+      <div class="action-text">
+        <strong>Run an Omnistudio post-mortem and apply the playbook</strong>
+        Volume dropped from 24 → 3 misses/month. Identify whether this was a product patch, KB article, proactive swarming, or routing change. Life Sciences (36), Configurator (35), and Transaction Mgmt (33) need the same treatment.
+      </div>
+    </li>
+    <li>
+      <span class="action-icon">📅</span>
+      <div class="action-text">
+        <strong>Add a Thursday surge plan</strong>
+        Thursday is 22% of the weekly load and spikes at 14–16 UTC. Consider a rotating "Tiger Thursday" where additional engineers are pre-allocated for this window every week.
+      </div>
+    </li>
+    <li>
+      <span class="action-icon">🎯</span>
+      <div class="action-text">
+        <strong>Create a Signature Success triage track</strong>
+        29% of Signature Success cases are Sev 1 Critical — the highest critical rate across all success plans. These accounts have zero tolerance for SLO violations. A fast-path assignment rule for Signature + Sev 1 cases would protect your highest-value accounts.
+      </div>
+    </li>
+    <li>
+      <span class="action-icon">🗺️</span>
+      <div class="action-text">
+        <strong>Investigate the "Others" engineer queue</strong>
+        86% of all cases have no named engineer — they go through a generic Industry queue. Determine whether queue-routed cases have worse SLO outcomes than assigned ones. If yes, fixing auto-assignment logic may reduce misses without adding headcount.
+      </div>
+    </li>
+    <li>
+      <span class="action-icon">📉</span>
+      <div class="action-text">
+        <strong>Watch June — it reversed a 2-month improvement streak</strong>
+        After Apr (−28%) and May (−11%), June spiked +14%. Investigate what drove the June bounce before it becomes a trend. July is currently tracking at ~52 (partial month) — if it ends above 70, the improvement is not holding.
+      </div>
+    </li>
+  </ul>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ── Heatmap ──────────────────────────────────────────────────
+// Actual data: day_of_week × hour count from 520 records
+const HEATMAP = {
+  Monday:    {0:0,1:1,2:0,3:0,4:1,5:1,6:1,7:1,8:2,9:6,10:5,11:5,12:2,13:5,14:9,15:8,16:8,17:8,18:4,19:6,20:7,21:5,22:3,23:1},
+  Tuesday:   {0:0,1:0,2:0,3:1,4:1,5:1,6:1,7:2,8:3,9:5,10:4,11:3,12:3,13:6,14:10,15:7,16:9,17:8,18:6,19:4,20:6,21:4,22:3,23:2},
+  Wednesday: {0:2,1:0,2:1,3:0,4:3,5:0,6:3,7:2,8:2,9:5,10:6,11:3,12:1,13:5,14:10,15:8,16:9,17:7,18:4,19:5,20:7,21:5,22:4,23:2},
+  Thursday:  {0:2,1:1,2:0,3:1,4:2,5:1,6:2,7:2,8:3,9:6,10:6,11:4,12:4,13:7,14:12,15:11,16:12,17:6,18:5,19:5,20:9,21:9,22:5,23:2},
+  Friday:    {0:1,1:2,2:1,3:1,4:2,5:2,6:2,7:2,8:3,9:5,10:4,11:4,12:4,13:6,14:13,15:9,16:9,17:5,18:6,19:5,20:4,21:2,22:2,23:1},
+  Saturday:  {0:0,1:0,2:0,3:0,4:0,5:0,6:1,7:1,8:1,9:1,10:1,11:1,12:1,13:1,14:3,15:2,16:2,17:1,18:1,19:1,20:1,21:0,22:0,23:0},
+  Sunday:    {0:0,1:1,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0,14:2,15:0,16:2,17:1,18:2,19:2,20:1,21:1,22:0,23:0},
+};
+const DOW = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const maxV = 13; // Thu 14:00 peak
+
+function heatColor(v) {
+  if (v === 0) return '#f5f4f0';
+  const t = v / maxV;
+  if (t < 0.2)  return '#fdf5e0';
+  if (t < 0.4)  return '#f5c878';
+  if (t < 0.6)  return '#e88030';
+  if (t < 0.8)  return '#d04828';
+  return '#8b1a1a';
+}
+function textColor(v) {
+  const t = v / maxV;
+  return t > 0.4 ? '#fff' : '#4a4844';
+}
+
+const container = document.getElementById('heatmap-container');
+const cellW = 36, cellH = 28, labelW = 64, labelH = 22;
+const W = labelW + 24 * (cellW + 1) + 4;
+const H = labelH + 7 * (cellH + 1);
+
+const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+svg.setAttribute('width', '100%');
+svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+svg.style.maxWidth = W + 'px';
+svg.style.fontFamily = 'system-ui,-apple-system,"Segoe UI",sans-serif';
+
+// Hour labels
+for (let h = 0; h < 24; h++) {
+  const x = labelW + h * (cellW + 1) + cellW / 2;
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', x); t.setAttribute('y', 14);
+  t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-size', 9);
+  t.setAttribute('fill', '#8a8784');
+  t.textContent = String(h).padStart(2,'0');
+  svg.appendChild(t);
+}
+
+// Cells
+DOW.forEach((dow, di) => {
+  const y = labelH + di * (cellH + 1);
+
+  // Day label
+  const lt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  lt.setAttribute('x', labelW - 6); lt.setAttribute('y', y + cellH / 2 + 1);
+  lt.setAttribute('text-anchor', 'end'); lt.setAttribute('dominant-baseline', 'middle');
+  lt.setAttribute('font-size', 11); lt.setAttribute('fill', '#4a4844');
+  if (dow === 'Thursday') { lt.setAttribute('font-weight', '700'); lt.setAttribute('fill', '#d03b3b'); }
+  lt.textContent = dow.slice(0,3);
+  svg.appendChild(lt);
+
+  for (let h = 0; h < 24; h++) {
+    const v = HEATMAP[dow][h] || 0;
+    const x = labelW + h * (cellW + 1);
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', x); rect.setAttribute('y', y);
+    rect.setAttribute('width', cellW); rect.setAttribute('height', cellH);
+    rect.setAttribute('rx', 3); rect.setAttribute('fill', heatColor(v));
+    rect.style.cursor = 'default';
+
+    // Tooltip
+    rect.addEventListener('mouseenter', function(e) {
+      this.setAttribute('stroke', '#1a1917'); this.setAttribute('stroke-width', '1.5');
+    });
+    rect.addEventListener('mouseleave', function() {
+      this.removeAttribute('stroke'); this.removeAttribute('stroke-width');
+    });
+    rect.setAttribute('title', `${dow} ${String(h).padStart(2,'0')}:00 UTC — ${v} cases`);
+
+    svg.appendChild(rect);
+
+    if (v > 0) {
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', x + cellW/2); txt.setAttribute('y', y + cellH/2 + 1);
+      txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('dominant-baseline', 'middle');
+      txt.setAttribute('font-size', 10); txt.setAttribute('font-weight', '600');
+      txt.setAttribute('fill', textColor(v)); txt.setAttribute('pointer-events', 'none');
+      txt.textContent = v;
+      svg.appendChild(txt);
+    }
+  }
+});
+
+container.appendChild(svg);
+</script>
+</body>
+</html>
