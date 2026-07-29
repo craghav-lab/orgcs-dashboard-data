@@ -89,6 +89,7 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
   <div class="nav-brand">IND <span>SLO Miss</span></div>
   <div class="nav-tab active" onclick="switchPage('p1',this)">📊 Overview &amp; Heatmap</div>
   <div class="nav-tab" onclick="switchPage('p2',this)">📈 Trend Explorer</div>
+  <div class="nav-tab" onclick="switchPage('p3',this)">🔥 Heatmap Drill-Down</div>
   <div class="nav-spacer"></div>
   <button class="theme-btn" onclick="toggleTheme()">☀ / ☾</button>
 </nav>
@@ -247,6 +248,62 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
       <div class="card-title">Product category trend</div>
       <div class="card-sub">Revenue spiked Mar; Industry recovering</div>
       <div id="prod-trend-wrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: 6 Heatmaps -->
+<div id="p3" class="page">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+    <div class="card-title" style="margin:0">Heatmap Drill-Down</div>
+    <span style="font-size:11px;color:var(--ink3)">Day of Week × Hour (UTC) · hover for shift, case count, success plans &amp; case numbers</span>
+  </div>
+
+  <!-- Row 1: All Industry | All Revenue -->
+  <div class="grid2" style="margin-bottom:13px">
+    <div class="card">
+      <div class="card-title">1 — Industry Cloud · All Plans · All Severities</div>
+      <div class="card-sub">PD shifts = Industry Cloud schedule (UTC)</div>
+      <div id="hm-ind-all" style="overflow-x:auto"></div>
+      <div id="hm-ind-all-leg" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;align-items:center"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">2 — Revenue Cloud · All Plans · All Severities</div>
+      <div class="card-sub">PD shifts = Revenue Cloud schedule (UTC)</div>
+      <div id="hm-rev-all" style="overflow-x:auto"></div>
+      <div id="hm-rev-all-leg" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;align-items:center"></div>
+    </div>
+  </div>
+
+  <!-- Row 2: Industry Signature | Revenue Signature -->
+  <div class="grid2" style="margin-bottom:13px">
+    <div class="card">
+      <div class="card-title">3 — Industry Cloud · Signature Plans Only</div>
+      <div class="card-sub">Signature Success · Gov Signature · US Signature · Premier Priority</div>
+      <div id="hm-ind-sig" style="overflow-x:auto"></div>
+      <div id="hm-ind-sig-leg" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;align-items:center"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">4 — Revenue Cloud · Signature Plans Only</div>
+      <div class="card-sub">Signature Success · Gov Signature · US Signature · Premier Priority</div>
+      <div id="hm-rev-sig" style="overflow-x:auto"></div>
+      <div id="hm-rev-sig-leg" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;align-items:center"></div>
+    </div>
+  </div>
+
+  <!-- Row 3: Industry Premier+Other | Revenue Premier+Other -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">5 — Industry Cloud · Premier + Other Plans</div>
+      <div class="card-sub">All plans except Signature &amp; Premier Priority</div>
+      <div id="hm-ind-prem" style="overflow-x:auto"></div>
+      <div id="hm-ind-prem-leg" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;align-items:center"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">6 — Revenue Cloud · Premier + Other Plans</div>
+      <div class="card-sub">All plans except Signature &amp; Premier Priority</div>
+      <div id="hm-rev-prem" style="overflow-x:auto"></div>
+      <div id="hm-rev-prem-leg" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;align-items:center"></div>
     </div>
   </div>
 </div>
@@ -466,6 +523,169 @@ function mkSeries(dim,data,months){
     color:dim==='shift'?SHIFT_COLORS[v]||SCOL[i]:dim==='severity'?SEV_COLORS[v]||SCOL[i]:SCOL[i%SCOL.length],
     vals:months.map(m=>data.filter(r=>r[dim]===v&&r.month===m).length)
   })).filter(s=>s.vals.some(x=>x>0));
+}
+
+/* ── SHIFT SCHEDULES FOR BOTH CLOUDS (UTC hours) ─────────── */
+// Industry Cloud PD schedule
+const IND_SHIFT_HOURS={APAC:[1,2,3,4,5],IST:[6,7,8,9,10],EMEA:[11,12,13,14,15],EST:[16,17,18,19,20],PST:[0,21,22,23]};
+// Revenue Cloud PD schedule (different boundaries)
+const REV_SHIFT_HOURS={APAC:[1,2,3,4,5],IST:[6,7,8],EMEA:[9,10,11,12],EST:[13,14,15,16,17,18],PST:[0,19,20,21,22,23]};
+
+function buildH2S(shiftHours){
+  const h2s={};
+  for(const[s,hrs]of Object.entries(shiftHours))hrs.forEach(h=>h2s[h]=s);
+  return h2s;
+}
+const IND_H2S=buildH2S(IND_SHIFT_HOURS);
+const REV_H2S=buildH2S(REV_SHIFT_HOURS);
+
+/* ── SIGNATURE FILTER ────────────────────────────────────── */
+const SIG_PLANS=new Set(['Gov Signature Success','Signature Success','Signature','US Signature Success','Premier Priority']);
+function isSig(r){return SIG_PLANS.has(r.success_plan);}
+
+/* ── GENERIC HEATMAP (reusable, with configurable shift map) */
+function drawHeatmapGeneric(wrapId, legendId, records, shiftHours, h2s){
+  const wrap=document.getElementById(wrapId);
+  if(!wrap)return;
+  wrap.innerHTML='';
+
+  const cnt={};const clist={};const splist={};
+  DOW_ORDER.forEach(d=>{
+    cnt[d]={};clist[d]={};splist[d]={};
+    for(let h=0;h<24;h++){cnt[d][h]=0;clist[d][h]=[];splist[d][h]={};}
+  });
+  records.forEach(r=>{
+    cnt[r.dow][r.hour]++;
+    clist[r.dow][r.hour].push(r.case_num);
+    const sp=r.success_plan||'Unknown';
+    splist[r.dow][r.hour][sp]=(splist[r.dow][r.hour][sp]||0)+1;
+  });
+  const maxV=Math.max(...DOW_ORDER.flatMap(d=>Object.values(cnt[d])),1);
+
+  function hCol(v){
+    if(v===0)return cv('--surf2')||'#f4f3ef';
+    const t=v/maxV;
+    if(t<0.15)return '#fef9ec';if(t<0.3)return '#fde68a';
+    if(t<0.5)return '#f59e0b';if(t<0.7)return '#d04020';return '#7c0e0e';
+  }
+  function tCol(v){return v/maxV>0.45?'#fff':'#333';}
+
+  const cW=37,cH=29,lW=48,lH=20,g=1;
+  const W=lW+24*(cW+g),H=lH+7*(cH+g);
+  const svg=ns('svg',{width:W,height:H,viewBox:`0 0 ${W} ${H}`});
+  svg.style.fontFamily='system-ui,-apple-system,sans-serif';
+  svg.style.display='block';
+
+  // Shift band backgrounds
+  for(const[sh,hrs]of Object.entries(shiftHours)){
+    // Group consecutive hours into bands for bg rects
+    const sorted=[...hrs].sort((a,b)=>a-b);
+    // Draw individual cells for non-consecutive (PST wraps around midnight)
+    hrs.forEach(h=>{
+      const bx=lW+h*(cW+g);
+      svg.appendChild(ns('rect',{x:bx,y:0,width:cW,height:H,fill:SHIFT_LIGHT[sh]}));
+    });
+    // Shift label on first hour of shift (display order)
+    const firstH=sorted[0];
+    const bx=lW+firstH*(cW+g);
+    const st=ns('text',{x:bx+cW/2,y:11,'text-anchor':'middle','font-size':8,'font-weight':'700',
+      fill:SHIFT_COLORS[sh],'pointer-events':'none'});
+    st.textContent=sh;svg.appendChild(st);
+  }
+
+  // Hour labels
+  for(let h=0;h<24;h++){
+    const x=lW+h*(cW+g)+cW/2;
+    const t=ns('text',{x,y:lH-3,'text-anchor':'middle','font-size':8.5,fill:cv('--ink3')});
+    t.textContent=String(h).padStart(2,'0');svg.appendChild(t);
+  }
+
+  // Cells
+  DOW_ORDER.forEach((dow,di)=>{
+    const y=lH+di*(cH+g);
+    const lt=ns('text',{x:lW-4,y:y+cH/2,'text-anchor':'end','dominant-baseline':'middle','font-size':10.5,
+      'font-weight':dow==='Thursday'?'700':'400',fill:dow==='Thursday'?'#c0392b':cv('--ink2')});
+    lt.textContent=dow.slice(0,3);svg.appendChild(lt);
+    for(let h=0;h<24;h++){
+      const v=cnt[dow][h]||0,cases=clist[dow][h]||[];
+      const sps=splist[dow][h]||{};
+      const x=lW+h*(cW+g);
+      const rect=ns('rect',{x,y,width:cW,height:cH,rx:3,fill:hCol(v)});
+      rect.addEventListener('pointerenter',e=>{
+        rect.setAttribute('stroke','#111');rect.setAttribute('stroke-width','1.5');
+        const sh=h2s[h]||'—';
+        const cs=cases.length?cases.slice(0,6).join(', ')+(cases.length>6?` +${cases.length-6} more`:''):'—';
+        // Build success plan summary
+        const spEntries=Object.entries(sps).sort((a,b)=>b[1]-a[1]);
+        const spStr=spEntries.map(([k,vv])=>k+' ('+vv+')').slice(0,5).join(', ')+(spEntries.length>5?' …':'');
+        showTT(
+          '<div class="tt-title">'+esc(dow)+' · '+String(h).padStart(2,'0')+':00 UTC</div>'+
+          '<div class="tt-row"><span class="tt-lbl">PD Shift</span><span class="tt-val">'+esc(sh)+'</span></div>'+
+          '<div class="tt-row"><span class="tt-lbl">Cases</span><span class="tt-val">'+v+'</span></div>'+
+          (spEntries.length?'<div class="tt-row"><span class="tt-lbl">Plans</span><span class="tt-val">'+esc(spStr)+'</span></div>':'')+
+          (v>0?'<div class="tt-cases">'+esc(cs)+'</div>':''),e);
+      });
+      rect.addEventListener('pointermove',moveTT);
+      rect.addEventListener('pointerleave',()=>{rect.removeAttribute('stroke');rect.removeAttribute('stroke-width');hideTT();});
+      svg.appendChild(rect);
+      if(v>0){
+        const tx=ns('text',{x:x+cW/2,y:y+cH/2,'text-anchor':'middle','dominant-baseline':'middle',
+          'font-size':10,'font-weight':'600',fill:tCol(v),'pointer-events':'none'});
+        tx.textContent=v;svg.appendChild(tx);
+      }
+    }
+  });
+  wrap.appendChild(svg);
+
+  // Legend
+  const legEl=document.getElementById(legendId);
+  if(legEl){
+    legEl.innerHTML='';
+    const lspan=document.createElement('span');
+    lspan.style.cssText='font-size:11px;color:var(--ink3)';
+    lspan.textContent='Shifts (UTC):';
+    legEl.appendChild(lspan);
+    ['APAC','IST','EMEA','EST','PST'].forEach(sh=>{
+      if(!shiftHours[sh]||!shiftHours[sh].length)return;
+      const hrs=shiftHours[sh];
+      const sorted=[...hrs].sort((a,b)=>a-b);
+      const rangeStr=sorted[0]===0&&sorted.length>1?
+        (sorted.slice(1)[0]+'-23, 00'):
+        (sorted[0]+'-'+sorted[sorted.length-1]);
+      const sb=document.createElement('span');sb.className='sb sb-'+sh;
+      sb.textContent=sh+' '+String(sorted[0]).padStart(2,'0')+'–'+String(sorted[sorted.length-1]).padStart(2,'0');
+      legEl.appendChild(sb);
+    });
+    // Total count
+    const tot=document.createElement('span');
+    tot.style.cssText='font-size:11px;color:var(--ink3);margin-left:8px;font-weight:700';
+    tot.textContent='n='+records.length;
+    legEl.appendChild(tot);
+  }
+}
+
+/* ── PAGE 3 RENDER ───────────────────────────────────────── */
+function renderP3(){
+  // Filter helpers
+  const indRecs=RECORDS.filter(r=>r.product_topic.startsWith('Industry'));
+  const revRecs=RECORDS.filter(r=>r.product_topic.startsWith('Revenue'));
+  const indSig=indRecs.filter(isSig);
+  const revSig=revRecs.filter(isSig);
+  const indPrem=indRecs.filter(r=>!isSig(r));
+  const revPrem=revRecs.filter(r=>!isSig(r));
+
+  // 1: Industry All — Industry Cloud shifts
+  drawHeatmapGeneric('hm-ind-all','hm-ind-all-leg',indRecs,IND_SHIFT_HOURS,IND_H2S);
+  // 2: Revenue All — Revenue Cloud shifts
+  drawHeatmapGeneric('hm-rev-all','hm-rev-all-leg',revRecs,REV_SHIFT_HOURS,REV_H2S);
+  // 3: Industry Signature — Industry Cloud shifts
+  drawHeatmapGeneric('hm-ind-sig','hm-ind-sig-leg',indSig,IND_SHIFT_HOURS,IND_H2S);
+  // 4: Revenue Signature — Revenue Cloud shifts
+  drawHeatmapGeneric('hm-rev-sig','hm-rev-sig-leg',revSig,REV_SHIFT_HOURS,REV_H2S);
+  // 5: Industry Premier+Other — Industry Cloud shifts
+  drawHeatmapGeneric('hm-ind-prem','hm-ind-prem-leg',indPrem,IND_SHIFT_HOURS,IND_H2S);
+  // 6: Revenue Premier+Other — Revenue Cloud shifts
+  drawHeatmapGeneric('hm-rev-prem','hm-rev-prem-leg',revPrem,REV_SHIFT_HOURS,REV_H2S);
 }
 
 /* ── TIER COLORS ─────────────────────────────────────────── */
@@ -744,7 +964,7 @@ function switchPage(id,tab){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');tab.classList.add('active');
-  if(id==='p1')renderP1();if(id==='p2')renderP2();
+  if(id==='p1')renderP1();if(id==='p2')renderP2();if(id==='p3')renderP3();
 }
 function setDim(btn){
   document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
@@ -752,7 +972,9 @@ function setDim(btn){
 }
 function toggleTheme(){
   document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';
-  renderP1();if(document.getElementById('p2').classList.contains('active'))renderP2();
+  renderP1();
+  if(document.getElementById('p2').classList.contains('active'))renderP2();
+  if(document.getElementById('p3').classList.contains('active'))renderP3();
 }
 function resetFilters(){
   ['f-eng','f-sev','f-sp','f-prod','f-shift'].forEach(id=>{
