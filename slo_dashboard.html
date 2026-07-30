@@ -48,9 +48,7 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
 .grid6040{display:grid;grid-template-columns:1.5fr 1fr;gap:13px}
 .card{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:16px 18px;overflow:hidden}
 .card-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
-.card-sub{font-size:11px;color:var(--ink3);margin-bottom:12px}
-.p4-section-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:5px}
-#tt{position:fixed;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12px;pointer-events:none;z-index:9999;max-width:300px;box-shadow:0 4px 20px rgba(0,0,0,.13);display:none}
+.card-sub{font-size:11px;color:var(--ink3);margin-bottom:12px}#tt{position:fixed;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-size:12px;pointer-events:none;z-index:9999;max-width:300px;box-shadow:0 4px 20px rgba(0,0,0,.13);display:none}
 .tt-title{font-weight:700;color:var(--ink);margin-bottom:5px;font-size:13px}
 .tt-row{display:flex;justify-content:space-between;gap:16px;margin-bottom:2px}
 .tt-lbl{color:var(--ink3)}.tt-val{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
@@ -254,33 +252,25 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
   </div>
 </div>
 
-<!-- PAGE 4: 6 Dual Trend Graphs (Severity + Shift) -->
+<!-- PAGE 4: 6 Severity Trend Graphs -->
 <div id="p4" class="page">
   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
-    <div class="card-title" style="margin:0">Severity &amp; Shift Trends</div>
-    <span style="font-size:11px;color:var(--ink3)">Each card: top = Severity by month · bottom = PD Shift by month (cloud-aligned) · click legend to show/hide</span>
+    <div class="card-title" style="margin:0">Severity Trends</div>
+    <span style="font-size:11px;color:var(--ink3)">X = Month · Y = Case count · one line per severity · click legend to show/hide</span>
   </div>
 
   <div class="grid2" style="margin-bottom:13px">
     <div class="card">
       <div class="card-title">1 — Industry Cloud · All Plans</div>
       <div class="card-sub" id="p4-sub-1"></div>
-      <div class="p4-section-lbl">Severity</div>
-      <div id="p4-sev-1"></div>
-      <div class="legend" id="p4-sev-l1" style="margin-bottom:14px"></div>
-      <div class="p4-section-lbl">PD Shift — Industry Cloud</div>
-      <div id="p4-shift-1"></div>
-      <div class="legend" id="p4-shift-l1"></div>
+      <div id="p4-chart-1"></div>
+      <div class="legend" id="p4-leg-1"></div>
     </div>
     <div class="card">
       <div class="card-title">2 — Revenue Cloud · All Plans</div>
       <div class="card-sub" id="p4-sub-2"></div>
-      <div class="p4-section-lbl">Severity</div>
-      <div id="p4-sev-2"></div>
-      <div class="legend" id="p4-sev-l2" style="margin-bottom:14px"></div>
-      <div class="p4-section-lbl">PD Shift — Revenue Cloud</div>
-      <div id="p4-shift-2"></div>
-      <div class="legend" id="p4-shift-l2"></div>
+      <div id="p4-chart-2"></div>
+      <div class="legend" id="p4-leg-2"></div>
     </div>
   </div>
 
@@ -288,22 +278,14 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
     <div class="card">
       <div class="card-title">3 — Industry Cloud · Signature Plans</div>
       <div class="card-sub">Gov Signature · Signature Success · US Signature · Premier Priority</div>
-      <div class="p4-section-lbl">Severity</div>
-      <div id="p4-sev-3"></div>
-      <div class="legend" id="p4-sev-l3" style="margin-bottom:14px"></div>
-      <div class="p4-section-lbl">PD Shift — Industry Cloud</div>
-      <div id="p4-shift-3"></div>
-      <div class="legend" id="p4-shift-l3"></div>
+      <div id="p4-chart-3"></div>
+      <div class="legend" id="p4-leg-3"></div>
     </div>
     <div class="card">
       <div class="card-title">4 — Revenue Cloud · Signature Plans</div>
       <div class="card-sub">Gov Signature · Signature Success · US Signature · Premier Priority</div>
-      <div class="p4-section-lbl">Severity</div>
-      <div id="p4-sev-4"></div>
-      <div class="legend" id="p4-sev-l4" style="margin-bottom:14px"></div>
-      <div class="p4-section-lbl">PD Shift — Revenue Cloud</div>
-      <div id="p4-shift-4"></div>
-      <div class="legend" id="p4-shift-l4"></div>
+      <div id="p4-chart-4"></div>
+      <div class="legend" id="p4-leg-4"></div>
     </div>
   </div>
 
@@ -311,22 +293,14 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
     <div class="card">
       <div class="card-title">5 — Industry Cloud · Premier + Other</div>
       <div class="card-sub">All plans excluding Signature &amp; Premier Priority</div>
-      <div class="p4-section-lbl">Severity</div>
-      <div id="p4-sev-5"></div>
-      <div class="legend" id="p4-sev-l5" style="margin-bottom:14px"></div>
-      <div class="p4-section-lbl">PD Shift — Industry Cloud</div>
-      <div id="p4-shift-5"></div>
-      <div class="legend" id="p4-shift-l5"></div>
+      <div id="p4-chart-5"></div>
+      <div class="legend" id="p4-leg-5"></div>
     </div>
     <div class="card">
       <div class="card-title">6 — Revenue Cloud · Premier + Other</div>
       <div class="card-sub">All plans excluding Signature &amp; Premier Priority</div>
-      <div class="p4-section-lbl">Severity</div>
-      <div id="p4-sev-6"></div>
-      <div class="legend" id="p4-sev-l6" style="margin-bottom:14px"></div>
-      <div class="p4-section-lbl">PD Shift — Revenue Cloud</div>
-      <div id="p4-shift-6"></div>
-      <div class="legend" id="p4-shift-l6"></div>
+      <div id="p4-chart-6"></div>
+      <div class="legend" id="p4-leg-6"></div>
     </div>
   </div>
 </div>
@@ -744,58 +718,112 @@ function drawHeatmapGeneric(wrapId, legendId, records, shiftHours, h2s){
   }
 }
 
-/* ── PAGE 4: dual trend (severity + shift) per panel ─────── */
-function drawTrendChart(wrapId, legendId, series, hiddenSet, redrawFn){
+/* ── PAGE 4: severity trend chart ────────────────────────── */
+function drawSevTrendChart(wrapId, legendId, records, hiddenSet){
+  const series=SEV_ORDER.map(sev=>({
+    label:sev,
+    color:SEV_COLORS[sev],
+    vals:MONTHS.map(m=>records.filter(r=>r.severity===sev&&r.month===m).length)
+  })).filter(s=>s.vals.some(x=>x>0));
+
   const wrap=document.getElementById(wrapId);
   if(!wrap)return;
   wrap.innerHTML='';
+
   const active=series.filter(s=>!hiddenSet.has(s.label));
   if(!active.length){
     const msg=document.createElement('div');
-    msg.style.cssText='color:var(--ink3);font-size:12px;padding:10px 0';
-    msg.textContent='No data';wrap.appendChild(msg);return;
-  }
-  const allV=active.flatMap(s=>s.vals);
-  const maxV=Math.max(...allV,1);
-  const mn=MONTHS.length;
-  const pL=32,pR=14,pT=8,pB=20,cH=100;
-  const W=Math.max(mn*68,360),H=cH+pT+pB;
-  const svg=ns('svg',{width:'100%',viewBox:`0 0 ${W} ${H}`});
-  svg.style.fontFamily='system-ui,-apple-system,sans-serif';
-  [0,0.5,1].forEach(t=>{
-    const y=pT+cH-t*cH;
-    svg.appendChild(ns('line',{x1:pL,y1:y,x2:W-pR,y2:y,stroke:cv('--border'),'stroke-width':1}));
-    const lb=ns('text',{x:pL-3,y:y+3,'text-anchor':'end','font-size':9,fill:cv('--ink3')});
-    lb.textContent=Math.round(t*maxV);svg.appendChild(lb);
-  });
-  svg.appendChild(ns('line',{x1:pL,y1:pT+cH,x2:W-pR,y2:pT+cH,stroke:cv('--border2'),'stroke-width':1}));
-  MONTHS.forEach((m,mi)=>{
-    const x=pL+(mn<=1?0:(mi/(mn-1)))*(W-pL-pR);
-    const t=ns('text',{x,y:H-3,'text-anchor':'middle','font-size':10,fill:cv('--ink3')});
-    t.textContent=m.replace(' 26','');svg.appendChild(t);
-  });
-  active.forEach(s=>{
-    const pts=MONTHS.map((m,mi)=>({x:pL+(mn<=1?0:(mi/(mn-1)))*(W-pL-pR),y:pT+cH-(s.vals[mi]/maxV)*cH,v:s.vals[mi],m}));
-    const d=pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-    svg.appendChild(ns('path',{d,fill:'none',stroke:s.color,'stroke-width':2.5,'stroke-linejoin':'round','stroke-linecap':'round'}));
-    pts.forEach(p=>{
-      const c=ns('circle',{cx:p.x,cy:p.y,r:5,fill:s.color,stroke:cv('--surf'),'stroke-width':2});
-      c.addEventListener('pointerenter',e=>{
-        let tip='<div class="tt-title">'+esc(p.m)+'</div>';
-        active.forEach(ss=>{
-          const v=ss.vals[MONTHS.indexOf(p.m)];
-          const lbl=ss.label.replace('Level ','L');
-          tip+='<div class="tt-row"><span class="tt-lbl">'+esc(lbl)+'</span><span class="tt-val">'+v+'</span></div>';
-        });
-        tip+='<div class="tt-row" style="border-top:1px solid var(--border);margin-top:3px;padding-top:3px"><span class="tt-lbl">Total</span><span class="tt-val">'+active.reduce((s,ss)=>s+ss.vals[MONTHS.indexOf(p.m)],0)+'</span></div>';
-        showTT(tip,e);
-      });
-      c.addEventListener('pointermove',moveTT);c.addEventListener('pointerleave',hideTT);
-      svg.appendChild(c);
+    msg.style.cssText='color:var(--ink3);font-size:12px;padding:20px 0;text-align:center';
+    msg.textContent='No data for this segment';wrap.appendChild(msg);
+  } else {
+    const allV=active.flatMap(s=>s.vals);
+    const maxV=Math.max(...allV,1);
+    const mn=MONTHS.length;
+    // Generous padding: pL wide enough for 3-digit Y labels, pB for full month names
+    const pL=36,pR=18,pT=14,pB=26,cH=180;
+    const W=Math.max(mn*90,480),H=cH+pT+pB;
+    const svg=ns('svg',{width:'100%',viewBox:`0 0 ${W} ${H}`});
+    svg.style.fontFamily='system-ui,-apple-system,sans-serif';
+    svg.style.display='block';
+
+    // Horizontal gridlines + Y-axis labels (count)
+    const steps=5;
+    for(let i=0;i<=steps;i++){
+      const t=i/steps;
+      const y=pT+cH-t*cH;
+      svg.appendChild(ns('line',{x1:pL,y1:y,x2:W-pR,y2:y,
+        stroke:cv('--border'),'stroke-width':i===0?1.5:1,'stroke-dasharray':i===0?'none':'3,3'}));
+      const lb=ns('text',{x:pL-6,y:y+4,'text-anchor':'end','font-size':10,fill:cv('--ink3')});
+      lb.textContent=Math.round(t*maxV);svg.appendChild(lb);
+    }
+    // Y-axis label "Cases"
+    const yAxisLbl=ns('text',{x:10,y:pT+cH/2,'text-anchor':'middle','font-size':10,
+      fill:cv('--ink3'),transform:`rotate(-90,10,${pT+cH/2})`});
+    yAxisLbl.textContent='Cases';svg.appendChild(yAxisLbl);
+
+    // X-axis baseline
+    svg.appendChild(ns('line',{x1:pL,y1:pT+cH,x2:W-pR,y2:pT+cH,
+      stroke:cv('--ink3'),'stroke-width':1.5}));
+
+    // X-axis tick marks + month labels
+    MONTHS.forEach((m,mi)=>{
+      const x=pL+(mn<=1?0:(mi/(mn-1)))*(W-pL-pR);
+      // tick
+      svg.appendChild(ns('line',{x1:x,y1:pT+cH,x2:x,y2:pT+cH+5,stroke:cv('--ink3'),'stroke-width':1}));
+      const t=ns('text',{x,y:H-4,'text-anchor':'middle','font-size':11,'font-weight':'600',fill:cv('--ink2')});
+      t.textContent=m.replace(' 26','');svg.appendChild(t);
     });
-  });
-  wrap.appendChild(svg);
-  // Legend
+
+    // Lines + dots
+    active.forEach(s=>{
+      const pts=MONTHS.map((m,mi)=>({
+        x:pL+(mn<=1?0:(mi/(mn-1)))*(W-pL-pR),
+        y:pT+cH-(s.vals[mi]/maxV)*cH,
+        v:s.vals[mi],m,mi
+      }));
+      // Line path
+      const d=pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      svg.appendChild(ns('path',{d,fill:'none',stroke:s.color,'stroke-width':2.5,
+        'stroke-linejoin':'round','stroke-linecap':'round'}));
+      // Dots
+      pts.forEach(p=>{
+        // Invisible wide hit target
+        const hit=ns('circle',{cx:p.x,cy:p.y,r:12,fill:'transparent'});
+        // Visible dot
+        const dot=ns('circle',{cx:p.x,cy:p.y,r:5,fill:s.color,stroke:cv('--surf'),'stroke-width':2,'pointer-events':'none'});
+        hit.addEventListener('pointerenter',e=>{
+          dot.setAttribute('r','7');
+          // Build tooltip: all series at this month
+          let tip='<div class="tt-title">'+esc(p.m)+'</div>';
+          SEV_ORDER.forEach(sev=>{
+            const ser=series.find(ss=>ss.label===sev);
+            if(!ser)return;
+            const v=ser.vals[p.mi];
+            if(v===0&&hiddenSet.has(sev))return;
+            tip+='<div class="tt-row"><span class="tt-lbl" style="color:'+esc(SEV_COLORS[sev])+'">'+
+              esc(sev.replace('Level ','L'))+'</span><span class="tt-val">'+v+'</span></div>';
+          });
+          const total=series.reduce((acc,ss)=>acc+ss.vals[p.mi],0);
+          tip+='<div class="tt-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px">'+
+            '<span class="tt-lbl">Total</span><span class="tt-val">'+total+'</span></div>';
+          showTT(tip,e);
+        });
+        hit.addEventListener('pointermove',moveTT);
+        hit.addEventListener('pointerleave',()=>{dot.setAttribute('r','5');hideTT();});
+        svg.appendChild(hit);
+        svg.appendChild(dot);
+        // Direct value label above dot (only if bar tall enough to show)
+        if(p.v>0){
+          const vl=ns('text',{x:p.x,y:p.y-9,'text-anchor':'middle','font-size':9,'font-weight':'700',
+            fill:s.color,'pointer-events':'none'});
+          vl.textContent=p.v;svg.appendChild(vl);
+        }
+      });
+    });
+    wrap.appendChild(svg);
+  }
+
+  // Legend — clickable, per panel
   const legEl=document.getElementById(legendId);
   if(!legEl)return;
   legEl.innerHTML='';
@@ -807,24 +835,10 @@ function drawTrendChart(wrapId, legendId, series, hiddenSet, redrawFn){
     item.appendChild(sw);item.appendChild(lb);
     item.addEventListener('click',()=>{
       hiddenSet.has(s.label)?hiddenSet.delete(s.label):hiddenSet.add(s.label);
-      redrawFn();
+      drawSevTrendChart(wrapId,legendId,records,hiddenSet);
     });
     legEl.appendChild(item);
   });
-}
-
-function buildSevSeries(records){
-  return SEV_ORDER.map(sev=>({
-    label:sev, color:SEV_COLORS[sev],
-    vals:MONTHS.map(m=>records.filter(r=>r.severity===sev&&r.month===m).length)
-  })).filter(s=>s.vals.some(x=>x>0));
-}
-
-function buildShiftSeries(records, h2s){
-  return SHIFT_ORDER.map(sh=>({
-    label:sh, color:SHIFT_COLORS[sh],
-    vals:MONTHS.map(m=>records.filter(r=>h2s[r.hour]===sh&&r.month===m).length)
-  })).filter(s=>s.vals.some(x=>x>0));
 }
 
 function renderP4(){
@@ -833,40 +847,27 @@ function renderP4(){
   const indSig=indRecs.filter(isSig), revSig=revRecs.filter(isSig);
   const indPrem=indRecs.filter(r=>!isSig(r)), revPrem=revRecs.filter(r=>!isSig(r));
 
-  // [records, h2s, panelIdx, subId]
   const panels=[
-    {recs:indRecs, h2s:IND_H2S, i:1, sub:'p4-sub-1'},
-    {recs:revRecs, h2s:REV_H2S, i:2, sub:'p4-sub-2'},
-    {recs:indSig,  h2s:IND_H2S, i:3, sub:null},
-    {recs:revSig,  h2s:REV_H2S, i:4, sub:null},
-    {recs:indPrem, h2s:IND_H2S, i:5, sub:null},
-    {recs:revPrem, h2s:REV_H2S, i:6, sub:null},
+    {recs:indRecs,i:1,sub:'p4-sub-1'},
+    {recs:revRecs,i:2,sub:'p4-sub-2'},
+    {recs:indSig, i:3,sub:null},
+    {recs:revSig, i:4,sub:null},
+    {recs:indPrem,i:5,sub:null},
+    {recs:revPrem,i:6,sub:null},
   ];
-
   panels.forEach(p=>{
-    // subtitle
     if(p.sub){
       const el=document.getElementById(p.sub);
       if(el){
         const n=p.recs.length;
         const l1=p.recs.filter(r=>r.severity==='Level 1 - Critical').length;
         const l2=p.recs.filter(r=>r.severity==='Level 2 - Urgent').length;
-        el.textContent='n='+n+' · L1 Crit '+l1+' · L2 Urgent '+l2+' · '+Math.round((l1+l2)/Math.max(n,1)*100)+'% high-severity';
+        el.textContent='n='+n+' · L1 Crit '+l1+' · L2 Urgent '+l2+
+          ' · '+Math.round((l1+l2)/Math.max(n,1)*100)+'% high-severity';
       }
     }
-    const sevKey='sev'+p.i, shiftKey='shift'+p.i;
-    if(!p4Hidden[sevKey])p4Hidden[sevKey]=new Set();
-    if(!p4Hidden[shiftKey])p4Hidden[shiftKey]=new Set();
-    const sevSeries=buildSevSeries(p.recs);
-    const shiftSeries=buildShiftSeries(p.recs,p.h2s);
-    drawTrendChart(
-      'p4-sev-'+p.i,'p4-sev-l'+p.i,sevSeries,p4Hidden[sevKey],
-      ()=>drawTrendChart('p4-sev-'+p.i,'p4-sev-l'+p.i,sevSeries,p4Hidden[sevKey],()=>{})
-    );
-    drawTrendChart(
-      'p4-shift-'+p.i,'p4-shift-l'+p.i,shiftSeries,p4Hidden[shiftKey],
-      ()=>drawTrendChart('p4-shift-'+p.i,'p4-shift-l'+p.i,shiftSeries,p4Hidden[shiftKey],()=>{})
-    );
+    if(!p4Hidden[p.i])p4Hidden[p.i]=new Set();
+    drawSevTrendChart('p4-chart-'+p.i,'p4-leg-'+p.i,p.recs,p4Hidden[p.i]);
   });
 }
 
