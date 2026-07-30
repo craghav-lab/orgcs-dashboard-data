@@ -90,6 +90,7 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
   <div class="nav-tab active" onclick="switchPage('p1',this)">📊 Overview &amp; Heatmap</div>
   <div class="nav-tab" onclick="switchPage('p2',this)">📈 Trend Explorer</div>
   <div class="nav-tab" onclick="switchPage('p3',this)">🔥 Heatmap Drill-Down</div>
+  <div class="nav-tab" onclick="switchPage('p4',this)">📉 Severity Trends</div>
   <div class="nav-spacer"></div>
   <button class="theme-btn" onclick="toggleTheme()">☀ / ☾</button>
 </nav>
@@ -252,6 +253,59 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
   </div>
 </div>
 
+<!-- PAGE 4: 6 Severity Trend Graphs -->
+<div id="p4" class="page">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+    <div class="card-title" style="margin:0">Severity Trends</div>
+    <span style="font-size:11px;color:var(--ink3)">Monthly case count by severity · same 6 segments as Heatmap Drill-Down · click legend to show/hide</span>
+  </div>
+
+  <div class="grid2" style="margin-bottom:13px">
+    <div class="card">
+      <div class="card-title">1 — Industry Cloud · All Plans</div>
+      <div class="card-sub" id="p4-sub-1"></div>
+      <div id="p4-t1"></div>
+      <div class="legend" id="p4-l1"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">2 — Revenue Cloud · All Plans</div>
+      <div class="card-sub" id="p4-sub-2"></div>
+      <div id="p4-t2"></div>
+      <div class="legend" id="p4-l2"></div>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-bottom:13px">
+    <div class="card">
+      <div class="card-title">3 — Industry Cloud · Signature Plans</div>
+      <div class="card-sub" id="p4-sub-3">Gov Signature · Signature Success · US Signature · Premier Priority</div>
+      <div id="p4-t3"></div>
+      <div class="legend" id="p4-l3"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">4 — Revenue Cloud · Signature Plans</div>
+      <div class="card-sub" id="p4-sub-4">Gov Signature · Signature Success · US Signature · Premier Priority</div>
+      <div id="p4-t4"></div>
+      <div class="legend" id="p4-l4"></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">5 — Industry Cloud · Premier + Other</div>
+      <div class="card-sub" id="p4-sub-5">All plans excluding Signature &amp; Premier Priority</div>
+      <div id="p4-t5"></div>
+      <div class="legend" id="p4-l5"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">6 — Revenue Cloud · Premier + Other</div>
+      <div class="card-sub" id="p4-sub-6">All plans excluding Signature &amp; Premier Priority</div>
+      <div id="p4-t6"></div>
+      <div class="legend" id="p4-l6"></div>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE 3: 6 Heatmaps -->
 <div id="p3" class="page">
   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
@@ -327,6 +381,7 @@ const H2S={};for(const[s,hrs]of Object.entries(SHIFT_HOURS))hrs.forEach(h=>H2S[h
 
 let curDim='shift';
 let hidden=new Set();
+const p4Hidden={}; // per-panel hidden sets for Page 4 severity legends
 
 /* Tooltip */
 const ttEl=document.getElementById('tt');
@@ -664,6 +719,113 @@ function drawHeatmapGeneric(wrapId, legendId, records, shiftHours, h2s){
   }
 }
 
+/* ── PAGE 4 RENDER — 6 severity trend graphs ─────────────── */
+function drawSevTrend(wrapId, legendId, records, p4HiddenSet){
+  const series=SEV_ORDER.map(sev=>({
+    label: sev,
+    color: SEV_COLORS[sev],
+    vals: MONTHS.map(m=>records.filter(r=>r.severity===sev&&r.month===m).length)
+  })).filter(s=>s.vals.some(x=>x>0));
+
+  // Draw chart (reuse drawLine but pass the per-panel hidden set)
+  const wrap=document.getElementById(wrapId);
+  if(!wrap)return;
+  wrap.innerHTML='';
+  const active=series.filter(s=>!p4HiddenSet.has(s.label));
+  if(!active.length){wrap.innerHTML='<div style="color:var(--ink3);font-size:12px;padding:12px 0">No data</div>';return;}
+  const allV=active.flatMap(s=>s.vals);
+  const maxV=Math.max(...allV,1);
+  const mn=MONTHS.length;
+  const pL=32,pR=14,pT=10,pB=22,cH=140;
+  const W=Math.max(mn*68,360),H=cH+pT+pB;
+  const svg=ns('svg',{width:'100%',viewBox:`0 0 ${W} ${H}`});
+  svg.style.fontFamily='system-ui,-apple-system,sans-serif';
+  [0,0.25,0.5,0.75,1].forEach(t=>{
+    const y=pT+cH-t*cH;
+    svg.appendChild(ns('line',{x1:pL,y1:y,x2:W-pR,y2:y,stroke:cv('--border'),'stroke-width':1}));
+    const lb=ns('text',{x:pL-3,y:y+3,'text-anchor':'end','font-size':9,fill:cv('--ink3')});
+    lb.textContent=Math.round(t*maxV);svg.appendChild(lb);
+  });
+  svg.appendChild(ns('line',{x1:pL,y1:pT+cH,x2:W-pR,y2:pT+cH,stroke:cv('--border2'),'stroke-width':1}));
+  MONTHS.forEach((m,mi)=>{
+    const x=pL+(mn<=1?0:(mi/(mn-1)))*(W-pL-pR);
+    const t=ns('text',{x,y:H-4,'text-anchor':'middle','font-size':10,fill:cv('--ink3')});
+    t.textContent=m.replace(' 26','');svg.appendChild(t);
+  });
+  active.forEach(s=>{
+    const pts=MONTHS.map((m,mi)=>({
+      x:pL+(mn<=1?0:(mi/(mn-1)))*(W-pL-pR),
+      y:pT+cH-(s.vals[mi]/maxV)*cH,
+      v:s.vals[mi],m
+    }));
+    const d=pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+    svg.appendChild(ns('path',{d,fill:'none',stroke:s.color,'stroke-width':2.5,'stroke-linejoin':'round','stroke-linecap':'round'}));
+    pts.forEach(p=>{
+      const c=ns('circle',{cx:p.x,cy:p.y,r:5,fill:s.color,stroke:cv('--surf'),'stroke-width':2});
+      // Collect all series values at this month for rich tooltip
+      c.addEventListener('pointerenter',e=>{
+        const allAtM=active.map(ss=>({lbl:ss.label.replace('Level ','L'),val:ss.vals[MONTHS.indexOf(p.m)]}));
+        let tip='<div class="tt-title">'+esc(p.m)+'</div>';
+        allAtM.forEach(row=>{tip+='<div class="tt-row"><span class="tt-lbl">'+esc(row.lbl)+'</span><span class="tt-val">'+row.val+'</span></div>';});
+        tip+='<div class="tt-row" style="border-top:1px solid var(--border);margin-top:3px;padding-top:3px"><span class="tt-lbl">Total</span><span class="tt-val">'+allAtM.reduce((s,r)=>s+r.val,0)+'</span></div>';
+        showTT(tip,e);
+      });
+      c.addEventListener('pointermove',moveTT);c.addEventListener('pointerleave',hideTT);
+      svg.appendChild(c);
+    });
+  });
+  wrap.appendChild(svg);
+
+  // Legend — clickable per-panel
+  const legEl=document.getElementById(legendId);
+  if(!legEl)return;
+  legEl.innerHTML='';
+  series.forEach(s=>{
+    const item=document.createElement('div');
+    item.className='legend-item'+(p4HiddenSet.has(s.label)?' off':'');
+    const sw=document.createElement('span');sw.className='legend-swatch';sw.style.background=s.color;
+    const lb=document.createElement('span');lb.textContent=s.label.replace('Level ','L');
+    item.appendChild(sw);item.appendChild(lb);
+    item.addEventListener('click',()=>{
+      p4HiddenSet.has(s.label)?p4HiddenSet.delete(s.label):p4HiddenSet.add(s.label);
+      drawSevTrend(wrapId,legendId,records,p4HiddenSet);
+    });
+    legEl.appendChild(item);
+  });
+}
+
+function renderP4(){
+  const indRecs=RECORDS.filter(r=>r.product_topic.startsWith('Industry'));
+  const revRecs=RECORDS.filter(r=>r.product_topic.startsWith('Revenue'));
+  const indSig=indRecs.filter(isSig);
+  const revSig=revRecs.filter(isSig);
+  const indPrem=indRecs.filter(r=>!isSig(r));
+  const revPrem=revRecs.filter(r=>!isSig(r));
+
+  const groups=[
+    {recs:indRecs, wrap:'p4-t1', leg:'p4-l1', sub:'p4-sub-1', label:'Industry All'},
+    {recs:revRecs, wrap:'p4-t2', leg:'p4-l2', sub:'p4-sub-2', label:'Revenue All'},
+    {recs:indSig,  wrap:'p4-t3', leg:'p4-l3', sub:null},
+    {recs:revSig,  wrap:'p4-t4', leg:'p4-l4', sub:null},
+    {recs:indPrem, wrap:'p4-t5', leg:'p4-l5', sub:null},
+    {recs:revPrem, wrap:'p4-t6', leg:'p4-l6', sub:null},
+  ];
+
+  groups.forEach((g,i)=>{
+    if(g.sub){
+      const subEl=document.getElementById(g.sub);
+      if(subEl){
+        const total=g.recs.length;
+        const l1=g.recs.filter(r=>r.severity==='Level 1 - Critical').length;
+        const l2=g.recs.filter(r=>r.severity==='Level 2 - Urgent').length;
+        subEl.textContent=`n=${total} · L1 Crit ${l1} · L2 Urgent ${l2} · ${Math.round((l1+l2)/Math.max(total,1)*100)}% high-severity`;
+      }
+    }
+    if(!p4Hidden[i])p4Hidden[i]=new Set();
+    drawSevTrend(g.wrap,g.leg,g.recs,p4Hidden[i]);
+  });
+}
+
 /* ── PAGE 3 RENDER ───────────────────────────────────────── */
 function renderP3(){
   // Filter helpers
@@ -964,7 +1126,7 @@ function switchPage(id,tab){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');tab.classList.add('active');
-  if(id==='p1')renderP1();if(id==='p2')renderP2();if(id==='p3')renderP3();
+  if(id==='p1')renderP1();if(id==='p2')renderP2();if(id==='p3')renderP3();if(id==='p4')renderP4();
 }
 function setDim(btn){
   document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
@@ -975,6 +1137,7 @@ function toggleTheme(){
   renderP1();
   if(document.getElementById('p2').classList.contains('active'))renderP2();
   if(document.getElementById('p3').classList.contains('active'))renderP3();
+  if(document.getElementById('p4').classList.contains('active'))renderP4();
 }
 function resetFilters(){
   ['f-eng','f-sev','f-sp','f-prod','f-shift'].forEach(id=>{
