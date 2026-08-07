@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Industry Cloud — Implementation Stage Insights</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:           #0f0f1a;
+  --surface-1:    #161625;
+  --surface-2:    #1e1e30;
+  --surface-3:    #252538;
+  --border:       rgba(255,255,255,0.08);
+  --border-med:   rgba(255,255,255,0.14);
+  --text-primary: #ffffff;
+  --text-secondary:#c3c2b7;
+  --text-muted:   #898781;
+  --accent:       #0176d3;
+
+  --stage-design:  #9085e9;
+  --stage-build:   #3987e5;
+  --stage-test:    #c98500;
+  --stage-golive:  #d95926;
+  --stage-operate: #199e70;
+
+  --health-healthy:#0ca30c;
+  --health-caution:#fab219;
+  --health-risk:   #d03b3b;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background:var(--bg);
+  color:var(--text-primary);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px;
+  line-height:1.5;
+}
+
+a{color:var(--accent);text-decoration:none}
+
+/* ── LAYOUT ── */
+.page-wrap{max-width:1440px;margin:0 auto;padding:0 24px 64px}
+
+/* ── HEADER ── */
+.page-header{
+  padding:32px 0 24px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:32px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.page-header h1{
+  font-size:22px;
+  font-weight:600;
+  color:var(--text-primary);
+  letter-spacing:-0.3px;
+}
+.page-header .subtitle{
+  font-size:13px;
+  color:var(--text-secondary);
+  margin-top:4px;
+}
+.header-meta{
+  text-align:right;
+  font-size:12px;
+  color:var(--text-muted);
+  line-height:1.8;
+}
+.header-meta strong{color:var(--text-secondary)}
+
+/* ── SECTION LABELS ── */
+.section-label{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  margin-bottom:16px;
+}
+
+/* ── DIVIDER ── */
+.section-divider{
+  border:none;
+  border-top:1px solid var(--border);
+  margin:40px 0 32px;
+}
+
+/* ── OVERVIEW ROW ── */
+.overview-row{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:32px;
+  align-items:start;
+  margin-bottom:28px;
+}
+.donut-wrap{
+  background:var(--surface-1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+.donut-wrap .chart-title{
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-secondary);
+  text-align:center;
+}
+.donut-canvas-wrap{position:relative;width:160px;height:160px}
+
+/* ── STAT TILES ── */
+.tiles-stack{display:flex;flex-direction:column;gap:16px}
+.tile-row{display:flex;gap:12px;flex-wrap:wrap}
+
+.stat-tile{
+  flex:1;
+  min-width:120px;
+  background:var(--surface-1);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.stat-tile .tile-label{
+  font-size:11px;
+  color:var(--text-muted);
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.tile-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.stat-tile .tile-value{
+  font-size:28px;
+  font-weight:600;
+  line-height:1;
+  color:var(--text-primary);
+}
+.stat-tile .tile-sub{
+  font-size:11px;
+  color:var(--text-muted);
+}
+
+.health-tile-row{display:flex;gap:12px;flex-wrap:wrap}
+.health-tile{
+  flex:1;
+  min-width:140px;
+  background:var(--surface-1);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.health-tile .health-icon{font-size:20px;line-height:1}
+.health-tile .health-info .h-label{font-size:12px;color:var(--text-muted)}
+.health-tile .health-info .h-val{font-size:24px;font-weight:600;line-height:1.1}
+
+/* ── PIPELINE ── */
+.pipeline-wrap{overflow-x:auto;padding-bottom:8px}
+.pipeline{
+  display:flex;
+  gap:0;
+  min-width:900px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+.stage-col{
+  flex:1;
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+}
+.stage-col:last-child{border-right:none}
+.stage-col-header{
+  padding:10px 12px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  text-align:center;
+  border-bottom:3px solid;
+  background:var(--surface-1);
+}
+.stage-col-body{
+  padding:10px 8px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  background:var(--surface-2);
+  flex:1;
+  min-height:120px;
+}
+
+.acct-card{
+  background:var(--surface-3);
+  border-radius:8px;
+  padding:10px 10px;
+  border-left:3px solid;
+  cursor:pointer;
+  transition:background .15s,transform .1s;
+  user-select:none;
+}
+.acct-card:hover{background:rgba(255,255,255,0.07);transform:translateX(2px)}
+.acct-card.active{background:rgba(1,118,211,0.15);outline:1px solid var(--accent)}
+.acct-card .card-name{
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-primary);
+  line-height:1.3;
+  margin-bottom:5px;
+}
+.card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card-case-count{
+  font-size:11px;
+  color:var(--text-muted);
+  background:var(--surface-1);
+  border-radius:4px;
+  padding:1px 5px;
+}
+.card-health-dot{
+  width:7px;height:7px;border-radius:50%;flex-shrink:0;
+}
+.card-trend{
+  font-size:13px;
+  line-height:1;
+  margin-left:auto;
+}
+
+/* ── DETAIL PANEL ── */
+#detail-panel{
+  background:var(--surface-1);
+  border:1px solid var(--border-med);
+  border-radius:12px;
+  padding:24px 28px;
+  margin-top:0;
+  display:none;
+}
+#detail-panel.visible{display:block}
+
+.detail-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.detail-title{font-size:18px;font-weight:600}
+.detail-cloud{
+  font-size:12px;
+  color:var(--text-muted);
+  margin-top:3px;
+}
+.detail-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  border:1px solid;
+}
+.badge-healthy{color:var(--health-healthy);border-color:var(--health-healthy);background:rgba(12,163,12,0.1)}
+.badge-caution{color:var(--health-caution);border-color:var(--health-caution);background:rgba(250,178,25,0.1)}
+.badge-risk{color:var(--health-risk);border-color:var(--health-risk);background:rgba(208,59,59,0.1)}
+
+.badge-stage{
+  background:var(--surface-2);
+  border-color:var(--border);
+  color:var(--text-secondary);
+  font-weight:500;
+}
+.badge-trend{
+  background:var(--surface-2);
+  border-color:var(--border);
+  color:var(--text-secondary);
+  font-weight:500;
+}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+}
+@media(max-width:700px){.detail-grid{grid-template-columns:1fr}}
+
+.detail-section-title{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  margin-bottom:10px;
+}
+
+/* Stage breakdown bar */
+.stage-breakdown-bar{
+  display:flex;
+  height:20px;
+  border-radius:4px;
+  overflow:hidden;
+  gap:2px;
+  background:var(--surface-2);
+  margin-bottom:8px;
+}
+.stage-seg{height:100%;transition:width .3s}
+.stage-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 14px;
+  margin-top:6px;
+}
+.stage-legend-item{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:11px;
+  color:var(--text-secondary);
+}
+.stage-legend-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* Issues list */
+.issues-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.issues-list li{
+  display:flex;
+  gap:8px;
+  font-size:13px;
+  color:var(--text-secondary);
+  line-height:1.45;
+}
+.issues-list li::before{
+  content:"•";
+  color:var(--accent);
+  flex-shrink:0;
+  font-weight:700;
+  margin-top:1px;
+}
+
+/* Evidence quotes */
+.evidence-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.evidence-item{
+  font-size:12px;
+  font-style:italic;
+  color:var(--text-secondary);
+  padding:8px 12px;
+  border-left:2px solid var(--border-med);
+  background:var(--surface-2);
+  border-radius:0 6px 6px 0;
+  line-height:1.5;
+}
+
+.health-reason-box{
+  margin-top:16px;
+  padding:12px 14px;
+  border-radius:8px;
+  font-size:13px;
+  color:var(--text-secondary);
+  background:var(--surface-2);
+  border-left:3px solid;
+  line-height:1.5;
+}
+
+.close-detail{
+  background:none;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  padding:4px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  flex-shrink:0;
+  transition:border-color .15s,color .15s;
+}
+.close-detail:hover{border-color:var(--border-med);color:var(--text-secondary)}
+
+/* ── STACKED BAR CHART ── */
+.chart-card{
+  background:var(--surface-1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+}
+.chart-card-title{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-primary);
+  margin-bottom:4px;
+}
+.chart-card-sub{
+  font-size:12px;
+  color:var(--text-muted);
+  margin-bottom:18px;
+}
+.chart-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 18px;
+  margin-bottom:16px;
+}
+.chart-legend-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--text-secondary);
+}
+.chart-legend-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+
+/* ── INSIGHTS ── */
+.insights-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+}
+.insight-box{
+  background:var(--surface-1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px 22px;
+}
+.insight-box-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+.insight-icon{
+  width:32px;height:32px;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+}
+.insight-box-title{font-size:13px;font-weight:600;color:var(--text-primary)}
+.insight-count{
+  margin-left:auto;
+  font-size:20px;
+  font-weight:700;
+  color:var(--text-primary);
+}
+.insight-account-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.insight-account-item{
+  font-size:12px;
+  color:var(--text-secondary);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 8px;
+  border-radius:6px;
+  background:var(--surface-2);
+}
+.insight-account-item .iai-health{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0;
+}
+.insight-account-item .iai-trend{
+  margin-left:auto;
+  font-size:13px;
+  color:var(--text-muted);
+}
+.insight-desc{
+  font-size:12px;
+  color:var(--text-muted);
+  margin-bottom:10px;
+  line-height:1.5;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface-1)}
+::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:3px}
+
+/* ── UTILITY ── */
+.mt8{margin-top:8px}
+.mt16{margin-top:16px}
+.mt24{margin-top:24px}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════════════ -->
+<header class="page-header">
+  <div>
+    <h1>Industry Cloud — Implementation Stage Insights</h1>
+    <div class="subtitle">Signature Accounts &middot; Feb–Aug 2026</div>
+  </div>
+  <div class="header-meta" id="header-meta"></div>
+</header>
+
+<!-- ══ SECTION 1: STAGE OVERVIEW ══════════════════════════════════════════ -->
+<div class="section-label">Stage Overview</div>
+<div class="overview-row">
+  <div class="donut-wrap">
+    <div class="chart-title">Accounts by Stage</div>
+    <div class="donut-canvas-wrap">
+      <canvas id="donutChart"></canvas>
+    </div>
+  </div>
+  <div class="tiles-stack">
+    <div class="tile-row" id="stage-tiles"></div>
+    <div class="health-tile-row" id="health-tiles"></div>
+  </div>
+</div>
+
+<!-- ══ SECTION 2: PIPELINE SWIMLANE ═══════════════════════════════════════ -->
+<hr class="section-divider">
+<div class="section-label">Lifecycle Stage Pipeline</div>
+<div class="pipeline-wrap">
+  <div class="pipeline" id="pipeline"></div>
+</div>
+
+<!-- ══ SECTION 3: DETAIL PANEL ════════════════════════════════════════════ -->
+<div style="margin-top:16px">
+  <div id="detail-panel"></div>
+</div>
+
+<!-- ══ SECTION 4: STACKED BAR CHART ══════════════════════════════════════ -->
+<hr class="section-divider">
+<div class="section-label">Stage Breakdown by Account</div>
+<div class="chart-card">
+  <div class="chart-card-title">Case Volume by Lifecycle Stage</div>
+  <div class="chart-card-sub">Sorted by total cases descending &mdash; all accounts</div>
+  <div class="chart-legend" id="bar-legend"></div>
+  <div style="position:relative;height:560px">
+    <canvas id="stackedBar"></canvas>
+  </div>
+</div>
+
+<!-- ══ SECTION 5: INSIGHT CALLOUTS ════════════════════════════════════════ -->
+<hr class="section-divider">
+<div class="section-label">Insight Callouts</div>
+<div class="insights-grid" id="insights-grid"></div>
+
+</div><!-- /page-wrap -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   EMBEDDED DATA
+═══════════════════════════════════════════════════════════════════════════ */
+const DATA = [{"account_id":"0010M00001TzfkEQAR","account_name":"AT&T Business","total_cases":270,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":2,"Build":20,"Test":30,"Go-Live/Hypercare":80,"Operate & Optimize":138},"stage_trend":"Progressing","trend_detail":"Moved through Build→Test→Go-Live, now stabilizing post-migration","top_issues":["Standard Cart API go-live (Jul 16) producing downstream submission failures and null pointer exceptions in production CPQ","OmniStudio Security enforcement — 13+ rolling extension batches across production and sandbox orgs","Quote adjustment pricing records deleted after cart reprice call (P1 escalated, recurring)"],"health_signal":"Caution","health_reason":"Multiple P1 escalations post go-live; OmniStudio Security enforcement creating ongoing toil","cloud":"Industry-CPQ/OmniStudio","key_evidence":["Standard Cart API go-live Jul 16 causing downstream failures","Recurring P1: quote pricing records deleted after cart reprice"]},{"account_id":"0010M00001SJu8mQAD","account_name":"Belong (New Org)","total_cases":44,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":0,"Build":2,"Test":5,"Go-Live/Hypercare":5,"Operate & Optimize":32},"stage_trend":"Stable","trend_detail":"Live in production, steady-state BAU support","top_issues":["OM+ EKS upgrade (1.32→1.34) and RDS/DB upgrade (v13→v14) causing environment instability","Production P1s: XOM-MIGAT is down and Suggested Date time format causing data issues in PROD orders","Custom adapter CD pipeline deployment failures blocking feature delivery"],"health_signal":"Caution","health_reason":"Infrastructure upgrade instability causing production P1s","cloud":"Industry-OmniStudio/OM+","key_evidence":["XOM-MIGAT is down — P1 production","OM+ EKS 1.32→1.34 upgrade instability"]},{"account_id":"0013000000grmPKAAY","account_name":"BT Consumer","total_cases":109,"dominant_stage":"Go-Live/Hypercare","stage_breakdown":{"Design":0,"Build":5,"Test":10,"Go-Live/Hypercare":20,"Operate & Optimize":15},"stage_trend":"Progressing","trend_detail":"Recently went live, in active hypercare stabilization","top_issues":["Post go-live orchestration plan items reverting from Completed back to Scheduled in production","CME 262 upgrade triggering Apex job failures requiring remediation","DCG JWT certificate rotation adding deployment complexity during stabilization"],"health_signal":"Caution","health_reason":"Hypercare instability; orchestration plan reversions in production","cloud":"Industry-Communications/OM+","key_evidence":["Orchestration plan items reverting Completed→Scheduled in production","CME 262 upgrade post-go-live Apex failures"]},{"account_id":"0010M00001aOrVUQA0","account_name":"BT Digico","total_cases":181,"dominant_stage":"Go-Live/Hypercare","stage_breakdown":{"Design":0,"Build":40,"Test":50,"Go-Live/Hypercare":60,"Operate & Optimize":31},"stage_trend":"Progressing","trend_detail":"Active go-live with Standard Cart API migration; customer-facing production outages","top_issues":["Standard Cart API migration production instability — Apex Heap size exceeded impacting real customers (P1 Sev1)","Frozen and duplicate orchestration plans in production — retry jobs dispatching parallel requests for the same order item","Order submission failures causing customer-facing outages during migration window"],"health_signal":"At Risk","health_reason":"P1 Sev1 customer-facing outages during live migration; Apex heap failures in production","cloud":"Industry-Communications/OM+","key_evidence":["Apex Heap size exceeded — real customers impacted (Sev1)","Frozen orchestration plans causing parallel duplicate order dispatch"]},{"account_id":"0010M00001W3L6vQAF","account_name":"Claro América Latina","total_cases":288,"dominant_stage":"Test","stage_breakdown":{"Design":0,"Build":80,"Test":120,"Go-Live/Hypercare":30,"Operate & Optimize":58},"stage_trend":"Progressing","trend_detail":"Heavy UAT activity; bulk pricing and cart issues blocking sign-off","top_issues":["Bulk price adjustment timeout for 1500 QLIs (51-minute execution, P1 recurring) blocking UAT sign-off","createSubOrder method triggering twice in UAT causing duplicate order items","ESM inline grid cart instability — product disappears from ESM configuration cart intermittently (P1)"],"health_signal":"Caution","health_reason":"Recurring P1s blocking UAT completion; performance issues at scale","cloud":"Industry-CPQ/ESM","key_evidence":["Bulk price adjustment 51-minute timeout blocking UAT sign-off","createSubOrder firing twice — duplicate orders in test"]},{"account_id":"0010M00001WAZ4uQAH","account_name":"HKT","total_cases":73,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":0,"Build":5,"Test":8,"Go-Live/Hypercare":10,"Operate & Optimize":50},"stage_trend":"Stable","trend_detail":"Steady-state operations with recurring platform enforcement issues","top_issues":["Cardinality constraint issue reopened 3+ times — recurring production defect with no permanent resolution","OmniStudio Security enforcement extension requests across 10+ orgs — compliance risk","Production order checkout failure (Sev1) — All orders could not checkout impacting business operations"],"health_signal":"Caution","health_reason":"Recurring unresolved defect; Sev1 production checkout failure","cloud":"Industry-OmniStudio/CPQ","key_evidence":["Cardinality constraint reopened 3+ times, no permanent fix","All orders could not checkout — Sev1 production"]},{"account_id":"0010M00001QoeHaQAJ","account_name":"M1 Limited","total_cases":41,"dominant_stage":"Test","stage_breakdown":{"Design":0,"Build":5,"Test":20,"Go-Live/Hypercare":15,"Operate & Optimize":1},"stage_trend":"Regressing","trend_detail":"Was approaching go-live but OmniStudio Security patch caused full regression — go-live blocked","top_issues":["OmniStudio Security patch broke cPOS and Web Order integrations entirely (P1) — go-live blocked","All orders stuck at Ready to Submit status (P1 Sev1) — production order flow non-functional","UAT stabilization blocked — cannot complete test sign-off while critical integrations remain broken"],"health_signal":"At Risk","health_reason":"Go-live blocked by OmniStudio Security regression; all orders stuck; P1 Sev1 open","cloud":"Industry-OmniStudio/CPQ","key_evidence":["Go-live blocked — cPOS and Web Order integrations entirely broken","All orders stuck at Ready to Submit — Sev1"]},{"account_id":"0010M00001PvUOuQAN","account_name":"Odido","total_cases":28,"dominant_stage":"Build","stage_breakdown":{"Design":3,"Build":18,"Test":5,"Go-Live/Hypercare":0,"Operate & Optimize":2},"stage_trend":"Stuck","trend_detail":"Build phase stalled; OmniStudio Security blocking partner community workflows","top_issues":["OmniStudio Security Enforcement breaking Partner Community user access to assets — blocking business workflows","Pythia not loading on first attempt (P1) — UI instability in pre-production","OmniStudio Hybrid mode enablement required to support managed package to standard runtime migration path"],"health_signal":"Caution","health_reason":"Build blocked by platform enforcement; no test progress","cloud":"Industry-OmniStudio","key_evidence":["Partner Community access broken by OmniStudio Security enforcement","Hybrid mode migration path required — blocking build completion"]},{"account_id":"0010M00001TGPvIQAX","account_name":"ORANGE BELGIUM NV/SA","total_cases":206,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":0,"Build":10,"Test":20,"Go-Live/Hypercare":10,"Operate & Optimize":166},"stage_trend":"Stable","trend_detail":"Long-running BAU with recurring MACD and OmniStudio enforcement issues","top_issues":["Recurring MACD action code incorrectly set to Change for unchanged products — P1 repeated across multiple product types","OmniStudio Security enforcement causing CPQ cart loading failures — 20+ sandbox extension requests, production blocked","ESM_CompleteATQ SOQL governor limit exceeded for large accounts (1300+ assets) — B2B enterprise quoting blocked"],"health_signal":"Caution","health_reason":"Recurring P1 MACD defect not permanently resolved; governor limits at scale","cloud":"Industry-CPQ/ESM","key_evidence":["MACD action code bug recurring across multiple product types","SOQL governor limit exceeded for 1300+ asset accounts — B2B quoting blocked"]},{"account_id":"0010M00001WAM8AQAX","account_name":"PLDT, Inc.","total_cases":70,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":0,"Build":5,"Test":15,"Go-Live/Hypercare":25,"Operate & Optimize":25},"stage_trend":"Progressing","trend_detail":"Post go-live; active assetization defects and release regressions","top_issues":["Recurring production assetization failures (MISSING_ARGUMENT and UNABLE_TO_LOCK_ROW) — orders stuck at assetize stage","OmniStudio Security enforcement extensions across 4+ orgs combined with Hyperforce migration compatibility","Post-900.644 release regressions: auto-add rules adding products multiple times, ReliesOn ID auto-populating on QLIs"],"health_signal":"Caution","health_reason":"Recurring assetization failures; release regressions compounding production debt","cloud":"Industry-OmniStudio/CPQ","key_evidence":["MISSING_ARGUMENT + UNABLE_TO_LOCK_ROW causing orders stuck at assetize","Post-900.644: auto-add rules adding products multiple times"]},{"account_id":"0010M00001QoaMoQAJ","account_name":"SaskTel","total_cases":26,"dominant_stage":"Test","stage_breakdown":{"Design":0,"Build":10,"Test":15,"Go-Live/Hypercare":0,"Operate & Optimize":1},"stage_trend":"Regressing","trend_detail":"OmniStudio Security patch caused widespread test regressions, now rebuilding","top_issues":["OmniStudio Security patch caused widespread regressions — action bar disappeared, proposals broken, contract mapping failed","Amend Contract failing in production but passing in preprod — environment parity issue blocking production usage","Deployment pipeline failures: preprod deployment failed, FlexCard compiler unable to install"],"health_signal":"Caution","health_reason":"OmniStudio Security regression set back test progress; preprod/prod parity gap","cloud":"Industry-OmniStudio","key_evidence":["Security patch broke action bar, proposals, contract mapping simultaneously","Amend Contract fails prod but passes preprod — parity issue"]},{"account_id":"0010M00001P0jWBQAZ","account_name":"Telecom Argentina S.A.","total_cases":308,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":0,"Build":20,"Test":40,"Go-Live/Hypercare":20,"Operate & Optimize":228},"stage_trend":"Stable","trend_detail":"Mature BAU with ongoing XOM migration waves alongside live production","top_issues":["Active XOM Migration Wave 33 in progress — OM+ DB script executions and EPC downloads alongside live operations","Mec Stop Delivery authentication errors causing open P1 production failures — orders not completing orchestration","Submitted orders not processed in OM+ combined with Standard DCAPI compile job failures after DCAPI enablement"],"health_signal":"Caution","health_reason":"Concurrent migration + live operations increasing P1 risk; open production failures","cloud":"Industry-OmniStudio/OM+","key_evidence":["XOM Migration Wave 33 running alongside live production","Mec Stop Delivery auth errors — orders stuck, P1 open"]},{"account_id":"0010M00001TFuEJQA1","account_name":"Telstra Limited","total_cases":180,"dominant_stage":"Build","stage_breakdown":{"Design":0,"Build":40,"Test":50,"Go-Live/Hypercare":40,"Operate & Optimize":50},"stage_trend":"Progressing","trend_detail":"Multi-workstream: some products live, others in active build/test","top_issues":["Standard Cart API migration active — date format validation strict causing P1 failures, AssetToOrder API failing, EPC compile job errors","OmniStudio Security enforcement — multiple extensions Feb-Jul across 5 orgs, advanced security checks breaking Integration Procedures","OM+ multi-service order failures in orchestration for large orders (100+ line items)"],"health_signal":"Caution","health_reason":"Multiple concurrent workstreams with P1 failures in both live and in-flight builds","cloud":"Industry-OmniStudio/OM+","key_evidence":["Standard Cart API migration causing P1 failures and AssetToOrder API broken","OM+ orchestration failures for 100+ line item orders"]},{"account_id":"0010M00001UXfm6QAD","account_name":"TPG Telecom Limited","total_cases":56,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":0,"Build":5,"Test":10,"Go-Live/Hypercare":5,"Operate & Optimize":36},"stage_trend":"Stable","trend_detail":"Steady BAU with mandatory upgrade program in progress","top_issues":["Mandatory Vlocity DCG upgrade to v260 across 10+ environments (AWS Java8 end-of-life)","OmniStudio Security enforcement causing production order failures after enabling EnforceDMFLSAndDataEncryption flag","DCG JWT certificate rotation required across all prod and non-prod environments"],"health_signal":"Caution","health_reason":"Mandatory upgrade across 10+ envs introducing operational risk; security flag causing prod failures","cloud":"Industry-OmniStudio/DCG","key_evidence":["DCG v260 mandatory upgrade across 10+ environments","EnforceDMFLSAndDataEncryption causing production order failures"]},{"account_id":"0010M00001QbkDYQAZ","account_name":"Verizon Sourcing LLC","total_cases":16,"dominant_stage":"Operate & Optimize","stage_breakdown":{"Design":0,"Build":2,"Test":3,"Go-Live/Hypercare":3,"Operate & Optimize":8},"stage_trend":"Stable","trend_detail":"BAU support with recurring orchestration trigger depth issue","top_issues":["Recurring OrchestrationItemWorkingSetTrigger maximum trigger depth exceeded — P1 repeated, no permanent fix","Orders stuck in draft status (P1 Sev1) — production order fulfillment blocked","Post-Summer 26 release breakage causing critical production issues (P1 Sev1)"],"health_signal":"Caution","health_reason":"Recurring trigger depth P1 unresolved; Summer 26 release introduced new P1s","cloud":"Industry-OmniStudio/OM+","key_evidence":["Trigger depth exceeded reopened multiple times — no permanent fix","Orders stuck draft + Summer 26 release breakage — 2 concurrent P1s"]},{"account_id":"0010M00001Qq01oQAB","account_name":"Xtelify Limited","total_cases":37,"dominant_stage":"Test","stage_breakdown":{"Design":0,"Build":10,"Test":15,"Go-Live/Hypercare":5,"Operate & Optimize":7},"stage_trend":"Progressing","trend_detail":"Approaching go-live; MACD pricing and order submission issues blocking final sign-off","top_issues":["ESM MACD pricing inaccuracies — missing sequence numbers in QuotePricingAdjustment__c dropping adjustments on subsequent MACDs (P1 Sev1)","ESM Summary tab failures — unable to view products and French locale defaults incorrect","Order submission failing with invalid date format error combined with MACD asset-to-quote errors"],"health_signal":"Caution","health_reason":"MACD pricing P1 Sev1 blocking final test sign-off; multiple concurrent open cases","cloud":"Industry-CPQ/ESM","key_evidence":["MACD pricing adjustments dropping — P1 Sev1, blocks go-live","Order submission invalid date format + MACD errors — concurrent open cases"]}];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CONSTANTS & DERIVED GLOBALS
+═══════════════════════════════════════════════════════════════════════════ */
+const STAGES = ["Design","Build","Test","Go-Live/Hypercare","Operate & Optimize"];
+const STAGE_COLORS = {
+  "Design":            "#9085e9",
+  "Build":             "#3987e5",
+  "Test":              "#c98500",
+  "Go-Live/Hypercare": "#d95926",
+  "Operate & Optimize":"#199e70"
+};
+const STAGE_LABELS_SHORT = {
+  "Design":"Design","Build":"Build","Test":"Test",
+  "Go-Live/Hypercare":"Go-Live","Operate & Optimize":"Operate"
+};
+const HEALTH_COLORS = {
+  "Healthy": "#0ca30c",
+  "Caution": "#fab219",
+  "At Risk": "#d03b3b"
+};
+const TREND_SYMBOLS = {
+  "Progressing":"↑","Stable":"→","Regressing":"↓","Stuck":"⏸"
+};
+
+/* header meta */
+document.getElementById("header-meta").innerHTML =
+  `Generated <strong>${new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</strong><br>
+   <strong>${DATA.length}</strong> Signature Accounts`;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION 1: STAGE OVERVIEW
+═══════════════════════════════════════════════════════════════════════════ */
+(function renderOverview(){
+  /* counts */
+  const stageCounts = {};
+  STAGES.forEach(s => stageCounts[s] = 0);
+  const healthCounts = {Healthy:0,Caution:0,"At Risk":0};
+  DATA.forEach(a => {
+    stageCounts[a.dominant_stage] = (stageCounts[a.dominant_stage]||0)+1;
+    healthCounts[a.health_signal] = (healthCounts[a.health_signal]||0)+1;
+  });
+
+  /* donut */
+  const dCtx = document.getElementById("donutChart").getContext("2d");
+  new Chart(dCtx, {
+    type:"doughnut",
+    data:{
+      labels: STAGES.map(s=>STAGE_LABELS_SHORT[s]),
+      datasets:[{
+        data: STAGES.map(s=>stageCounts[s]),
+        backgroundColor: STAGES.map(s=>STAGE_COLORS[s]),
+        borderColor: "#0f0f1a",
+        borderWidth: 2,
+        hoverBorderWidth: 2
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      cutout:"66%",
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:"#1e1e30",
+          borderColor:"rgba(255,255,255,0.14)",
+          borderWidth:1,
+          titleColor:"#fff",
+          bodyColor:"#c3c2b7",
+          padding:10,
+          callbacks:{
+            label:ctx=>`${ctx.label}: ${ctx.raw} account${ctx.raw!==1?"s":""}`
+          }
+        }
+      }
+    }
+  });
+
+  /* stage stat tiles */
+  const tileRow = document.getElementById("stage-tiles");
+  STAGES.forEach(s => {
+    const count = stageCounts[s];
+    const t = document.createElement("div");
+    t.className = "stat-tile";
+    t.innerHTML = `
+      <div class="tile-label">
+        <span class="tile-dot" style="background:${STAGE_COLORS[s]}"></span>
+        ${STAGE_LABELS_SHORT[s]}
+      </div>
+      <div class="tile-value">${count}</div>
+      <div class="tile-sub">account${count!==1?"s":""}</div>
+    `;
+    tileRow.appendChild(t);
+  });
+
+  /* health tiles */
+  const healthRow = document.getElementById("health-tiles");
+  const hDefs = [
+    {key:"Healthy", icon:"🟢", label:"Healthy"},
+    {key:"Caution", icon:"🟡", label:"Caution"},
+    {key:"At Risk", icon:"🔴", label:"At Risk"}
+  ];
+  hDefs.forEach(h => {
+    const t = document.createElement("div");
+    t.className = "health-tile";
+    t.innerHTML = `
+      <div class="health-icon">${h.icon}</div>
+      <div class="health-info">
+        <div class="h-label">${h.label}</div>
+        <div class="h-val" style="color:${HEALTH_COLORS[h.key]}">${healthCounts[h.key]}</div>
+      </div>
+    `;
+    healthRow.appendChild(t);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION 2: PIPELINE SWIMLANE
+═══════════════════════════════════════════════════════════════════════════ */
+(function renderPipeline(){
+  const pipeline = document.getElementById("pipeline");
+
+  STAGES.forEach(stage => {
+    const col = document.createElement("div");
+    col.className = "stage-col";
+
+    const hdr = document.createElement("div");
+    hdr.className = "stage-col-header";
+    hdr.style.borderColor = STAGE_COLORS[stage];
+    hdr.style.color = STAGE_COLORS[stage];
+    hdr.textContent = STAGE_LABELS_SHORT[stage];
+    col.appendChild(hdr);
+
+    const body = document.createElement("div");
+    body.className = "stage-col-body";
+
+    const accts = DATA.filter(a => a.dominant_stage === stage);
+    if(accts.length === 0){
+      const empty = document.createElement("div");
+      empty.style.cssText = "text-align:center;padding:24px 0;font-size:11px;color:#898781;";
+      empty.textContent = "—";
+      body.appendChild(empty);
+    } else {
+      accts.forEach(a => {
+        const card = document.createElement("div");
+        card.className = "acct-card";
+        card.dataset.id = a.account_id;
+        const hc = HEALTH_COLORS[a.health_signal];
+        card.style.borderLeftColor = hc;
+        card.innerHTML = `
+          <div class="card-name">${a.account_name}</div>
+          <div class="card-meta">
+            <span class="card-health-dot" style="background:${hc}" title="${a.health_signal}"></span>
+            <span class="card-case-count">${a.total_cases} cases</span>
+            <span class="card-trend" title="${a.stage_trend}">${TREND_SYMBOLS[a.stage_trend]}</span>
+          </div>
+        `;
+        card.addEventListener("click", () => toggleDetail(a, card));
+        body.appendChild(card);
+      });
+    }
+    col.appendChild(body);
+    pipeline.appendChild(col);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION 3: DETAIL PANEL
+═══════════════════════════════════════════════════════════════════════════ */
+let activeCardEl = null;
+let activeId = null;
+
+function toggleDetail(account, cardEl){
+  const panel = document.getElementById("detail-panel");
+  if(activeId === account.account_id){
+    /* close */
+    panel.classList.remove("visible");
+    panel.style.display = "none";
+    cardEl.classList.remove("active");
+    activeId = null;
+    activeCardEl = null;
+    return;
+  }
+  if(activeCardEl) activeCardEl.classList.remove("active");
+  activeCardEl = cardEl;
+  activeId = account.account_id;
+  cardEl.classList.add("active");
+
+  const hc = HEALTH_COLORS[account.health_signal];
+  const badgeClass = account.health_signal==="At Risk"?"badge-risk":
+                     account.health_signal==="Healthy"?"badge-healthy":"badge-caution";
+  const healthIcon = account.health_signal==="At Risk"?"🔴":
+                     account.health_signal==="Healthy"?"🟢":"🟡";
+
+  /* stage breakdown bar */
+  const total = account.total_cases;
+  const segHtml = STAGES.map(s=>{
+    const v = account.stage_breakdown[s]||0;
+    const pct = total>0 ? (v/total*100).toFixed(1) : 0;
+    if(v===0) return "";
+    return `<div class="stage-seg" style="width:${pct}%;background:${STAGE_COLORS[s]}" title="${STAGE_LABELS_SHORT[s]}: ${v} cases (${pct}%)"></div>`;
+  }).join("");
+
+  const legendHtml = STAGES.map(s=>{
+    const v = account.stage_breakdown[s]||0;
+    if(v===0) return "";
+    return `<div class="stage-legend-item">
+      <span class="stage-legend-dot" style="background:${STAGE_COLORS[s]}"></span>
+      ${STAGE_LABELS_SHORT[s]}: <strong>${v}</strong>
+    </div>`;
+  }).join("");
+
+  const issuesHtml = account.top_issues.map(i=>`<li>${i}</li>`).join("");
+  const evidenceHtml = account.key_evidence.map(e=>`<div class="evidence-item">"${e}"</div>`).join("");
+
+  panel.innerHTML = `
+    <div class="detail-header">
+      <div>
+        <div class="detail-title">${account.account_name}</div>
+        <div class="detail-cloud">${account.cloud}</div>
+      </div>
+      <div class="detail-badges">
+        <span class="badge ${badgeClass}">${healthIcon} ${account.health_signal}</span>
+        <span class="badge badge-stage">📍 ${account.dominant_stage}</span>
+        <span class="badge badge-trend">${TREND_SYMBOLS[account.stage_trend]} ${account.stage_trend}</span>
+        <span class="badge badge-stage">🗂 ${account.total_cases} cases</span>
+        <button class="close-detail" onclick="closeDetail()">✕ Close</button>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="detail-section-title">Stage Breakdown</div>
+        <div class="stage-breakdown-bar">${segHtml||'<div style="flex:1;background:#252538"></div>'}</div>
+        <div class="stage-legend">${legendHtml}</div>
+        <div class="health-reason-box" style="border-color:${hc}">
+          <strong style="color:${hc}">${account.health_signal}:</strong> ${account.health_reason}
+        </div>
+      </div>
+      <div>
+        <div class="detail-section-title">Top Issues</div>
+        <ul class="issues-list">${issuesHtml}</ul>
+        <div class="detail-section-title mt16">Key Evidence</div>
+        <div class="evidence-list">${evidenceHtml}</div>
+      </div>
+    </div>
+    <div class="mt8" style="font-size:11px;color:#898781;margin-top:14px;font-style:italic">${account.trend_detail}</div>
+  `;
+
+  panel.style.display = "block";
+  panel.classList.add("visible");
+  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function closeDetail(){
+  const panel = document.getElementById("detail-panel");
+  panel.classList.remove("visible");
+  panel.style.display = "none";
+  if(activeCardEl) activeCardEl.classList.remove("active");
+  activeId = null;
+  activeCardEl = null;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION 4: STACKED BAR CHART
+═══════════════════════════════════════════════════════════════════════════ */
+(function renderStackedBar(){
+  /* legend */
+  const legendEl = document.getElementById("bar-legend");
+  STAGES.forEach(s => {
+    const item = document.createElement("div");
+    item.className = "chart-legend-item";
+    item.innerHTML = `<span class="chart-legend-swatch" style="background:${STAGE_COLORS[s]}"></span>${s}`;
+    legendEl.appendChild(item);
+  });
+
+  /* sort by total_cases desc */
+  const sorted = [...DATA].sort((a,b)=>b.total_cases-a.total_cases);
+  const labels = sorted.map(a => a.account_name);
+
+  const datasets = STAGES.map(stage => ({
+    label: stage,
+    data: sorted.map(a => a.stage_breakdown[stage]||0),
+    backgroundColor: STAGE_COLORS[stage],
+    borderColor: "#0f0f1a",
+    borderWidth: 2,
+    borderRadius: {topRight:4, bottomRight:4, topLeft:0, bottomLeft:0},
+    borderSkipped: "left",
+    barThickness: 22
+  }));
+
+  /* first stage gets left radius, last gets right radius — handle in stack */
+  const ctx = document.getElementById("stackedBar").getContext("2d");
+  new Chart(ctx, {
+    type:"bar",
+    data:{labels, datasets},
+    options:{
+      indexAxis:"y",
+      responsive:true,
+      maintainAspectRatio:false,
+      layout:{padding:{right:8}},
+      scales:{
+        x:{
+          stacked:true,
+          grid:{color:"rgba(255,255,255,0.05)",lineWidth:1},
+          border:{color:"rgba(255,255,255,0.08)"},
+          ticks:{color:"#898781",font:{size:11},maxTicksLimit:8}
+        },
+        y:{
+          stacked:true,
+          grid:{display:false},
+          border:{display:false},
+          ticks:{color:"#c3c2b7",font:{size:12}}
+        }
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          mode:"index",
+          intersect:false,
+          backgroundColor:"#1e1e30",
+          borderColor:"rgba(255,255,255,0.14)",
+          borderWidth:1,
+          titleColor:"#fff",
+          bodyColor:"#c3c2b7",
+          padding:12,
+          callbacks:{
+            title: items => items[0].label,
+            label: ctx => {
+              const v = ctx.raw;
+              if(!v) return null;
+              return ` ${ctx.dataset.label}: ${v}`;
+            },
+            footer: items => {
+              const total = items.reduce((s,i)=>s+(i.raw||0),0);
+              return `Total: ${total}`;
+            }
+          }
+        }
+      }
+    }
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SECTION 5: INSIGHT CALLOUTS
+═══════════════════════════════════════════════════════════════════════════ */
+(function renderInsights(){
+  const container = document.getElementById("insights-grid");
+
+  /* 1 — OmniStudio Security Enforcement */
+  const omniAccts = DATA.filter(a =>
+    a.top_issues.some(i => /OmniStudio Security/i.test(i))
+  );
+
+  /* 2 — Go-Live Blockers */
+  const blockerAccts = DATA.filter(a =>
+    a.stage_trend === "Regressing" || a.health_signal === "At Risk"
+  );
+
+  /* 3 — Ready for Architect Engagement */
+  const adrAccts = DATA.filter(a =>
+    (a.dominant_stage === "Test" || a.dominant_stage === "Go-Live/Hypercare") &&
+    (a.health_signal === "Caution" || a.health_signal === "At Risk")
+  );
+
+  function makeAccountItem(a){
+    const hc = HEALTH_COLORS[a.health_signal];
+    return `<li class="insight-account-item">
+      <span class="iai-health" style="background:${hc}"></span>
+      <span>${a.account_name}</span>
+      <span style="color:${HEALTH_COLORS[a.health_signal]};font-size:10px;font-weight:600;margin-left:4px">${a.health_signal}</span>
+      <span class="iai-trend">${TREND_SYMBOLS[a.stage_trend]}</span>
+    </li>`;
+  }
+
+  const insights = [
+    {
+      icon:"🔐",
+      iconBg:"rgba(144,133,233,0.15)",
+      title:"OmniStudio Security Enforcement Impact",
+      desc:`${omniAccts.length} accounts have active OmniStudio Security enforcement issues causing production failures, extension requests, or build blockers.`,
+      accounts: omniAccts,
+      accentColor:"#9085e9"
+    },
+    {
+      icon:"🚧",
+      iconBg:"rgba(208,59,59,0.15)",
+      title:"Go-Live Blockers",
+      desc:`${blockerAccts.length} accounts classified At Risk or Regressing — requiring urgent escalation or architectural intervention to unblock delivery.`,
+      accounts: blockerAccts,
+      accentColor:"#d03b3b"
+    },
+    {
+      icon:"🏗",
+      iconBg:"rgba(1,118,211,0.15)",
+      title:"Ready for Architect Engagement",
+      desc:`${adrAccts.length} accounts in Test or Go-Live/Hypercare with Caution/At Risk health — prime ADR candidates for proactive support.`,
+      accounts: adrAccts,
+      accentColor:"#0176d3"
+    }
+  ];
+
+  insights.forEach(ins => {
+    const box = document.createElement("div");
+    box.className = "insight-box";
+    box.style.borderTopColor = ins.accentColor;
+    box.style.borderTopWidth = "3px";
+    box.innerHTML = `
+      <div class="insight-box-header">
+        <div class="insight-icon" style="background:${ins.iconBg}">${ins.icon}</div>
+        <div class="insight-box-title">${ins.title}</div>
+        <div class="insight-count" style="color:${ins.accentColor}">${ins.accounts.length}</div>
+      </div>
+      <div class="insight-desc">${ins.desc}</div>
+      <ul class="insight-account-list">
+        ${ins.accounts.map(makeAccountItem).join("")}
+      </ul>
+    `;
+    container.appendChild(box);
+  });
+})();
+</script>
+</body>
+</html>
