@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSE Case Analysis — Chaten Raghav's Team | Jul 8 – Aug 8, 2026</title>
+<style>
+/* ── CSS custom properties (palette.md reference palette) ── */
+:root {
+  color-scheme: light;
+  --surface-1: #fcfcfb;
+  --surface-2: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --series-7: #4a3aa7;
+  --series-8: #e34948;
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+  --seq-100: #cde2fb;
+  --seq-200: #9ec5f4;
+  --seq-300: #6da7ec;
+  --seq-400: #3987e5;
+  --seq-500: #256abf;
+  --seq-600: #184f95;
+  --seq-700: #0d366b;
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-1: #1a1a19;
+  --surface-2: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --gridline: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255,255,255,0.10);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --surface-2: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --gridline: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --series-7: #9085e9;
+    --series-8: #e66767;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+/* ── page layout ── */
+.page-header {
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--gridline);
+  padding: 20px 28px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.page-title { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+.page-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.theme-btn {
+  background: none; border: 1px solid var(--gridline); border-radius: 6px;
+  color: var(--text-secondary); cursor: pointer; padding: 5px 12px; font-size: 13px;
+}
+.theme-btn:hover { background: var(--surface-2); }
+
+/* ── filter row ── */
+.filter-row {
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--gridline);
+  padding: 10px 28px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.filter-row label { font-size: 12px; color: var(--text-muted); margin-right: 4px; }
+.filter-row select, .filter-row input {
+  background: var(--surface-2); border: 1px solid var(--gridline); border-radius: 6px;
+  color: var(--text-primary); font-size: 13px; padding: 5px 10px; outline: none;
+}
+.filter-row select:focus, .filter-row input:focus { border-color: var(--series-1); }
+.filter-tag {
+  font-size: 11px; background: var(--seq-100); color: var(--seq-600);
+  border-radius: 4px; padding: 2px 8px; font-weight: 500;
+}
+[data-theme="dark"] .filter-tag { background: #1c3558; color: var(--seq-300); }
+
+/* ── main content ── */
+.main { padding: 24px 28px; max-width: 1440px; margin: 0 auto; }
+
+/* ── stat tiles row ── */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.stat-tile {
+  background: var(--surface-1); border: 1px solid var(--gridline); border-radius: 10px;
+  padding: 16px 18px;
+}
+.stat-tile .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.stat-tile .value { font-size: 32px; font-weight: 700; color: var(--text-primary); margin-top: 4px; line-height: 1; }
+.stat-tile .sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.stat-tile.accent .value { color: var(--series-1); }
+.stat-tile.warn .value { color: var(--status-critical); }
+
+/* ── chart grid ── */
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.charts-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+.chart-card {
+  background: var(--surface-1); border: 1px solid var(--gridline); border-radius: 10px;
+  padding: 18px 20px; overflow: hidden;
+}
+.chart-card.wide { grid-column: span 2; }
+.chart-card.full { grid-column: 1 / -1; }
+.chart-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.chart-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; }
+
+/* ── legend ── */
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-secondary); }
+.legend-swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+.legend-line { width: 18px; height: 2px; flex-shrink: 0; border-radius: 1px; }
+
+/* ── bar chart SVG ── */
+.viz-root { width: 100%; overflow: visible; }
+
+/* ── tooltip ── */
+.tooltip {
+  position: fixed; background: var(--surface-1); border: 1px solid var(--gridline);
+  border-radius: 8px; padding: 10px 14px; font-size: 13px; pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,.10); z-index: 9999; max-width: 320px;
+  display: none; line-height: 1.6;
+}
+.tooltip .tt-title { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.tooltip .tt-row { display: flex; justify-content: space-between; gap: 16px; }
+.tooltip .tt-label { color: var(--text-secondary); }
+.tooltip .tt-val { font-weight: 600; color: var(--text-primary); }
+
+/* ── data table ── */
+.table-wrap { overflow-x: auto; margin-top: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--surface-2); color: var(--text-muted); font-size: 11px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+  padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--gridline);
+  white-space: nowrap; cursor: pointer; user-select: none;
+}
+thead th:hover { color: var(--text-primary); }
+thead th .sort-arrow { margin-left: 4px; opacity: .4; }
+thead th.sorted .sort-arrow { opacity: 1; }
+tbody tr { border-bottom: 1px solid var(--gridline); }
+tbody tr:hover { background: var(--surface-2); }
+tbody td { padding: 8px 12px; color: var(--text-primary); vertical-align: top; }
+tbody td.muted { color: var(--text-secondary); }
+.case-link { color: var(--series-1); text-decoration: none; font-weight: 500; }
+.case-link:hover { text-decoration: underline; }
+.badge {
+  display: inline-block; font-size: 11px; padding: 2px 7px; border-radius: 4px;
+  font-weight: 500; white-space: nowrap;
+}
+.badge-bug { background: #fde8e8; color: #b91c1c; }
+.badge-gus { background: #e8f4fd; color: #1c5cab; }
+.badge-slow { background: #fef3c7; color: #92400e; }
+.badge-flag { background: #fee2e2; color: #991b1b; }
+[data-theme="dark"] .badge-bug { background: #3b1a1a; color: #fca5a5; }
+[data-theme="dark"] .badge-gus { background: #1a2d3b; color: #93c5fd; }
+[data-theme="dark"] .badge-slow { background: #3b2e1a; color: #fcd34d; }
+[data-theme="dark"] .badge-flag { background: #3b1a1a; color: #fca5a5; }
+
+/* ── section headings ── */
+.section-title {
+  font-size: 16px; font-weight: 700; margin-bottom: 14px; margin-top: 28px;
+  padding-bottom: 6px; border-bottom: 2px solid var(--gridline);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title:first-child { margin-top: 0; }
+
+/* ── search / pagination ── */
+.table-controls {
+  display: flex; gap: 12px; align-items: center; justify-content: space-between;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.search-box {
+  background: var(--surface-2); border: 1px solid var(--gridline); border-radius: 6px;
+  color: var(--text-primary); font-size: 13px; padding: 5px 10px; outline: none;
+  width: 240px;
+}
+.search-box:focus { border-color: var(--series-1); }
+.page-info { font-size: 12px; color: var(--text-secondary); }
+.page-btn {
+  background: none; border: 1px solid var(--gridline); border-radius: 5px;
+  color: var(--text-secondary); cursor: pointer; padding: 4px 10px; font-size: 12px;
+}
+.page-btn:disabled { opacity: .35; cursor: default; }
+.page-btn:not(:disabled):hover { background: var(--surface-2); }
+
+/* ── insight cards ── */
+.insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.insight-card {
+  background: var(--surface-1); border: 1px solid var(--gridline); border-radius: 10px;
+  padding: 16px 18px; border-left: 4px solid var(--series-1);
+}
+.insight-card:nth-child(2) { border-left-color: var(--series-2); }
+.insight-card:nth-child(3) { border-left-color: var(--series-3); }
+.insight-card:nth-child(4) { border-left-color: var(--series-4); }
+.insight-card:nth-child(5) { border-left-color: var(--series-5); }
+.insight-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 4px; }
+.insight-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.insight-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ── tabs ── */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid var(--gridline); margin-bottom: 16px; }
+.tab-btn {
+  background: none; border: none; color: var(--text-secondary); cursor: pointer;
+  font-size: 13px; padding: 8px 16px; font-family: inherit; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: color .15s;
+}
+.tab-btn.active { color: var(--series-1); border-bottom-color: var(--series-1); font-weight: 600; }
+.tab-btn:hover:not(.active) { color: var(--text-primary); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── nav ── */
+.side-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface-1); border-bottom: 1px solid var(--gridline);
+  display: flex; gap: 0; overflow-x: auto; padding: 0 28px;
+}
+.nav-btn {
+  background: none; border: none; color: var(--text-secondary); cursor: pointer;
+  font-size: 13px; padding: 10px 14px; white-space: nowrap; font-family: inherit;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.nav-btn.active { color: var(--series-1); border-bottom-color: var(--series-1); font-weight: 600; }
+.nav-btn:hover:not(.active) { color: var(--text-primary); }
+
+.section-panel { display: none; }
+.section-panel.active { display: block; }
+</style>
+</head>
+<body data-theme="light">
+
+<div class="page-header">
+  <div>
+    <div class="page-title">TSE Case Analysis — Chaten Raghav's Team</div>
+    <div class="page-sub">250 closed cases &nbsp;·&nbsp; Jul 8 – Aug 8, 2026 &nbsp;·&nbsp; 12 engineers &nbsp;·&nbsp; 173 accounts</div>
+  </div>
+  <div class="header-right">
+    <span class="filter-tag">Team: Chaten Raghav</span>
+    <span class="filter-tag">Period: Last 30 days</span>
+    <button class="theme-btn" onclick="toggleTheme()">◐ Dark mode</button>
+  </div>
+</div>
+
+<div class="filter-row">
+  <label>Engineer</label>
+  <select id="f-owner" onchange="applyFilters()">
+    <option value="">All engineers</option>
+  </select>
+  <label>Product</label>
+  <select id="f-product" onchange="applyFilters()">
+    <option value="">All products</option>
+  </select>
+  <label>Has Bug/GUS</label>
+  <select id="f-bug" onchange="applyFilters()">
+    <option value="">All cases</option>
+    <option value="bug">Bug linked</option>
+    <option value="gus">GUS investigation</option>
+    <option value="any">Bug or GUS</option>
+  </select>
+  <label>Min age (days)</label>
+  <input type="number" id="f-age" placeholder="e.g. 10" style="width:90px" onchange="applyFilters()">
+  <label>Search</label>
+  <input type="text" id="f-search" placeholder="Subject, account, case #…" class="search-box" style="width:220px" oninput="applyFilters()">
+</div>
+
+<nav class="side-nav" id="main-nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('by-product')">By Product</button>
+  <button class="nav-btn" onclick="showSection('by-topic')">By Topic</button>
+  <button class="nav-btn" onclick="showSection('by-account')">By Account</button>
+  <button class="nav-btn" onclick="showSection('by-engineer')">By Engineer</button>
+  <button class="nav-btn" onclick="showSection('slow-fast')">Slow vs Fast</button>
+  <button class="nav-btn" onclick="showSection('bugs')">Bugs & GUS ⚠️</button>
+  <button class="nav-btn" onclick="showSection('all-cases')">All Cases</button>
+  <button class="nav-btn" onclick="showSection('insights')">Insights</button>
+</nav>
+
+<div class="main">
+
+<!-- ─────────────── OVERVIEW ─────────────── -->
+<div class="section-panel active" id="sec-overview">
+  <div class="section-title">Overview</div>
+  <div class="stat-row" id="stat-row"></div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Cases by Product</div>
+      <div class="chart-sub">Volume &amp; avg age (days)</div>
+      <div class="legend" id="legend-product"></div>
+      <svg class="viz-root" id="chart-product" height="220"></svg>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Cases by Engineer</div>
+      <div class="chart-sub">Volume colored by product mix</div>
+      <div class="legend" id="legend-engineer"></div>
+      <svg class="viz-root" id="chart-engineer" height="220"></svg>
+    </div>
+    <div class="chart-card wide">
+      <div class="chart-title">Age Distribution — all cases</div>
+      <div class="chart-sub">Number of cases by days-to-close bucket</div>
+      <svg class="viz-root" id="chart-age-dist" height="180"></svg>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Root Cause Themes</div>
+      <div class="chart-sub">Why customers file cases (from subject + description)</div>
+      <svg class="viz-root" id="chart-theme" height="250"></svg>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Avg Age by Product-Topic (top 10)</div>
+      <div class="chart-sub">Sorted by avg days to close</div>
+      <svg class="viz-root" id="chart-topic-age" height="250"></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── BY PRODUCT ─────────────── -->
+<div class="section-panel" id="sec-by-product">
+  <div class="section-title">By Product</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Case Volume by Product</div>
+      <svg class="viz-root" id="chart-prod-vol" height="200"></svg>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Avg Age by Product (days)</div>
+      <svg class="viz-root" id="chart-prod-age" height="200"></svg>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-product"><thead><tr>
+      <th>Product</th><th>Cases</th><th>Avg Age</th><th>Median</th><th>Max Age</th><th>Bug-Linked</th><th>GUS-Linked</th>
+    </tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<!-- ─────────────── BY TOPIC ─────────────── -->
+<div class="section-panel" id="sec-by-topic">
+  <div class="section-title">By Product &amp; Topic</div>
+  <div class="chart-card" style="margin-bottom:16px">
+    <div class="chart-title">Top 15 Product-Topics by Volume</div>
+    <svg class="viz-root" id="chart-topic-vol" height="300"></svg>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-topic"><thead><tr>
+      <th>Product Topic</th><th>Cases</th><th>Avg Age</th><th>Median</th><th>Max Age</th><th>Bug-Linked</th>
+    </tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<!-- ─────────────── BY ACCOUNT ─────────────── -->
+<div class="section-panel" id="sec-by-account">
+  <div class="section-title">By Account (top 20)</div>
+  <div class="chart-card" style="margin-bottom:16px">
+    <div class="chart-title">Top 20 Accounts by Case Volume</div>
+    <svg class="viz-root" id="chart-acct-vol" height="300"></svg>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-account"><thead><tr>
+      <th>Account</th><th>Cases</th><th>Avg Age</th><th>Max Age</th><th>Products</th><th>Engineers</th><th>Bug/GUS</th>
+    </tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<!-- ─────────────── BY ENGINEER ─────────────── -->
+<div class="section-panel" id="sec-by-engineer">
+  <div class="section-title">By Engineer</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Case Volume per Engineer</div>
+      <svg class="viz-root" id="chart-eng-vol" height="220"></svg>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Avg Age per Engineer (days)</div>
+      <svg class="viz-root" id="chart-eng-age" height="220"></svg>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-engineer"><thead><tr>
+      <th>Engineer</th><th>Cases</th><th>Avg Age</th><th>Median</th><th>Max Age</th><th>Top Product</th><th>Bug-Linked</th>
+    </tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<!-- ─────────────── SLOW / FAST ─────────────── -->
+<div class="section-panel" id="sec-slow-fast">
+  <div class="section-title">Slow vs Fast Cases</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Top 15 Slowest Cases</div>
+      <div class="chart-sub">Cases that took longest to close (days)</div>
+      <div class="table-wrap"><table id="tbl-slow"><thead><tr>
+        <th>Case #</th><th>Subject</th><th>Owner</th><th>Account</th><th>Age (d)</th><th>Topic</th><th>Bug/GUS</th>
+      </tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Top 15 Fastest Cases</div>
+      <div class="chart-sub">Cases closed same-day or near-instantly</div>
+      <div class="table-wrap"><table id="tbl-fast"><thead><tr>
+        <th>Case #</th><th>Subject</th><th>Owner</th><th>Account</th><th>Age (d)</th><th>Topic</th>
+      </tr></thead><tbody></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── BUGS & GUS ─────────────── -->
+<div class="section-panel" id="sec-bugs">
+  <div class="section-title">⚠️ Bug &amp; GUS Investigation Cases</div>
+  <div class="stat-row" id="bug-stat-row"></div>
+  <div class="table-wrap" style="margin-top:16px">
+    <table id="tbl-bugs"><thead><tr>
+      <th>Case #</th><th>Subject</th><th>Owner</th><th>Account</th><th>Age (d)</th><th>Topic</th><th>Bug #</th><th>GUS Investigation</th>
+    </tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<!-- ─────────────── ALL CASES ─────────────── -->
+<div class="section-panel" id="sec-all-cases">
+  <div class="section-title">All Cases</div>
+  <div class="table-controls">
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="all-count" class="page-info"></span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="page-btn" id="prev-btn" onclick="changePage(-1)">← Prev</button>
+      <span class="page-info" id="page-info"></span>
+      <button class="page-btn" id="next-btn" onclick="changePage(1)">Next →</button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl-all-cases"><thead><tr>
+      <th onclick="sortTable('CaseNumber')">Case # <span class="sort-arrow">↕</span></th>
+      <th onclick="sortTable('Subject')">Subject <span class="sort-arrow">↕</span></th>
+      <th onclick="sortTable('OwnerName')">Engineer <span class="sort-arrow">↕</span></th>
+      <th onclick="sortTable('AccountName')">Account <span class="sort-arrow">↕</span></th>
+      <th onclick="sortTable('Product')">Product <span class="sort-arrow">↕</span></th>
+      <th onclick="sortTable('ProductTopic')">Topic <span class="sort-arrow">↕</span></th>
+      <th onclick="sortTable('Age_days__c')">Age (d) <span class="sort-arrow">↕</span></th>
+      <th onclick="sortTable('ClosedDate')">Closed <span class="sort-arrow">↕</span></th>
+      <th>Bug/GUS</th>
+    </tr></thead><tbody id="tbl-all-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ─────────────── INSIGHTS ─────────────── -->
+<div class="section-panel" id="sec-insights">
+  <div class="section-title">Key Insights &amp; Recommendations</div>
+  <div class="insights-grid">
+    <div class="insight-card">
+      <div class="insight-num">Insight 1</div>
+      <div class="insight-title">Industry-CPQ/OM: Structural Risk Needing Engineering Escalation</div>
+      <div class="insight-body">Avg age 16.2d across 24 cases; the 4 longest-running cases (50–73 days) are all blocked on Summer '26 regressions. Accounts: Telecom Argentina, SaskTel, Verizon, TDS Telecommunications. Bug W-19153042 appears to be a long-standing unresolved platform issue.<br><br><strong>Action:</strong> Weekly sync with CPQ/OM product engineering on GUS W-22680450, W-22879106, W-23373794, W-23604856. Proactive executive communication for Verizon (52d) and SaskTel (71d).</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-num">Insight 2</div>
+      <div class="insight-title">Pfizer (LSC-EMEA): Needs a Single Technical DRI</div>
+      <div class="insight-body">Pfizer generated 18 cases in 30 days — 7.2% of team volume — across 4 different engineers. 6 are bug-linked in Managed Events. Bug W-23558456 appears across 2 separate open cases. Coordination risk and duplicate discovery effort.<br><br><strong>Action:</strong> Designate UmaMahesh as DRI; create shared case view for the 4 covering engineers; consolidate Managed Events bugs into a product engineering bridge.</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-num">Insight 3</div>
+      <div class="insight-title">25.6% of Cases Are Config/Setup Errors — Self-Service Opportunity</div>
+      <div class="insight-body">Largest theme: customers can't activate features they purchased (PSG permissions, DocGen not in prod, OmniStudio tabs invisible, MFA setup, API Access Control). Most resolve in under 1 day.<br><br><strong>Action:</strong> Build a "Feature Activation Checklist" for Industry Cloud, Revenue Cloud, and OmniStudio. Capturing 30% of these saves ~20 cases/month.</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-num">Insight 4</div>
+      <div class="insight-title">Split SLA Reporting into Engineer-Resolved vs GUS-Blocked</div>
+      <div class="insight-body">Bug-blocked cases average 17.8d vs 7.0d for unblocked. The 9.04d mean conflates two fundamentally different populations. Engineer performance looks inflated by cases they cannot close unilaterally.<br><br><strong>Action:</strong> Track "time-to-GUS-filed" and "time-to-engineering-commitment" as KPIs for bug-blocked cases. Report age-excluding-bug-wait as the engineer performance metric.</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-num">Insight 5</div>
+      <div class="insight-title">MFA Extension Requests: Recurring Low-Value Work (14 cases, 5.6%)</div>
+      <div class="insight-body">13 different accounts filed MFA enforcement extension/deferral cases — nearly one per engineer per month. These are administrative policy requests, not technical problems.<br><br><strong>Action:</strong> Explore a self-service MFA extension portal or auto-route to a non-TSE team. Proactively communicate MFA enforcement wave timelines to at-risk accounts.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.main -->
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// ── embedded data ──
+const CASES = [{"Id":"500hi000002Ib4pAAC","CaseNumber":"474145257","Subject":"Revenue Cloud User PSG error on Quote Lines","Status":"Closed","Priority":"13","CreatedDate":"2026-07-22T13:41:28.000+0000","ClosedDate":"2026-08-07T22:13:25.000+0000","Age_days__c":16.36,"AccountName":"Protiviti Inc.","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002eUSrAAM","CaseNumber":"474192450","Subject":"Price Water fall is not showing the breakdown in Transaction Line Editor","Status":"Closed","Priority":"27","CreatedDate":"2026-07-28T14:21:41.000+0000","ClosedDate":"2026-08-07T22:12:29.000+0000","Age_days__c":10.33,"AccountName":"Rapid7","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Price Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002SihhAAC","CaseNumber":"474172081","Subject":"RLM Billing: Consolidating Billing Schedules from different Billing Accounts onto one Parent-Account Invoice","Status":"Closed","Priority":"45","CreatedDate":"2026-07-24T17:30:40.000+0000","ClosedDate":"2026-08-07T22:12:21.000+0000","Age_days__c":14.2,"AccountName":"ACT Education Corp","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Billing & Invoicing","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002SOnqAAG","CaseNumber":"474171426","Subject":"Cancel Accrual Action & Bulk Processing for cancellation & Adjustment in Loyalty Management","Status":"Closed","Priority":"27","CreatedDate":"2026-07-24T16:05:58.000+0000","ClosedDate":"2026-08-07T20:55:53.000+0000","Age_days__c":14.2,"AccountName":"Marriott International Administrative Services, Inc..","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Loyalty Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000035MSnAAM","CaseNumber":"474254173","Subject":"LSC Mobile (iPad) \u2013 Agentforce Provider Summary not generated for field rep user despite documented permissions (Preprod)","Status":"Closed","Priority":"25","CreatedDate":"2026-08-04T17:28:13.000+0000","ClosedDate":"2026-08-07T20:55:16.000+0000","Age_days__c":3.14,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003F2KjAAK","CaseNumber":"474276827","Subject":"Temporarily disable and extend the phishing resistant MFA roll out","Status":"Closed","Priority":"13","CreatedDate":"2026-08-06T21:01:05.000+0000","ClosedDate":"2026-08-07T20:05:27.000+0000","Age_days__c":0.96,"AccountName":"SS&C Technologies, Inc.","OwnerName":"Lokesh Reddy Koya","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003HaYQAA0","CaseNumber":"474282463","Subject":"Error message on picklist while creating case","Status":"Closed","Priority":"27","CreatedDate":"2026-08-07T14:25:32.000+0000","ClosedDate":"2026-08-07T16:10:16.000+0000","Age_days__c":0.07,"AccountName":"Arkansas Blue Cross Blue Shield - Call Center","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":"W-23030913","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000031ZwTAAU","CaseNumber":"474245331","Subject":"Need Omnistudio package link for the installation in sandbox","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T21:25:01.000+0000","ClosedDate":"2026-08-07T15:53:58.000+0000","Age_days__c":3.77,"AccountName":"CompSource Mutual Insurance Co","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000031YkHAAU","CaseNumber":"474245275","Subject":"Reached limit of tree nodes for search - ERROR","Status":"Closed","Priority":"0","CreatedDate":"2026-08-03T21:17:12.000+0000","ClosedDate":"2026-08-07T15:18:37.000+0000","Age_days__c":3.75,"AccountName":"CrowdStrike, Inc.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003HVLqAAO","CaseNumber":"474281922","Subject":"Blocker Sub-Category Error","Status":"Closed","Priority":"27","CreatedDate":"2026-08-07T13:22:08.000+0000","ClosedDate":"2026-08-07T14:23:40.000+0000","Age_days__c":0.04,"AccountName":"Inhabit IQ","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000021mpRAAQ","CaseNumber":"474116842","Subject":"Omniscript - timeStamp Data Manipulation Question","Status":"Closed","Priority":"0","CreatedDate":"2026-07-17T18:29:35.000+0000","ClosedDate":"2026-08-07T02:11:40.000+0000","Age_days__c":20.32,"AccountName":"Florida Power & Light Company*","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002An37AAC","CaseNumber":"474128677","Subject":"Unable to search for active products in the cart search option","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T20:12:52.000+0000","ClosedDate":"2026-08-07T00:27:31.000+0000","Age_days__c":17.18,"AccountName":"Cogeco Connexion Inc (New B2B)","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003FDZVAA4","CaseNumber":"474277182","Subject":"Request to temporarily extend debug log size to 100MB","Status":"Closed","Priority":"13","CreatedDate":"2026-08-06T22:11:28.000+0000","ClosedDate":"2026-08-06T23:58:39.000+0000","Age_days__c":0.07,"AccountName":"Conga","OwnerName":"Lokesh Reddy Koya","Product":"Sales","ProductTopic":"Sales-AppExchange & Managed Packages","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002NCH3AAO","CaseNumber":"474155548","Subject":"Dynamic Reply to and Flow Rules Issue","Status":"Closed","Priority":"45","CreatedDate":"2026-07-23T13:29:07.000+0000","ClosedDate":"2026-08-06T23:54:53.000+0000","Age_days__c":14.43,"AccountName":"WellnessLiving Systems","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Messaging","Reason":"Marketing Cloud","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003EZkAAAW","CaseNumber":"474276548","Subject":"Requesting extension for MFA enforcement due to multipleauthn unavailability","Status":"Closed","Priority":"45","CreatedDate":"2026-08-06T20:18:27.000+0000","ClosedDate":"2026-08-06T23:50:23.000+0000","Age_days__c":0.15,"AccountName":"BPM LLP","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003F4j7AAC","CaseNumber":"474276900","Subject":"The Unit Price / Sales Price  in not being Updated in the Quote Lines .","Status":"Closed","Priority":"12","CreatedDate":"2026-08-06T21:12:22.000+0000","ClosedDate":"2026-08-06T23:33:05.000+0000","Age_days__c":0.1,"AccountName":"OmniCloud Software Consulting Pvt. Ltd.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Price Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000035yzWAAQ","CaseNumber":"474255976","Subject":"500 error when activating CML using table constraint","Status":"Closed","Priority":"27","CreatedDate":"2026-08-04T20:43:54.000+0000","ClosedDate":"2026-08-06T22:20:52.000+0000","Age_days__c":2.07,"AccountName":"Equinix, Inc.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000030rXFAAY","CaseNumber":"474243254","Subject":"RCA Price override not working","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T17:39:33.000+0000","ClosedDate":"2026-08-06T22:20:25.000+0000","Age_days__c":3.2,"AccountName":"Colibri - Project Farside Org","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Price Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002A3JdAAK","CaseNumber":"474126887","Subject":"OmniAnalytic: Not able to see Raw Data once Omnianalytic is enabled","Status":"Closed","Priority":"0","CreatedDate":"2026-07-20T16:32:50.000+0000","ClosedDate":"2026-08-06T21:18:48.000+0000","Age_days__c":17.2,"AccountName":"Xcel Energy Services Inc - New Org","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003EI9pAAG","CaseNumber":"474275064","Subject":"Increase of Static Resource Limit in Sandbox Environment","Status":"Closed","Priority":"45","CreatedDate":"2026-08-06T17:27:57.000+0000","ClosedDate":"2026-08-06T20:21:47.000+0000","Age_days__c":0.12,"AccountName":"Meltwater News US Inc.","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Sales","ProductTopic":"Sales-How-to, Setup, Configuration, Data Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001sULWAA2","CaseNumber":"474097252","Subject":"Marketing Cloud sending channel access","Status":"Closed","Priority":"16","CreatedDate":"2026-07-15T18:57:41.000+0000","ClosedDate":"2026-08-06T20:12:02.000+0000","Age_days__c":22.05,"AccountName":"Fionta","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Messaging","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23493861","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23493861\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000003EdqzAAC","CaseNumber":"474275924","Subject":"Omnistudio 'Document Generation' not appearing in production org","Status":"Closed","Priority":"45","CreatedDate":"2026-08-06T18:57:04.000+0000","ClosedDate":"2026-08-06T20:08:06.000+0000","Age_days__c":0.05,"AccountName":"RBC Investor Services Trust","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002fuZlAAI","CaseNumber":"474196311","Subject":"Expression Sets - Object & Field Alias Mapping Issue","Status":"Closed","Priority":"45","CreatedDate":"2026-07-28T20:52:20.000+0000","ClosedDate":"2026-08-06T18:35:52.000+0000","Age_days__c":8.91,"AccountName":"UDC Enterprise Wide CRM","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Business Rules Engine (BRE)","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23690474","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23690474\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi0000039yeLAAQ","CaseNumber":"474265164","Subject":"Marketing Engagement Analytics Package Installation Error","Status":"Closed","Priority":"45","CreatedDate":"2026-08-05T18:18:35.000+0000","ClosedDate":"2026-08-06T18:31:21.000+0000","Age_days__c":1.01,"AccountName":"Pleora Technologies Inc","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003DcIhAAK","CaseNumber":"474273774","Subject":"Issue with CLM Reconciliation","Status":"Closed","Priority":"45","CreatedDate":"2026-08-06T15:32:31.000+0000","ClosedDate":"2026-08-06T18:00:53.000+0000","Age_days__c":0.1,"AccountName":"Bell Canada COCD 1000","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002ajzyAAA","CaseNumber":"474184434","Subject":"Experience Portal users able to submit an order through our Omnistudio solution but seeing missing information","Status":"Closed","Priority":"45","CreatedDate":"2026-07-27T18:10:54.000+0000","ClosedDate":"2026-08-06T17:01:24.000+0000","Age_days__c":9.95,"AccountName":"Veracyte, Inc","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001o8bJAAQ","CaseNumber":"474087319","Subject":"DocGen OmniScript Lightning spinner remains stuck indefinitely upon first load","Status":"Closed","Priority":"27","CreatedDate":"2026-07-14T20:27:58.000+0000","ClosedDate":"2026-08-06T16:10:43.000+0000","Age_days__c":22.82,"AccountName":"SUN Life Assurance Company Of Canada","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":"W-14510441","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000035boRAAQ","CaseNumber":"474255809","Subject":"Open Access to Product2 Product Type Field for Large ARM Implementation till 10/01/2026","Status":"Closed","Priority":"27","CreatedDate":"2026-08-04T20:21:21.000+0000","ClosedDate":"2026-08-06T15:31:14.000+0000","Age_days__c":1.8,"AccountName":"WillScot Holdings Corporation","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Catalog Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000022VGHAA2","CaseNumber":"474118275","Subject":"Guidewire: Fulfillment Order Product Action showing \"No Change\" instead of \"Renew\" on Standard Renewal","Status":"Closed","Priority":"12","CreatedDate":"2026-07-17T22:47:46.000+0000","ClosedDate":"2026-08-06T15:28:44.000+0000","Age_days__c":19.7,"AccountName":"Neocol","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Dynamic Revenue Orchestration","Reason":"Unassigned","IssueType":null,"Bug":"W-23557764","GUSInvestigation":"W-23535884","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23535884\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002kKFXAA2","CaseNumber":"474207910","Subject":"MFA Extension for Org 00D5f000003HZqm","Status":"Closed","Priority":"16","CreatedDate":"2026-07-29T21:51:33.000+0000","ClosedDate":"2026-08-06T14:11:28.000+0000","Age_days__c":7.68,"AccountName":"Altvia Solutions, LLC","OwnerName":"Sathyavathi K N","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002xknFAAQ","CaseNumber":"474235298","Subject":"Enable API Access Control","Status":"Closed","Priority":"0","CreatedDate":"2026-08-03T01:43:42.000+0000","ClosedDate":"2026-08-06T13:33:54.000+0000","Age_days__c":3.49,"AccountName":"Comunicaci\u00f3n Celular, S.A. (Org B2C Industries)","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000039Vm1AAE","CaseNumber":"474263863","Subject":"OmniScript Lookup Field Displays Record ID Instead of Name When Initialized with Existing Value","Status":"Closed","Priority":"27","CreatedDate":"2026-08-05T16:11:23.000+0000","ClosedDate":"2026-08-06T06:09:13.000+0000","Age_days__c":0.58,"AccountName":"Caterpillar Inc. - CRM Innovation","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002XKmnAAG","CaseNumber":"474176476","Subject":"Apex Heap Size error","Status":"Closed","Priority":"27","CreatedDate":"2026-07-26T21:05:05.000+0000","ClosedDate":"2026-08-06T02:12:48.000+0000","Age_days__c":10.21,"AccountName":"*Claro S.A.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002NfUMAA0","CaseNumber":"474157191","Subject":"Critical Issue - BRE Price Calculation Not Triggered in Shopping Cart","Status":"Closed","Priority":"0","CreatedDate":"2026-07-23T15:38:34.000+0000","ClosedDate":"2026-08-06T02:12:44.000+0000","Age_days__c":13.44,"AccountName":"MEDIA COMMERCE PARTNERS S.A.S","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003A7PuAAK","CaseNumber":"474266228","Subject":"LSC Mobile App (iPad): Record edits bypass Data Change Request creation \u2014 DCR works on desktop but is not generated on mobile","Status":"Closed","Priority":"25","CreatedDate":"2026-08-05T20:22:56.000+0000","ClosedDate":"2026-08-05T23:30:29.000+0000","Age_days__c":0.13,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000030a4zAAA","CaseNumber":"474242442","Subject":"OmniStudio designer components (OmniScripts, Data Mappers, Integration Procedures, FlexCards) not accessible despite Permission Set License assigned","Status":"Closed","Priority":"45","CreatedDate":"2026-08-03T16:32:07.000+0000","ClosedDate":"2026-08-05T21:48:31.000+0000","Age_days__c":2.22,"AccountName":"KnowBe4, Inc","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002POHJAA4","CaseNumber":"474160596","Subject":"Migrating components from one org to another","Status":"Closed","Priority":"45","CreatedDate":"2026-07-23T23:52:27.000+0000","ClosedDate":"2026-08-05T21:25:17.000+0000","Age_days__c":12.9,"AccountName":"PriMed Management Consulting Services, Inc.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000039XW6AAM","CaseNumber":"474264204","Subject":"NPM Auth Key Request - Vlocity Build Tool Local Compiler","Status":"Closed","Priority":"45","CreatedDate":"2026-08-05T16:43:15.000+0000","ClosedDate":"2026-08-05T21:18:59.000+0000","Age_days__c":0.19,"AccountName":"Ontario Ministry of Long Term Care - LTC Inspections","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Public Sector Solutions","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000003AACUAA4","CaseNumber":"474265910","Subject":"Design Document template is missing in devhybrid sandbox","Status":"Closed","Priority":"27","CreatedDate":"2026-08-05T19:43:01.000+0000","ClosedDate":"2026-08-05T20:24:52.000+0000","Age_days__c":0.03,"AccountName":"PriMed Management Consulting Services, Inc.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002RpenAAC","CaseNumber":"474165237","Subject":"Drop in open rates and deliverability issues after transitioning to Marketing Cloud Next","Status":"Closed","Priority":"45","CreatedDate":"2026-07-24T13:40:36.000+0000","ClosedDate":"2026-08-05T18:35:15.000+0000","Age_days__c":12.2,"AccountName":"BDL Club Invest","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002iWMQAA2","CaseNumber":"474202822","Subject":"Passkey prompted for user without Admin or view/modify all access","Status":"Closed","Priority":"27","CreatedDate":"2026-07-29T13:28:19.000+0000","ClosedDate":"2026-08-05T18:17:26.000+0000","Age_days__c":7.2,"AccountName":"Shoppers Drug Mart Inc.","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002jUNOAA2","CaseNumber":"474205331","Subject":"FSC lisence questions","Status":"Closed","Priority":"45","CreatedDate":"2026-07-29T16:54:43.000+0000","ClosedDate":"2026-08-05T18:16:13.000+0000","Age_days__c":7.06,"AccountName":"USAA (Agency FSC)","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000036E09AAE","CaseNumber":"474256315","Subject":"Data Mapper Extract filtering issue in OmniScript","Status":"Closed","Priority":"27","CreatedDate":"2026-08-04T21:40:36.000+0000","ClosedDate":"2026-08-05T17:41:20.000+0000","Age_days__c":0.83,"AccountName":"National Geographic Society NPC","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi00000372EfAAI","CaseNumber":"474257710","Subject":"OmniStudio Migration Engagement","Status":"Closed","Priority":"45","CreatedDate":"2026-08-05T04:10:35.000+0000","ClosedDate":"2026-08-05T17:13:46.000+0000","Age_days__c":0.54,"AccountName":"PriMed Management Consulting Services, Inc.","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002anXJAAY","CaseNumber":"474184043","Subject":"OmniIntegrationProcedure error when backpropagating Release","Status":"Closed","Priority":"45","CreatedDate":"2026-07-27T17:30:21.000+0000","ClosedDate":"2026-08-05T17:06:16.000+0000","Age_days__c":8.98,"AccountName":"Smithville Communications (Comms Cloud Org)","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":"W-23683827","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002kL9yAAE","CaseNumber":"474207625","Subject":"Request to Increase Data Pipeline Limit for next 2 weeks","Status":"Closed","Priority":"0","CreatedDate":"2026-07-29T21:01:55.000+0000","ClosedDate":"2026-08-05T16:35:19.000+0000","Age_days__c":6.81,"AccountName":"Saks.com LLC","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Manufacturing Cloud","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002vTDpAAM","CaseNumber":"474233037","Subject":"Grantmaking","Status":"Closed","Priority":"45","CreatedDate":"2026-08-01T21:46:35.000+0000","ClosedDate":"2026-08-05T14:19:53.000+0000","Age_days__c":3.69,"AccountName":"Orals LLC","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Public Sector Solutions","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000031Z3eAAE","CaseNumber":"474245570","Subject":"Phishing-Resistant MFA question on Data Cloud Setup menu","Status":"Closed","Priority":"45","CreatedDate":"2026-08-03T22:07:40.000+0000","ClosedDate":"2026-08-05T14:02:09.000+0000","Age_days__c":1.66,"AccountName":"THE UNIVERSITY OF CHICAGO MEDICAL CENTER","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500Hx00001HwOAvIAN","CaseNumber":"473826868","Subject":"You don't have permission to access IndustriesCPQService. Contact your administrator.","Status":"Closed","Priority":"0","CreatedDate":"2026-06-15T23:03:47.000+0000","ClosedDate":"2026-08-05T12:52:20.000+0000","Age_days__c":50.58,"AccountName":"TDS Telecommunications LLC","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23373794,W-23604856","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23373794,W-23604856\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000001vyjdAAA","CaseNumber":"474104045","Subject":"Enable Indexing of 2 fields in Object- blng__Payment__c","Status":"Closed","Priority":"45","CreatedDate":"2026-07-16T13:05:39.000+0000","ClosedDate":"2026-08-05T12:12:15.000+0000","Age_days__c":19.96,"AccountName":"ADT LLC","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002zf6kAAA","CaseNumber":"474239863","Subject":"IntegrationProcedureFireAndForget Behaves Differently in Preprod Despite Identical Codebase","Status":"Closed","Priority":"0","CreatedDate":"2026-08-03T13:06:48.000+0000","ClosedDate":"2026-08-05T12:01:15.000+0000","Age_days__c":1.95,"AccountName":"Genesis Energy Limited","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002TVGzAAO","CaseNumber":"474173738","Subject":"[Life Sciences] LSC Mobile App (iPad) \u2013 Dashboard component is not rendering on iPad","Status":"Closed","Priority":"0","CreatedDate":"2026-07-24T22:23:37.000+0000","ClosedDate":"2026-08-04T23:48:17.000+0000","Age_days__c":11.06,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23492221","GUSInvestigation":"W-23635482","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23635482\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002fLDrAAM","CaseNumber":"474195652","Subject":"Go-Live Monitoring - 2026/07/31 7:15pm ET - 9:30pm ET","Status":"Closed","Priority":"27","CreatedDate":"2026-07-28T19:20:20.000+0000","ClosedDate":"2026-08-04T23:37:12.000+0000","Age_days__c":7.18,"AccountName":"Rogers Communications Canada Inc.","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-Communication Cloud","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002smmTAAQ","CaseNumber":"474228857","Subject":"Need Vlocity error log enabled in our UAT environment for Admin and another user","Status":"Closed","Priority":"27","CreatedDate":"2026-07-31T19:09:20.000+0000","ClosedDate":"2026-08-04T23:35:48.000+0000","Age_days__c":4.19,"AccountName":"Health Alliance Plan Of Michigan","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-Health & Insurance","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002oAHZAA2","CaseNumber":"474217347","Subject":"Email sending issue due to DKIM authentication failure","Status":"Closed","Priority":"45","CreatedDate":"2026-07-30T17:40:56.000+0000","ClosedDate":"2026-08-04T23:18:55.000+0000","Age_days__c":5.23,"AccountName":"Security Care Inc.","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002ado5AAA","CaseNumber":"474183634","Subject":"Change Order: Delta count 106 does not match with input size 109","Status":"Closed","Priority":"25","CreatedDate":"2026-07-27T16:48:23.000+0000","ClosedDate":"2026-08-04T23:11:50.000+0000","Age_days__c":8.27,"AccountName":"Equinix, Inc.","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Dynamic Revenue Orchestration","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001oHY9AAM","CaseNumber":"474087624","Subject":"Emails sent from Email Invoices on Invoice Batch Run record missing invoice document attachment","Status":"Closed","Priority":"27","CreatedDate":"2026-07-14T21:20:27.000+0000","ClosedDate":"2026-08-04T23:11:12.000+0000","Age_days__c":21.08,"AccountName":"Capital One Services, LLC","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Billing & Invoicing","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500Hx00001FK7VdIAL","CaseNumber":"473556225","Subject":"AssetToBasket API failing in pre-prod. Help needed to check SF managed package log","Status":"Closed","Priority":"27","CreatedDate":"2026-05-26T00:10:04.000+0000","ClosedDate":"2026-08-04T21:11:52.000+0000","Age_days__c":70.88,"AccountName":"SaskTel","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-22680450,W-23194214","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-22680450,W-23194214\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi0000030xhVAAQ","CaseNumber":"474243590","Subject":"Billing: Create billing schedule groups and billing schedules","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T18:11:46.000+0000","ClosedDate":"2026-08-04T20:54:55.000+0000","Age_days__c":1.11,"AccountName":"Bluebeam Inc 3rd Org","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Billing & Invoicing","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000035Gs1AAE","CaseNumber":"474253953","Subject":"Error accessing Integration procedure as Partner User","Status":"Closed","Priority":"45","CreatedDate":"2026-08-04T17:06:55.000+0000","ClosedDate":"2026-08-04T20:53:37.000+0000","Age_days__c":0.16,"AccountName":"The Manufacturers Life Insurance Company","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000030vfhAAA","CaseNumber":"474243494","Subject":"#Revert LAP Open Access to Product2 Product Type Field for Large ARM Implementation","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T18:02:25.000+0000","ClosedDate":"2026-08-04T20:45:37.000+0000","Age_days__c":1.11,"AccountName":"WillScot Holdings Corporation","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Catalog Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002rfezAAA","CaseNumber":"474225521","Subject":"Re: Salesforce Automations Audit","Status":"Closed","Priority":"27","CreatedDate":"2026-07-31T14:23:06.000+0000","ClosedDate":"2026-08-04T20:32:04.000+0000","Age_days__c":4.26,"AccountName":"Wayfair","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-How-to, Setup, Configuration, Reports & Dashboards","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000013M1pAAE","CaseNumber":"473993260","Subject":"CRM-A Questions / Issues","Status":"Closed","Priority":"45","CreatedDate":"2026-07-02T02:47:41.000+0000","ClosedDate":"2026-08-04T20:12:46.000+0000","Age_days__c":33.73,"AccountName":"Skechers USA, Inc","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Loyalty Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002pGj7AAE","CaseNumber":"474220151","Subject":"Data Processing Engine (BatchCalcJobDefinition) deploy rejects already-granted FLS for the Analytics Cloud Integration User","Status":"Closed","Priority":"27","CreatedDate":"2026-07-30T23:48:45.000+0000","ClosedDate":"2026-08-04T20:01:35.000+0000","Age_days__c":4.84,"AccountName":"Yahoo Inc.","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Loyalty Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001rsPuAAI","CaseNumber":"474096137","Subject":"Invoice generated incorrectly after Salesforce release bug? Cancelled evergreen asset got rebilled.","Status":"Closed","Priority":"45","CreatedDate":"2026-07-15T17:02:03.000+0000","ClosedDate":"2026-08-04T19:14:18.000+0000","Age_days__c":20.09,"AccountName":"Common Application, Inc. (Core & MC Org)","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Billing & Invoicing","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002NXq9AAG","CaseNumber":"474156452","Subject":"Snooze or dismiss on Alert on Contact/Team page is throwing an error.","Status":"Closed","Priority":"25","CreatedDate":"2026-07-23T14:44:03.000+0000","ClosedDate":"2026-08-04T18:35:42.000+0000","Age_days__c":12.16,"AccountName":"The Toronto-Dominion Bank","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":"W-23660383","GUSInvestigation":"W-23650880","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23650880\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi0000033oWQAAY","CaseNumber":"474250478","Subject":"Revenue Cloud Pricing Procedure Group Element","Status":"Closed","Priority":"13","CreatedDate":"2026-08-04T11:59:26.000+0000","ClosedDate":"2026-08-04T18:32:38.000+0000","Age_days__c":0.27,"AccountName":"Acxiom LLC","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000028zrZAAQ","CaseNumber":"474124168","Subject":"Cannot disconnect security key","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T12:12:32.000+0000","ClosedDate":"2026-08-04T18:29:48.000+0000","Age_days__c":15.26,"AccountName":"Sendero Health Plans, Inc.","OwnerName":"Kaushik Jagatap","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23629210","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23629210\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002jiRxAAI","CaseNumber":"474205900","Subject":"not able to see Marketing Performance in MCN","Status":"Closed","Priority":"45","CreatedDate":"2026-07-29T17:50:08.000+0000","ClosedDate":"2026-08-04T18:15:23.000+0000","Age_days__c":6.02,"AccountName":"Panasonic - Industrial Devices (PIDSA)","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002ElAnAAK","CaseNumber":"474137100","Subject":"No Navigation to Managed Event Record Page from Calendar View on Desktop","Status":"Closed","Priority":"45","CreatedDate":"2026-07-21T16:28:58.000+0000","ClosedDate":"2026-08-04T18:14:17.000+0000","Age_days__c":14.07,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23558456","GUSInvestigation":"W-23564910","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23564910\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi00000317QjAAI","CaseNumber":"474244099","Subject":"Specialty Filters pulling incorrect labels or no labels","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T19:05:57.000+0000","ClosedDate":"2026-08-04T17:57:19.000+0000","Age_days__c":0.95,"AccountName":"Harrow Health","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002J76HAAS","CaseNumber":"474146390","Subject":"GCP integration user missing columns","Status":"Closed","Priority":"0","CreatedDate":"2026-07-22T15:10:39.000+0000","ClosedDate":"2026-08-04T17:13:54.000+0000","Age_days__c":13.09,"AccountName":"Pets Insurance Services Ltd","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000031FGDAA2","CaseNumber":"474244466","Subject":"Help with OmniScript Step > not appearing in front end","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T19:42:58.000+0000","ClosedDate":"2026-08-04T16:48:56.000+0000","Age_days__c":0.88,"AccountName":"National Geographic Society NPC","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000020Vp5AAE","CaseNumber":"474114233","Subject":"Inherited Sharing context not being respected in OmniStudio Integration Procedure -> Apex flow","Status":"Closed","Priority":"27","CreatedDate":"2026-07-17T13:47:06.000+0000","ClosedDate":"2026-08-04T16:22:22.000+0000","Age_days__c":18.11,"AccountName":"Banco Bradesco S.A.","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23631526","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23631526\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002ztzJAAQ","CaseNumber":"474240445","Subject":"B2B Request for MFA Activation Extension and Exemption - All Employees","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T14:00:05.000+0000","ClosedDate":"2026-08-04T16:19:05.000+0000","Age_days__c":1.1,"AccountName":"INWI","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Developer Support","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002tUh3AAE","CaseNumber":"474230647","Subject":"Need support for salesforce CR deployment","Status":"Closed","Priority":"0","CreatedDate":"2026-08-01T00:06:26.000+0000","ClosedDate":"2026-08-04T15:41:21.000+0000","Age_days__c":3.65,"AccountName":"City National Bank*","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000031S3nAAE","CaseNumber":"474245587","Subject":"Partner Enterprise Environment with Agentforce Revenue Management(Revenue Cloud) and Revenue Cloud Billing(RCB)","Status":"Closed","Priority":"16","CreatedDate":"2026-08-03T22:10:36.000+0000","ClosedDate":"2026-08-04T15:11:01.000+0000","Age_days__c":0.71,"AccountName":"Coastal Cloud","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002ys2nAAA","CaseNumber":"474237770","Subject":"Apex queueable Performance","Status":"Closed","Priority":"27","CreatedDate":"2026-08-03T08:51:51.000+0000","ClosedDate":"2026-08-04T13:17:21.000+0000","Age_days__c":1.18,"AccountName":"Block, Inc.","OwnerName":"Pallavi Pandey","Product":"Revenue","ProductTopic":"Revenue-CPQ Developer Support","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002yww1AAA","CaseNumber":"474237996","Subject":"Restore Deleted records from Recycle Bean","Status":"Closed","Priority":"26","CreatedDate":"2026-08-03T09:13:06.000+0000","ClosedDate":"2026-08-04T13:11:42.000+0000","Age_days__c":1.17,"AccountName":"SailPoint Technologies, Inc.","OwnerName":"Pallavi Pandey","Product":"Revenue","ProductTopic":"Revenue-Salesforce Billing","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001jJnVAAU","CaseNumber":"474076261","Subject":"Unable to create Benefit records when RebateType has MeasureType = \"Fixed Amount\"","Status":"Closed","Priority":"27","CreatedDate":"2026-07-13T19:58:36.000+0000","ClosedDate":"2026-08-04T00:14:26.000+0000","Age_days__c":21.18,"AccountName":"Syngenta Crop Protection AG","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Rebate Management","Reason":"Unassigned","IssueType":null,"Bug":"W-23453847","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi00000314FxAAI","CaseNumber":"474243925","Subject":"Cannot open flow in a campaign on marketing cloud next","Status":"Closed","Priority":"15","CreatedDate":"2026-08-03T18:48:27.000+0000","ClosedDate":"2026-08-04T00:00:21.000+0000","Age_days__c":0.22,"AccountName":"Tier1CRM","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001HvUNAA0","CaseNumber":"474018860","Subject":"Vlocity CMT Summer 2026 Upgrade Blocked \u2013 Apex Code Required by VF Pages XOMOrchQueueAssignmentCondition / XOMOrchQueueAssignmentConditionOnOI","Status":"Closed","Priority":"45","CreatedDate":"2026-07-06T18:44:26.000+0000","ClosedDate":"2026-08-03T22:12:42.000+0000","Age_days__c":28.14,"AccountName":"COPEL COMERCIALIZACAO S.A.","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002T5chAAC","CaseNumber":"474172988","Subject":"Incorrect Error Message Displayed for All Products During Sample Transfer","Status":"Closed","Priority":"25","CreatedDate":"2026-07-24T19:40:24.000+0000","ClosedDate":"2026-08-03T21:48:18.000+0000","Age_days__c":10.09,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23656968","GUSInvestigation":"W-23637089","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23637089\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002fxsbAAA","CaseNumber":"474196441","Subject":"Error 1006 while setting up subdomain in Marketing Cloud","Status":"Closed","Priority":"45","CreatedDate":"2026-07-28T21:11:05.000+0000","ClosedDate":"2026-08-03T21:11:00.000+0000","Age_days__c":6,"AccountName":"E.A Langenfeld","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002o0rhAAA","CaseNumber":"474216836","Subject":"User not able to Delete Contract but has the permission to do so.","Status":"Closed","Priority":"13","CreatedDate":"2026-07-30T16:53:07.000+0000","ClosedDate":"2026-08-03T21:09:08.000+0000","Age_days__c":4.18,"AccountName":"CloudMasonry","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002rOnpAAE","CaseNumber":"474224743","Subject":"Issue with Vlocity Product Attribute Interface Processing","Status":"Closed","Priority":"0","CreatedDate":"2026-07-31T13:13:26.000+0000","ClosedDate":"2026-08-03T18:35:10.000+0000","Age_days__c":3.22,"AccountName":"Point32Health Services, Inc.","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":"W-14246902","GUSInvestigation":"W-12107671","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-12107671\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002jt2PAAQ","CaseNumber":"474206357","Subject":"Integration Procedures HTTP Action Certificate Support","Status":"Closed","Priority":"45","CreatedDate":"2026-07-29T18:39:07.000+0000","ClosedDate":"2026-08-03T17:56:42.000+0000","Age_days__c":4.97,"AccountName":"Banco Bradesco BBI S.A.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002StGYAA0","CaseNumber":"474172556","Subject":"Email campaign not sending","Status":"Closed","Priority":"45","CreatedDate":"2026-07-24T18:35:34.000+0000","ClosedDate":"2026-08-03T17:17:47.000+0000","Age_days__c":9.95,"AccountName":"Rain Engineering","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Marketing Cloud","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002ApuXAAS","CaseNumber":"474128777","Subject":"Filters (Visit vs Event) on  Expense Type Advanced Search","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T20:25:47.000+0000","ClosedDate":"2026-08-03T17:15:08.000+0000","Age_days__c":13.87,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23558456","GUSInvestigation":"W-23575029","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23575029\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002RqJ7AAK","CaseNumber":"474165259","Subject":"OAUTH_APPROVAL_ERROR_GENERIC during Google Sheets Connector Authentication via SSO","Status":"Closed","Priority":"0","CreatedDate":"2026-07-24T13:43:36.000+0000","ClosedDate":"2026-08-03T16:59:17.000+0000","Age_days__c":10.14,"AccountName":"BOTICARIO PRODUTOS DE BELEZA LTDA","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002jfqfAAA","CaseNumber":"474205787","Subject":"Flex card data table issue on Experience Cloud","Status":"Closed","Priority":"0","CreatedDate":"2026-07-29T17:39:54.000+0000","ClosedDate":"2026-08-03T16:59:10.000+0000","Age_days__c":4.97,"AccountName":"PACCAR Financial","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000030VQHAA2","CaseNumber":"474242197","Subject":"OmniScript Document Generation Error \u2013 Retired Visualforce-Based OmniScripts, Missing DocGenerationSampleLwc DataPack \u2013 Org 00D2h0000000qkj","Status":"Closed","Priority":"45","CreatedDate":"2026-08-03T16:15:30.000+0000","ClosedDate":"2026-08-03T16:20:04.000+0000","Age_days__c":0,"AccountName":"COPEL COMERCIALIZACAO S.A.","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000000xt5KAAQ","CaseNumber":"473981748","Subject":"Flow Breaking when created new version of Pricing agreement.","Status":"Closed","Priority":"27","CreatedDate":"2026-06-30T21:20:25.000+0000","ClosedDate":"2026-08-03T15:31:48.000+0000","Age_days__c":33.76,"AccountName":"Victaulic Company*","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23495995","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23495995\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002ABSTAA4","CaseNumber":"474127237","Subject":"Getting error when trying to add field to display on new filter","Status":"Closed","Priority":"27","CreatedDate":"2026-07-20T17:12:28.000+0000","ClosedDate":"2026-08-01T21:34:58.000+0000","Age_days__c":12.18,"AccountName":"Mylan Inc.","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23341626","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002fFegAAE","CaseNumber":"474194878","Subject":"Additional Information Tab \u2014 Account Team Missing on iPad","Status":"Closed","Priority":"27","CreatedDate":"2026-07-28T17:55:54.000+0000","ClosedDate":"2026-08-01T16:16:51.000+0000","Age_days__c":3.93,"AccountName":"Harrow Health","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002INOQAA4","CaseNumber":"474144936","Subject":"Decision Table - not returning the expected rows","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T13:19:20.000+0000","ClosedDate":"2026-07-31T22:30:52.000+0000","Age_days__c":9.38,"AccountName":"W. L. Gore & Associates, Inc.","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Price Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23564093","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23564093\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002IZHWAA4","CaseNumber":"474145020","Subject":"On Managed Events object, the \"Mode\" (In-Person, Virtual, Hybrid, Remote Engagement) and \"Location Type\" picklist fields are part of a managed package and can not be edited or customized to meet business requirements.","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T13:26:50.000+0000","ClosedDate":"2026-07-31T21:41:08.000+0000","Age_days__c":9.34,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23603736","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23603736\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002IMVbAAO","CaseNumber":"474145116","Subject":"Translation Override Not Reflecting for Managed Package Field Labels","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T13:33:08.000+0000","ClosedDate":"2026-07-31T21:14:15.000+0000","Age_days__c":9.32,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002fNM5AAM","CaseNumber":"474194954","Subject":"Medical Insights Feed tab customization","Status":"Closed","Priority":"45","CreatedDate":"2026-07-28T18:04:55.000+0000","ClosedDate":"2026-07-31T19:21:56.000+0000","Age_days__c":3.05,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002flkzAAA","CaseNumber":"474195991","Subject":"Revenue Cloud Transaction Line Editor \u2013 License Requirement and Ability to Control OOTB Action Buttons","Status":"Closed","Priority":"27","CreatedDate":"2026-07-28T20:05:51.000+0000","ClosedDate":"2026-07-31T16:52:50.000+0000","Age_days__c":2.87,"AccountName":"Equinix, Inc.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Transaction Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000021UcPAAU","CaseNumber":"474116143","Subject":"Sandbox login forcing Passkey setup","Status":"Closed","Priority":"45","CreatedDate":"2026-07-17T17:04:04.000+0000","ClosedDate":"2026-07-31T16:42:13.000+0000","Age_days__c":13.98,"AccountName":"Jitisoft","OwnerName":"Anita Kumari","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001wmgPAAQ","CaseNumber":"474106193","Subject":"Schedule Orchestration Steps with Negative Delays","Status":"Closed","Priority":"45","CreatedDate":"2026-07-16T16:11:16.000+0000","ClosedDate":"2026-07-31T16:33:50.000+0000","Age_days__c":15.02,"AccountName":"salesforce.com - 62 org attached*","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Dynamic Revenue Orchestration","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002aFdhAAE","CaseNumber":"474182524","Subject":"Journey Builder does not appear in the menu \u2014 MCE+ Pro Edition","Status":"Closed","Priority":"45","CreatedDate":"2026-07-27T15:13:24.000+0000","ClosedDate":"2026-07-31T16:13:30.000+0000","Age_days__c":4.04,"AccountName":"Darede Servi\u00e7os de TI","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Messaging","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002rYjxAAE","CaseNumber":"474225199","Subject":"OmniStudio tabs are not visible in new org despite automatic provisioning","Status":"Closed","Priority":"25","CreatedDate":"2026-07-31T13:57:46.000+0000","ClosedDate":"2026-07-31T14:34:41.000+0000","Age_days__c":0.03,"AccountName":"Convergint Technologies LLC","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002N3yYAAS","CaseNumber":"474155414","Subject":"DDS Header Adjustment Setup is Missing Steps in Documentation for List Group & Assignment Configuration","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T13:15:22.000+0000","ClosedDate":"2026-07-31T14:09:57.000+0000","Age_days__c":8.04,"AccountName":"Verint Americas Inc.","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Price Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002NknNAAS","CaseNumber":"474157081","Subject":"TA MIGRATION WAVE 33 - script to be executed on the OM PROD DB (productive pilot)","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T15:27:43.000+0000","ClosedDate":"2026-07-31T14:09:48.000+0000","Age_days__c":7.95,"AccountName":"Telecom Argentina S.A.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002EyRNAA0","CaseNumber":"474137634","Subject":"RCA Setup Issues","Status":"Closed","Priority":"27","CreatedDate":"2026-07-21T17:22:23.000+0000","ClosedDate":"2026-07-31T14:08:46.000+0000","Age_days__c":9.87,"AccountName":"Colibri - Project Farside Org","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002AkRpAAK","CaseNumber":"474128588","Subject":"Bug/ enhancement for Manage Events --> Related list Add -> Account Attendees functionality","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T20:00:23.000+0000","ClosedDate":"2026-07-31T13:11:56.000+0000","Age_days__c":10.72,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23564697","GUSInvestigation":"W-23560825","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23560825\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002k5LJAAY","CaseNumber":"474206816","Subject":"Request to defer MFA release for additional orgs","Status":"Closed","Priority":"45","CreatedDate":"2026-07-29T19:31:12.000+0000","ClosedDate":"2026-07-31T12:59:59.000+0000","Age_days__c":1.73,"AccountName":"Haventree Bank - Core Org","OwnerName":"Sathyavathi K N","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002p0UfAAI","CaseNumber":"474219605","Subject":"Data Pipelines / Data Processing Pipeline needs to be enabled","Status":"Closed","Priority":"0","CreatedDate":"2026-07-30T21:51:41.000+0000","ClosedDate":"2026-07-31T00:48:49.000+0000","Age_days__c":0.12,"AccountName":"Yahoo Inc.","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001ATOLAA4","CaseNumber":"474008280","Subject":"Problemas con vlocity","Status":"Closed","Priority":"27","CreatedDate":"2026-07-03T19:38:12.000+0000","ClosedDate":"2026-07-30T23:37:12.000+0000","Age_days__c":27.17,"AccountName":"Banco Del Estado De Chile","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002FYt4AAG","CaseNumber":"474139422","Subject":"Erro na extracao de relatorios","Status":"Closed","Priority":"27","CreatedDate":"2026-07-21T21:07:05.000+0000","ClosedDate":"2026-07-30T23:12:29.000+0000","Age_days__c":9.09,"AccountName":"Banco Bradesco S.A. (Private)","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-How-to, Setup, Configuration, Reports & Dashboards","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000022NPCAA2","CaseNumber":"474118177","Subject":"Manage Event Location field & layout issue","Status":"Closed","Priority":"45","CreatedDate":"2026-07-17T22:14:26.000+0000","ClosedDate":"2026-07-30T22:35:59.000+0000","Age_days__c":13.01,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23563853,W-23577094","GUSInvestigation":"W-23543843","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23543843\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002AWIPAA4","CaseNumber":"474128072","Subject":"Follow-on: ContextModificationException: Invalid tag attribute name key: [SalesTransactionGroup] \u2014 B2B Asset ARC via RCA Flow","Status":"Closed","Priority":"27","CreatedDate":"2026-07-20T18:52:08.000+0000","ClosedDate":"2026-07-30T21:52:45.000+0000","Age_days__c":10.13,"AccountName":"Bluebeam Inc 3rd Org","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Transaction Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002Ne0PAAS","CaseNumber":"474156698","Subject":"incorrect contract format","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T15:03:49.000+0000","ClosedDate":"2026-07-30T20:47:32.000+0000","Age_days__c":7.24,"AccountName":"AT&T Business","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000029dVfAAI","CaseNumber":"474126133","Subject":"Unable to remove Assignment field lookup field on EventSubjectAssignment layout","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T15:21:52.000+0000","ClosedDate":"2026-07-30T20:27:20.000+0000","Age_days__c":10.21,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002KXY9AAO","CaseNumber":"474150179","Subject":"Performance Testing Monitoring Support - 2026/07/08 - AMER","Status":"Closed","Priority":"0","CreatedDate":"2026-07-22T22:58:39.000+0000","ClosedDate":"2026-07-30T20:19:43.000+0000","Age_days__c":7.89,"AccountName":"Marriott International Administrative Services, Inc..","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Developer Support","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002EbLAAA0","CaseNumber":"474137447","Subject":"iPad App Error on Login","Status":"Closed","Priority":"0","CreatedDate":"2026-07-21T17:03:30.000+0000","ClosedDate":"2026-07-30T20:14:50.000+0000","Age_days__c":9.13,"AccountName":"Harrow Health","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23533140","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23533140\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000001UeM2AAK","CaseNumber":"474048246","Subject":"Omnistudio Apex Error - DocGenObjectMappings","Status":"Closed","Priority":"0","CreatedDate":"2026-07-09T14:04:43.000+0000","ClosedDate":"2026-07-30T18:19:29.000+0000","Age_days__c":21.18,"AccountName":"Veeam Software Corporation (New Org)","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":"W-23613135","GUSInvestigation":"W-23588254","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23588254\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002Kx9FAAS","CaseNumber":"474150772","Subject":"Manage Events --> Expense tab --> Display \"Not Allocated\" amount","Status":"Closed","Priority":"45","CreatedDate":"2026-07-23T01:52:41.000+0000","ClosedDate":"2026-07-30T18:14:18.000+0000","Age_days__c":7.68,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002T87VAAS","CaseNumber":"474173027","Subject":"RBL Rollup Summary Field Calculations Financial Services Cloud","Status":"Closed","Priority":"27","CreatedDate":"2026-07-24T19:46:47.000+0000","ClosedDate":"2026-07-30T17:19:57.000+0000","Age_days__c":5.9,"AccountName":"UMB Financial Corporation","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002KbK1AAK","CaseNumber":"474150253","Subject":"Communications, Media & Energy \u2014 Summer '26 Major Release upgrade failed","Status":"Closed","Priority":"45","CreatedDate":"2026-07-22T23:27:30.000+0000","ClosedDate":"2026-07-30T16:31:49.000+0000","Age_days__c":7.71,"AccountName":"Amazon Leo","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Communication Cloud","Reason":"Unassigned","IssueType":null,"Bug":"W-23565463","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001izQbAAI","CaseNumber":"474075340","Subject":"Alerts and Recommendations show (0) on Desktop","Status":"Closed","Priority":"45","CreatedDate":"2026-07-13T18:25:59.000+0000","ClosedDate":"2026-07-30T16:14:22.000+0000","Age_days__c":16.91,"AccountName":"Harrow Health","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002kITpAAM","CaseNumber":"474207423","Subject":"Calculation Not Triggered in Shopping Cart","Status":"Closed","Priority":"45","CreatedDate":"2026-07-29T20:34:44.000+0000","ClosedDate":"2026-07-30T15:35:19.000+0000","Age_days__c":0.79,"AccountName":"MEDIA COMMERCE PARTNERS S.A.S","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001WIkPAAW","CaseNumber":"474052518","Subject":"revenue cloud order creation error: You reached the limit of 1700 records that can persist in the context","Status":"Closed","Priority":"27","CreatedDate":"2026-07-09T20:57:07.000+0000","ClosedDate":"2026-07-30T13:23:25.000+0000","Age_days__c":20.68,"AccountName":"PointClickCare Technologies, Inc.","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Developer Support - Product to Order","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001kRHZAA2","CaseNumber":"474078321","Subject":"Ability to selectively add/remove objects from appearing in the \"new Account List\" layout","Status":"Closed","Priority":"45","CreatedDate":"2026-07-14T03:26:51.000+0000","ClosedDate":"2026-07-30T12:14:39.000+0000","Age_days__c":16.37,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23596943","GUSInvestigation":"W-23517975","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23517975\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002aFx4AAE","CaseNumber":"474182810","Subject":"Instant Pricing toggle set to true in Product Configurator flow for org 00DNq00000MLP1x","Status":"Closed","Priority":"45","CreatedDate":"2026-07-27T15:39:56.000+0000","ClosedDate":"2026-07-30T01:00:59.000+0000","Age_days__c":2.39,"AccountName":"Metro Fibernet, LLC","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002JlIDAA0","CaseNumber":"474148352","Subject":"Maintain the country and currency in LifeSciences Cloud environment","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T18:12:23.000+0000","ClosedDate":"2026-07-29T23:13:16.000+0000","Age_days__c":7.21,"AccountName":"Mylan Inc.","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002iSHBAA2","CaseNumber":"474202317","Subject":"Products not displayed for configuration","Status":"Closed","Priority":"45","CreatedDate":"2026-07-29T12:40:26.000+0000","ClosedDate":"2026-07-29T21:04:33.000+0000","Age_days__c":0.35,"AccountName":"Tuple Bidco Limited Teciem","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002jfSUAAY","CaseNumber":"474206215","Subject":"Customer Go-Live","Status":"Closed","Priority":"45","CreatedDate":"2026-07-29T18:23:46.000+0000","ClosedDate":"2026-07-29T20:38:13.000+0000","Age_days__c":0.09,"AccountName":"His Majesty the King in Right of the Province of British Columbia BC MOH BCPDH","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Health Cloud","Reason":"Proactive Monitoring","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002OhqfAAC","CaseNumber":"474159417","Subject":"Can we enable password expiry notification to system users?","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T19:46:14.000+0000","ClosedDate":"2026-07-29T18:56:14.000+0000","Age_days__c":5.97,"AccountName":"Barclaycard - Customer Servicing","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002fr2QAAQ","CaseNumber":"474196530","Subject":"Facing issue for deploying the omnistudio Standard components","Status":"Closed","Priority":"27","CreatedDate":"2026-07-28T21:27:50.000+0000","ClosedDate":"2026-07-29T18:32:57.000+0000","Age_days__c":0.88,"AccountName":"Webster Bank, N.A. (FSC Org)","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002InnWAAS","CaseNumber":"474145637","Subject":"Ingesting MCE BUs in Data Cloud with MCE+","Status":"Closed","Priority":"45","CreatedDate":"2026-07-22T14:11:01.000+0000","ClosedDate":"2026-07-29T18:21:57.000+0000","Age_days__c":7.17,"AccountName":"Wild Birds Unlimited, Inc.","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23601951","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23601951\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002K2fdAAC","CaseNumber":"474149147","Subject":"Setting up Marketing Cloud NEXT - email domain question","Status":"Closed","Priority":"16","CreatedDate":"2026-07-22T19:40:44.000+0000","ClosedDate":"2026-07-29T18:16:25.000+0000","Age_days__c":6.94,"AccountName":"Gabriel Sales","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Messaging","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002JmEHAA0","CaseNumber":"474148395","Subject":"Unable to Install OmniStudio Summer 2026 Package \u2013 Data Storage Limits Exceeded","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T18:18:19.000+0000","ClosedDate":"2026-07-29T18:14:48.000+0000","Age_days__c":7,"AccountName":"Sysco Corporation","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002bKjNAAU","CaseNumber":"474185386","Subject":"How to stop email tracking","Status":"Closed","Priority":"45","CreatedDate":"2026-07-27T20:10:20.000+0000","ClosedDate":"2026-07-29T17:58:13.000+0000","Age_days__c":1.91,"AccountName":"SEJER editions Nathan","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Pardot","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002a8IrAAI","CaseNumber":"474182203","Subject":"OmniStudio DocGen PDF Generation Failing","Status":"Closed","Priority":"27","CreatedDate":"2026-07-27T14:45:46.000+0000","ClosedDate":"2026-07-29T16:53:29.000+0000","Age_days__c":2.09,"AccountName":"The Toronto-Dominion Bank","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002Nq4oAAC","CaseNumber":"474157462","Subject":"Installed Package - Public Sector Solutions","Status":"Closed","Priority":"45","CreatedDate":"2026-07-23T16:03:20.000+0000","ClosedDate":"2026-07-29T16:47:46.000+0000","Age_days__c":6.03,"AccountName":"Cherokee Nation - Government Services","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Public Sector Solutions","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002fTrJAAU","CaseNumber":"474195208","Subject":"Marketing Cloud Next setup errors","Status":"Closed","Priority":"45","CreatedDate":"2026-07-28T18:36:24.000+0000","ClosedDate":"2026-07-29T16:23:01.000+0000","Age_days__c":0.91,"AccountName":"Concora Credit Inc. (fka Genesis FS Card Services, Inc)","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Marketing Cloud","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001tWBZAA2","CaseNumber":"474099108","Subject":"Currency and Date localization issue in CLM server-side document generation","Status":"Closed","Priority":"45","CreatedDate":"2026-07-15T23:56:01.000+0000","ClosedDate":"2026-07-29T15:15:04.000+0000","Age_days__c":13.64,"AccountName":"Barton Integration LLC","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Contract Lifecycle Management with DocGen","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001LtlhAAC","CaseNumber":"474027435","Subject":"Child Case for case 473521407 - Sandbox | FSC Package | Action Plan Template - View Page Issue in Sandbox","Status":"Closed","Priority":"27","CreatedDate":"2026-07-07T15:45:50.000+0000","ClosedDate":"2026-07-29T15:12:00.000+0000","Age_days__c":21.98,"AccountName":"Wells Fargo Bank, N.A. - WIM","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":"W-13520049,W-22670947","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002N7xJAAS","CaseNumber":"474155390","Subject":"Step Up Report Export Opt Out","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T13:12:24.000+0000","ClosedDate":"2026-07-29T14:58:36.000+0000","Age_days__c":6.07,"AccountName":"Antioch University- Edu Cloud Org","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002AILtAAO","CaseNumber":"474127515","Subject":"Data Change Request approval process not triggering on record creation (ProviderAffiliation)","Status":"Closed","Priority":"27","CreatedDate":"2026-07-20T17:48:20.000+0000","ClosedDate":"2026-07-29T14:14:49.000+0000","Age_days__c":8.85,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23510339","GUSInvestigation":"W-23602174","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23602174\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002CqWMAA0","CaseNumber":"474132664","Subject":"Gear Icon Requires Double Click to Open Configuration Page","Status":"Closed","Priority":"27","CreatedDate":"2026-07-21T08:51:16.000+0000","ClosedDate":"2026-07-29T14:13:47.000+0000","Age_days__c":8.22,"AccountName":"CrowdStrike, Inc.","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001sHw9AAE","CaseNumber":"474096378","Subject":"Omni-Studio Enhanced Security","Status":"Closed","Priority":"27","CreatedDate":"2026-07-15T17:26:39.000+0000","ClosedDate":"2026-07-29T00:01:54.000+0000","Age_days__c":13.27,"AccountName":"Airbnb, Inc*","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002SJrOAAW","CaseNumber":"474171466","Subject":"Need help increasing the limit of The number of pricing elements in a pricing procedure to 200","Status":"Closed","Priority":"27","CreatedDate":"2026-07-24T16:10:46.000+0000","ClosedDate":"2026-07-28T23:47:19.000+0000","Age_days__c":4.32,"AccountName":"CrowdStrike, Inc.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002fqcbAAA","CaseNumber":"474196181","Subject":"My Bundle Child Products are Not We being saved , Showing we the Required Field Is Missing [Price Book Entry]","Status":"Closed","Priority":"12","CreatedDate":"2026-07-28T20:30:14.000+0000","ClosedDate":"2026-07-28T23:41:47.000+0000","Age_days__c":0.13,"AccountName":"OmniCloud Software Consulting Pvt. Ltd.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Price Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002MYpuAAG","CaseNumber":"474154257","Subject":"Problema con atributos de picklist en Vlocity","Status":"Closed","Priority":"26","CreatedDate":"2026-07-23T10:49:17.000+0000","ClosedDate":"2026-07-28T23:38:37.000+0000","Age_days__c":5.53,"AccountName":"AUDAX RENOVABLES, S.A.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500Hx00001GrP8GIAV","CaseNumber":"473676153","Subject":"Issues Post Salesforce Summer Release","Status":"Closed","Priority":"0","CreatedDate":"2026-06-06T20:49:45.000+0000","ClosedDate":"2026-07-28T23:36:45.000+0000","Age_days__c":52.12,"AccountName":"Verizon Sourcing LLC","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":"W-23159072","GUSInvestigation":"W-22879106,W-22988916","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-22879106,W-22988916\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002KFRZAA4","CaseNumber":"474149701","Subject":"Deployment of metadata failing - Loyalty Cloud related metadata","Status":"Closed","Priority":"0","CreatedDate":"2026-07-22T20:56:16.000+0000","ClosedDate":"2026-07-28T22:45:36.000+0000","Age_days__c":6.08,"AccountName":"Pentagon Federal Credit Union","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Loyalty Management","Reason":"Unassigned","IssueType":null,"Bug":"W-23554655","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002bBL7AAM","CaseNumber":"474185032","Subject":"Consulta Salesforce Financial Services Cloud acerca de automatizaciones, triggers o flujo para asignaci\u00f3n/eliminaci\u00f3n de grupo publico","Status":"Closed","Priority":"0","CreatedDate":"2026-07-27T19:21:35.000+0000","ClosedDate":"2026-07-28T22:06:29.000+0000","Age_days__c":1.11,"AccountName":"Bancolombia S.A.","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002f7VpAAI","CaseNumber":"474194329","Subject":"AMPscript personalization issue","Status":"Closed","Priority":"45","CreatedDate":"2026-07-28T16:54:31.000+0000","ClosedDate":"2026-07-28T21:17:44.000+0000","Age_days__c":0.18,"AccountName":"TTC TRAVEL GROUP LTD","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002K0dqAAC","CaseNumber":"474149549","Subject":"Actionable content on App Alert\u2019s AdditionalMessage field doesn\u2019t work for Announcements.","Status":"Closed","Priority":"45","CreatedDate":"2026-07-22T20:33:06.000+0000","ClosedDate":"2026-07-28T20:27:47.000+0000","Age_days__c":6,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001vxKZAAY","CaseNumber":"474104304","Subject":"Production | Salesforce CPQ Amendment Quote Calculation Fails with \"Unexpected token ILLEGAL\"","Status":"Closed","Priority":"25","CreatedDate":"2026-07-16T13:29:35.000+0000","ClosedDate":"2026-07-28T19:56:08.000+0000","Age_days__c":12.27,"AccountName":"Accruent, LLC","OwnerName":"Pallavi Pandey","Product":"Revenue","ProductTopic":"Revenue-Salesforce CPQ","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002MXPCAA4","CaseNumber":"474155009","Subject":"Opportunity Line Items doesn't stay in Recycle bin?","Status":"Closed","Priority":"45","CreatedDate":"2026-07-23T12:28:05.000+0000","ClosedDate":"2026-07-28T19:52:21.000+0000","Age_days__c":5.31,"AccountName":"RSA Security USA LLC","OwnerName":"Pallavi Pandey","Product":"Revenue","ProductTopic":"Revenue-CPQ Developer Support","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001j6FBAAY","CaseNumber":"474075622","Subject":"Title Case Capitalization for Input Fields in OmniScript","Status":"Closed","Priority":"45","CreatedDate":"2026-07-13T18:49:54.000+0000","ClosedDate":"2026-07-28T19:25:26.000+0000","Age_days__c":15.02,"AccountName":"Laurel Springs School","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001t14YAAQ","CaseNumber":"474098931","Subject":"SEV2 - Business Critical: OmniStudio/Vlocity CMT datapack deployment (packDeploy) fails on ALL Summer '26 scratch orgs \u2014 every datapack errors \"undefined\"","Status":"Closed","Priority":"0","CreatedDate":"2026-07-15T23:12:45.000+0000","ClosedDate":"2026-07-28T18:04:05.000+0000","Age_days__c":12.79,"AccountName":"Amazon Leo","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23582837,W-23608611","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23582837,W-23608611\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002IiUTAA0","CaseNumber":"474145240","Subject":"Billing Schedules failing to complete invoicing","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T13:40:02.000+0000","ClosedDate":"2026-07-28T17:32:53.000+0000","Age_days__c":6.16,"AccountName":"Veeam Software Corporation (New Org)","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Billing & Invoicing","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001VKMrAAO","CaseNumber":"474049935","Subject":"Preprod: 171 OrdeItem Object ids not displaying on UI but showing in SOQL result","Status":"Closed","Priority":"0","CreatedDate":"2026-07-09T16:10:55.000+0000","ClosedDate":"2026-07-28T16:47:40.000+0000","Age_days__c":19.03,"AccountName":"Verizon Sourcing LLC","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Communication Cloud","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-19996421","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-19996421\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002TMs2AAG","CaseNumber":"474173539","Subject":"Restricci\u00f3n de IP perfil Jefe","Status":"Closed","Priority":"0","CreatedDate":"2026-07-24T21:14:52.000+0000","ClosedDate":"2026-07-28T16:03:00.000+0000","Age_days__c":3.78,"AccountName":"Colmena Seguros Riesgos Laborales S.A","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002eMOrAAM","CaseNumber":"474192071","Subject":"Error: Maximum view state size limit (170KB) exceeded.Actual view state size for this page was 177,298KB","Status":"Closed","Priority":"27","CreatedDate":"2026-07-28T13:51:50.000+0000","ClosedDate":"2026-07-28T15:33:39.000+0000","Age_days__c":0.07,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23575665","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23575665\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002TKa5AAG","CaseNumber":"474173428","Subject":"HealthCloud Package | Languages Global Value Sets","Status":"Closed","Priority":"45","CreatedDate":"2026-07-24T21:02:24.000+0000","ClosedDate":"2026-07-28T14:26:55.000+0000","Age_days__c":3.73,"AccountName":"U.S. Medical Management, LLC","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Health Cloud","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001nBszAAE","CaseNumber":"474084789","Subject":"Revenue Setting options missing and unable to configure Bundle Products","Status":"Closed","Priority":"45","CreatedDate":"2026-07-14T16:03:55.000+0000","ClosedDate":"2026-07-28T14:11:07.000+0000","Age_days__c":13.92,"AccountName":"Cypher Learning (2nd Org)","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi00000210xhAAA","CaseNumber":"474114914","Subject":"Group Profile FI Document Generation (UAT)","Status":"Closed","Priority":"45","CreatedDate":"2026-07-17T14:53:50.000+0000","ClosedDate":"2026-07-28T13:54:58.000+0000","Age_days__c":10.96,"AccountName":"Sentara Health","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001pMkIAAU","CaseNumber":"474089635","Subject":"Vulnerability Scan","Status":"Closed","Priority":"45","CreatedDate":"2026-07-15T05:07:29.000+0000","ClosedDate":"2026-07-28T12:47:28.000+0000","Age_days__c":13.32,"AccountName":"Hypera Farma","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001h2FjAAI","CaseNumber":"474070743","Subject":"Transaction Journals not created for posted Invoice Lines despite active matching General Ledger Account Assignment Rule","Status":"Closed","Priority":"26","CreatedDate":"2026-07-13T11:39:39.000+0000","ClosedDate":"2026-07-28T11:14:51.000+0000","Age_days__c":14.98,"AccountName":"ECi","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Billing & Invoicing","Reason":"Unassigned","IssueType":null,"Bug":"W-22357449","GUSInvestigation":"W-22308635","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-22308635\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi0000022ZbdAAE","CaseNumber":"474118352","Subject":"In RCA how can I override list price that is coming from the pricebook entry","Status":"Closed","Priority":"45","CreatedDate":"2026-07-17T23:24:19.000+0000","ClosedDate":"2026-07-28T11:10:42.000+0000","Age_days__c":10.49,"AccountName":"LiveRamp, Inc","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Price Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002ETllAAG","CaseNumber":"474136389","Subject":"Instant Pricing toggle set to true in Product Configurator flow","Status":"Closed","Priority":"45","CreatedDate":"2026-07-21T15:23:04.000+0000","ClosedDate":"2026-07-28T00:13:01.000+0000","Age_days__c":6.37,"AccountName":"Metro Fibernet, LLC","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001sC5FAAU","CaseNumber":"474096113","Subject":"Vlocity Security Extension deadline","Status":"Closed","Priority":"0","CreatedDate":"2026-07-15T17:00:08.000+0000","ClosedDate":"2026-07-28T00:01:02.000+0000","Age_days__c":12.29,"AccountName":"Google Fiber Inc.","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001V35uAAC","CaseNumber":"474049431","Subject":"Bulk Edit - Update items for Selected location","Status":"Closed","Priority":"45","CreatedDate":"2026-07-09T15:32:47.000+0000","ClosedDate":"2026-07-27T23:24:22.000+0000","Age_days__c":18.33,"AccountName":"AT&T Business","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001ICgTAAW","CaseNumber":"474019216","Subject":"Request to Enable OmniStudio Hybrid Migration Runtime (Managed Package + OmniStudio Core)","Status":"Closed","Priority":"27","CreatedDate":"2026-07-06T19:19:08.000+0000","ClosedDate":"2026-07-27T22:37:45.000+0000","Age_days__c":21.14,"AccountName":"PriMed Management Consulting Services, Inc.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001y4hhAAA","CaseNumber":"474109212","Subject":"Revenue Cloud API: save-instance API issue causing quote creation failure","Status":"Closed","Priority":"45","CreatedDate":"2026-07-16T22:36:13.000+0000","ClosedDate":"2026-07-27T21:56:09.000+0000","Age_days__c":10.97,"AccountName":"Altice USA (formerly Cablevision) - Residential","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001WgtBAAS","CaseNumber":"474053154","Subject":"Guidewire: Unknown Exception When Activating Order","Status":"Closed","Priority":"13","CreatedDate":"2026-07-09T23:42:49.000+0000","ClosedDate":"2026-07-27T21:41:12.000+0000","Age_days__c":17.92,"AccountName":"Neocol","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Transaction Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23476107","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23476107\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002STdqAAG","CaseNumber":"474171774","Subject":"ERROR Decomposition failed - Sales Rejected","Status":"Closed","Priority":"25","CreatedDate":"2026-07-24T16:50:06.000+0000","ClosedDate":"2026-07-27T20:18:28.000+0000","Age_days__c":3.14,"AccountName":"Comunicaci\u00f3n Celular, S.A. (Org B2C Industries)","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002DyZuAAK","CaseNumber":"474135333","Subject":"INVALID_FIELD error when creating Person Education records","Status":"Closed","Priority":"27","CreatedDate":"2026-07-21T13:54:04.000+0000","ClosedDate":"2026-07-27T17:21:12.000+0000","Age_days__c":6.14,"AccountName":"York University - Education Cloud SIS","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Health Cloud","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002BBtRAAW","CaseNumber":"474129448","Subject":"Creation of an Additional Index","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T22:35:33.000+0000","ClosedDate":"2026-07-27T16:24:38.000+0000","Age_days__c":6.74,"AccountName":"Marriott International Administrative Services, Inc..","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Developer Support","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000021ZFVAA2","CaseNumber":"474116315","Subject":"Request to Install and Enable DocGenerationSampleLwc (fnddocGenerationSampleLwc) in Our Org","Status":"Closed","Priority":"27","CreatedDate":"2026-07-17T17:24:21.000+0000","ClosedDate":"2026-07-27T16:14:08.000+0000","Age_days__c":9.95,"AccountName":"Miami Dade County Regulatory & Enterprise Resources","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002A6W1AAK","CaseNumber":"474127012","Subject":"Deployment Failure for Expression Set Definition and Expression Set Version Despite Prerequisite Metadata Deployment","Status":"Closed","Priority":"0","CreatedDate":"2026-07-20T16:48:06.000+0000","ClosedDate":"2026-07-27T15:42:18.000+0000","Age_days__c":6.95,"AccountName":"Cummins SFA, DBU & Power Generation","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Business Rules Engine (BRE)","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000000RkBdAAK","CaseNumber":"473909753","Subject":"VIP is not respecting the 60-minute cache as configured in the options.","Status":"Closed","Priority":"45","CreatedDate":"2026-06-22T18:50:36.000+0000","ClosedDate":"2026-07-27T13:30:50.000+0000","Age_days__c":34.78,"AccountName":"*Claro S.A.","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002XH7NAAW","CaseNumber":"474176443","Subject":"Urgent Assistance Required \u2013 Demo Org Access Issue","Status":"Closed","Priority":"12","CreatedDate":"2026-07-26T20:20:18.000+0000","ClosedDate":"2026-07-26T21:02:26.000+0000","Age_days__c":0.03,"AccountName":"Tata Consultancy Services","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Transaction Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001myqvAAA","CaseNumber":"474084202","Subject":"MFA enforcement and OKTA process","Status":"Closed","Priority":"0","CreatedDate":"2026-07-14T15:17:21.000+0000","ClosedDate":"2026-07-25T02:13:41.000+0000","Age_days__c":10.46,"AccountName":"Vantor Holdings Inc.","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002EaTtAAK","CaseNumber":"474136657","Subject":"Marketing Cloud Advanced Welcome Email Correction","Status":"Closed","Priority":"0","CreatedDate":"2026-07-21T15:49:43.000+0000","ClosedDate":"2026-07-24T23:06:24.000+0000","Age_days__c":3.3,"AccountName":"Aegis General Insurance Services","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Pardot","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001mmGHAAY","CaseNumber":"474083625","Subject":"LSC Document Preview Rendering Delay for HCP Portal Submissions (PDFs Primarily Affected)","Status":"Closed","Priority":"0","CreatedDate":"2026-07-14T14:31:04.000+0000","ClosedDate":"2026-07-24T21:22:04.000+0000","Age_days__c":10.29,"AccountName":"Lilly Life Sciences Cloud Org - New","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23441524","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23441524\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002E9ezAAC","CaseNumber":"474135527","Subject":"Meeting  (Managed Event) Record Type and Meeting Type (available ask LKP field) Dependency","Status":"Closed","Priority":"45","CreatedDate":"2026-07-21T14:10:56.000+0000","ClosedDate":"2026-07-24T21:21:33.000+0000","Age_days__c":3.3,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001u0CrAAI","CaseNumber":"474099881","Subject":"Issues with Managed Event Record Type Selection, Picklist Value Customization, and Label Translation Override","Status":"Closed","Priority":"27","CreatedDate":"2026-07-16T03:17:03.000+0000","ClosedDate":"2026-07-24T21:19:46.000+0000","Age_days__c":8.75,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23530489","GUSInvestigation":"W-23492042","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23492042\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi0000021tqvAAA","CaseNumber":"474117099","Subject":"MFA: Org-wide MFA Requirement Opt-Out","Status":"Closed","Priority":"27","CreatedDate":"2026-07-17T19:02:17.000+0000","ClosedDate":"2026-07-24T21:14:35.000+0000","Age_days__c":7.09,"AccountName":"Banco Del Estado De Chile","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002SzsDAAS","CaseNumber":"474172743","Subject":"NET ZERO CLOUD-Customer Cannot Open Cases - Agentforce Help is Down","Status":"Closed","Priority":"45","CreatedDate":"2026-07-24T19:01:44.000+0000","ClosedDate":"2026-07-24T21:05:03.000+0000","Age_days__c":0.09,"AccountName":"Morningstar Corporate","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Net Zero Cloud","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000000awGoAAI","CaseNumber":"473930979","Subject":"Scheduled DPEs failed to execute in Production","Status":"Closed","Priority":"0","CreatedDate":"2026-06-24T18:38:31.000+0000","ClosedDate":"2026-07-24T20:57:50.000+0000","Age_days__c":30.1,"AccountName":"Motorola Solutions, Inc.","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Loyalty Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23172978","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23172978\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000001wf2DAAQ","CaseNumber":"474105819","Subject":"Billing Period Error When Creating Assets with Usage Products - Org Id: 00DKa000003M5R9","Status":"Closed","Priority":"13","CreatedDate":"2026-07-16T15:39:53.000+0000","ClosedDate":"2026-07-24T20:12:46.000+0000","Age_days__c":8.19,"AccountName":"Neocol","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Usage & Ratings","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001LDmTAAW","CaseNumber":"474025515","Subject":"RCA + Commerce Issues","Status":"Closed","Priority":"15","CreatedDate":"2026-07-07T13:11:34.000+0000","ClosedDate":"2026-07-24T20:11:38.000+0000","Age_days__c":17.29,"AccountName":"Saltbox Mgmt Inc","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002Jip0AAC","CaseNumber":"474148339","Subject":"Reopening Issue - AttributeCategory Not Generated in DCAPI OfferItem Cache After v262.15","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T18:10:50.000+0000","ClosedDate":"2026-07-24T19:59:56.000+0000","Age_days__c":2.08,"AccountName":"Telecom Argentina S.A.","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000029hqzAAA","CaseNumber":"474125929","Subject":"Managed Event \u2013 Name Field on Child Objects Should Be Auto-Populated, not needed on UI","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T15:03:27.000+0000","ClosedDate":"2026-07-24T17:33:55.000+0000","Age_days__c":4.1,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23562405","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23562405\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002Fu3xAAC","CaseNumber":"474139660","Subject":"Preview Invoice and Generating PDF issue in Clients RCB Org","Status":"Closed","Priority":"13","CreatedDate":"2026-07-21T21:55:18.000+0000","ClosedDate":"2026-07-24T17:19:03.000+0000","Age_days__c":2.81,"AccountName":"Aleysian LLC","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Billing & Invoicing","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000015ncDAAQ","CaseNumber":"473998599","Subject":"Inconsistent Rendering of Custom Labels in Page Headers","Status":"Closed","Priority":"45","CreatedDate":"2026-07-02T15:07:26.000+0000","ClosedDate":"2026-07-24T17:14:08.000+0000","Age_days__c":22.09,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002KSS3AAO","CaseNumber":"474150331","Subject":"Unable to Access Product Configurator Functionality in Revenue Cloud Sandbox (RCADEV)","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T00:01:23.000+0000","ClosedDate":"2026-07-24T15:17:18.000+0000","Age_days__c":1.64,"AccountName":"SmartRent Technologies, Inc","OwnerName":"Pratibha Rajpoot","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002Ic8vAAC","CaseNumber":"474144962","Subject":"TA MIGRATION WAVE 33 - SFI OM EPC Download Task | re-execution","Status":"Closed","Priority":"27","CreatedDate":"2026-07-22T13:21:39.000+0000","ClosedDate":"2026-07-24T14:32:23.000+0000","Age_days__c":2.05,"AccountName":"Telecom Argentina S.A.","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500Hx00001Day45IAB","CaseNumber":"473441041","Subject":"Error Generate Compile v260/262","Status":"Closed","Priority":"0","CreatedDate":"2026-05-11T14:53:52.000+0000","ClosedDate":"2026-07-24T12:46:05.000+0000","Age_days__c":73.91,"AccountName":"Telecom Argentina S.A.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":"W-19153042","GUSInvestigation":"W-22802204","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-22802204\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000001f5w2AAA","CaseNumber":"474065995","Subject":"Email template not working","Status":"Closed","Priority":"27","CreatedDate":"2026-07-12T23:32:26.000+0000","ClosedDate":"2026-07-24T12:11:55.000+0000","Age_days__c":11.53,"AccountName":"Mylan Inc.","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002NTGHAA4","CaseNumber":"474156270","Subject":"Access issues with FSC standard field","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T14:29:30.000+0000","ClosedDate":"2026-07-24T01:57:07.000+0000","Age_days__c":0.48,"AccountName":"The Manufacturers Life Insurance Company","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000021ujlAAA","CaseNumber":"474117139","Subject":"Takeda Nori - Update Primary Designated Contacts - Org ID 00D6g000002fQi6","Status":"Closed","Priority":"27","CreatedDate":"2026-07-17T19:06:28.000+0000","ClosedDate":"2026-07-23T23:15:49.000+0000","Age_days__c":6.17,"AccountName":"Takeda Pharmaceuticals U.S.A.","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002NDppAAG","CaseNumber":"474155618","Subject":"[Life Sciences] LSC Mobile App (iPad) \u2013 Dashboard component only renders bar/column charts on the home page; all other supported chart types display blank","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T13:35:59.000+0000","ClosedDate":"2026-07-23T21:07:40.000+0000","Age_days__c":0.31,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002OBdtAAG","CaseNumber":"474158190","Subject":"No Data is fetched in Account Team component in iPad but the data is coming on web","Status":"Closed","Priority":"27","CreatedDate":"2026-07-23T17:21:49.000+0000","ClosedDate":"2026-07-23T20:42:18.000+0000","Age_days__c":0.14,"AccountName":"Fresenius Kabi AG (LSC Environment)","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002FWpdAAG","CaseNumber":"474138927","Subject":"LSC: MDM configuration possibilities for Life Sciences Cloud Mobile App (Custom Domain / SSO)","Status":"Closed","Priority":"0","CreatedDate":"2026-07-21T19:53:20.000+0000","ClosedDate":"2026-07-23T20:37:10.000+0000","Age_days__c":2.03,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000029g8YAAQ","CaseNumber":"474126365","Subject":"Enable editing for Unit of Measure field on Product2 Object","Status":"Closed","Priority":"27","CreatedDate":"2026-07-20T15:45:04.000+0000","ClosedDate":"2026-07-23T20:24:10.000+0000","Age_days__c":3.19,"AccountName":"Tuple Bidco Limited Teciem","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Catalog Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000021ugYAAQ","CaseNumber":"474117464","Subject":"CRMA Adoption Analytics App not appearing in App templates","Status":"Closed","Priority":"45","CreatedDate":"2026-07-17T19:49:13.000+0000","ClosedDate":"2026-07-23T20:20:40.000+0000","Age_days__c":6.02,"AccountName":"Hancock Whitney Bank - Main","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-CRM Analytics","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000022IKfAAM","CaseNumber":"474117950","Subject":"Flow error: We couldn\u2019t fetch the data for EXT_SalesTransactionContext context definition.","Status":"Closed","Priority":"13","CreatedDate":"2026-07-17T21:17:55.000+0000","ClosedDate":"2026-07-23T20:11:38.000+0000","Age_days__c":5.95,"AccountName":"Stack Intelligence LLC","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Transaction Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001WTO5AAO","CaseNumber":"474052823","Subject":"Life Sciences Cloud Territory Product Issue","Status":"Closed","Priority":"0","CreatedDate":"2026-07-09T21:54:41.000+0000","ClosedDate":"2026-07-23T19:49:35.000+0000","Age_days__c":13.91,"AccountName":"Merck Sharp & Dohme LLC","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001t2jlAAA","CaseNumber":"474098206","Subject":"OmniScripts not working in lower orgs after refresh","Status":"Closed","Priority":"0","CreatedDate":"2026-07-15T20:45:35.000+0000","ClosedDate":"2026-07-23T19:30:09.000+0000","Age_days__c":7.95,"AccountName":"Synergy RIA Compliance Solutions","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001weAzAAI","CaseNumber":"474105784","Subject":"Error generating public URL link in Marketing Cloud Next","Status":"Closed","Priority":"45","CreatedDate":"2026-07-16T15:37:09.000+0000","ClosedDate":"2026-07-23T19:13:16.000+0000","Age_days__c":7.15,"AccountName":"Practising Law Institute","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002C5MAAA0","CaseNumber":"474130974","Subject":"CML Advanced configuration failure","Status":"Closed","Priority":"27","CreatedDate":"2026-07-21T05:06:31.000+0000","ClosedDate":"2026-07-23T19:03:15.000+0000","Age_days__c":2.58,"AccountName":"Amazon Web Services, Inc. (AWS)*","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001w1UbAAI","CaseNumber":"474104164","Subject":"DocGen Document Generation \u2013 Checkbox Support and Field Size Formatting Issue","Status":"Closed","Priority":"45","CreatedDate":"2026-07-16T13:16:58.000+0000","ClosedDate":"2026-07-23T18:54:47.000+0000","Age_days__c":7.23,"AccountName":"Veracyte, Inc","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002JheQAAS","CaseNumber":"474149015","Subject":"IP Block Size show/hide behavior is not working correctly when implemented through Product Configuration Procedures (PCP).","Status":"Closed","Priority":"45","CreatedDate":"2026-07-22T19:22:45.000+0000","ClosedDate":"2026-07-23T18:17:07.000+0000","Age_days__c":0.95,"AccountName":"AT&T Business","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001vbdNAAQ","CaseNumber":"474103172","Subject":"MFA exemption for non-person users with Salesforce Integration license","Status":"Closed","Priority":"45","CreatedDate":"2026-07-16T11:16:10.000+0000","ClosedDate":"2026-07-23T18:15:23.000+0000","Age_days__c":7.29,"AccountName":"Citysave Credit Union","OwnerName":"Sathyavathi K N","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500Hx00001IJmAvIAL","CaseNumber":"473881853","Subject":"Custom object cannot be deleted - blocked by Loyalty Program Setup dependency with no identifiable live reference","Status":"Closed","Priority":"45","CreatedDate":"2026-06-18T13:53:55.000+0000","ClosedDate":"2026-07-23T18:14:32.000+0000","Age_days__c":35.18,"AccountName":"Six Continents Hotels, Inc.","OwnerName":"Vipin Sharma","Product":"Industry","ProductTopic":"Industry-Loyalty Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23242109","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23242109\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002NyITAA0","CaseNumber":"474157654","Subject":"Products are Not Being Shown in the Browse Catalog","Status":"Closed","Priority":"12","CreatedDate":"2026-07-23T16:23:09.000+0000","ClosedDate":"2026-07-23T17:49:40.000+0000","Age_days__c":0.06,"AccountName":"OmniCloud Software Consulting Pvt. Ltd.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Product Configurator","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001sBsLAAU","CaseNumber":"474096106","Subject":"Customer is working on MFA","Status":"Closed","Priority":"0","CreatedDate":"2026-07-15T16:59:10.000+0000","ClosedDate":"2026-07-23T15:47:49.000+0000","Age_days__c":7.95,"AccountName":"PDI - Beckwood Press","OwnerName":"Abhi Chohan","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002KtnBAAS","CaseNumber":"474150698","Subject":"Managed Event - Checklist Functionality / Option","Status":"Closed","Priority":"45","CreatedDate":"2026-07-23T01:29:48.000+0000","ClosedDate":"2026-07-23T15:12:29.000+0000","Age_days__c":0.57,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001jhQ2AAI","CaseNumber":"474077324","Subject":"Phishing-Resistant MFA Enforcement","Status":"Closed","Priority":"27","CreatedDate":"2026-07-13T22:28:56.000+0000","ClosedDate":"2026-07-23T15:11:33.000+0000","Age_days__c":9.7,"AccountName":"Telecomunicaciones de Guatemala S.A.","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001hcStAAI","CaseNumber":"474071647","Subject":"[Life Sciences] Inventory Management n\u00e3o est\u00e1  desaparecendo da tela ao zerar o Lote ap\u00f3s sincroniza\u00e7\u00e3o","Status":"Closed","Priority":"27","CreatedDate":"2026-07-13T13:19:41.000+0000","ClosedDate":"2026-07-23T15:07:14.000+0000","Age_days__c":10.07,"AccountName":"Apsen Farmaceutica S/A","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001tlLuAAI","CaseNumber":"474100227","Subject":"I need more information on the Group Record Type Mapper FinServ Custom Metadata configuration.","Status":"Closed","Priority":"45","CreatedDate":"2026-07-16T04:52:46.000+0000","ClosedDate":"2026-07-23T14:12:27.000+0000","Age_days__c":7.39,"AccountName":"Canadian Imperial Bank of Commerce","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001tAarAAE","CaseNumber":"474098484","Subject":"Solicita\u00e7\u00e3o de prorroga\u00e7\u00e3o da obrigatoriedade do MFA","Status":"Closed","Priority":"45","CreatedDate":"2026-07-15T21:24:33.000+0000","ClosedDate":"2026-07-23T14:11:09.000+0000","Age_days__c":7.7,"AccountName":"Copa Energia Distribuidora de G\u00e1s S.A.*","OwnerName":"Sathyavathi K N","Product":"Sales","ProductTopic":"Sales-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000020vjWAAQ","CaseNumber":"474114923","Subject":"TA-PROD - Increase replicas for the \"ta-tasks-progress\" POD","Status":"Closed","Priority":"45","CreatedDate":"2026-07-17T14:55:11.000+0000","ClosedDate":"2026-07-23T12:41:46.000+0000","Age_days__c":5.91,"AccountName":"Telecom Argentina S.A.","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002FIQ5AAO","CaseNumber":"474138399","Subject":"Cannot see create order button on Quote","Status":"Closed","Priority":"13","CreatedDate":"2026-07-21T18:45:39.000+0000","ClosedDate":"2026-07-23T12:39:53.000+0000","Age_days__c":1.75,"AccountName":"Protiviti Inc.","OwnerName":"Anita Kumari","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Transaction Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000000VBK9AAO","CaseNumber":"473917048","Subject":"TA PROD - (97) OM+ BD Data Extraction - Inventory items Nokia Wifi Extender , Nokia Internet Backup attribute XOM_NK_INSTANCE_ID","Status":"Closed","Priority":"45","CreatedDate":"2026-06-23T13:29:11.000+0000","ClosedDate":"2026-07-23T12:24:48.000+0000","Age_days__c":29.96,"AccountName":"Telecom Argentina S.A.","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002DyGXAA0","CaseNumber":"474135058","Subject":"Orders not Submitting to downstream.","Status":"Closed","Priority":"0","CreatedDate":"2026-07-21T13:30:46.000+0000","ClosedDate":"2026-07-23T12:17:47.000+0000","Age_days__c":1.95,"AccountName":"AT&T Business","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002KJRxAAO","CaseNumber":"474149830","Subject":"How to Confirm Document Generation Version (1.0 vs 2.0) \u2013 Org 00D2h0000000qkj","Status":"Closed","Priority":"45","CreatedDate":"2026-07-22T21:22:32.000+0000","ClosedDate":"2026-07-22T21:33:28.000+0000","Age_days__c":0.01,"AccountName":"COPEL COMERCIALIZACAO S.A.","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002K7DuAAK","CaseNumber":"474149829","Subject":"Scheduled Apex Job UpdateVoidedQuote Failing \u2013 Org 00D2h0000000qkj","Status":"Closed","Priority":"45","CreatedDate":"2026-07-22T21:22:26.000+0000","ClosedDate":"2026-07-22T21:33:18.000+0000","Age_days__c":0.01,"AccountName":"COPEL COMERCIALIZACAO S.A.","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002KF50AAG","CaseNumber":"474149828","Subject":"Post-Upgrade Apex Compilation Errors \u2013 Org 00D2h0000000qkj","Status":"Closed","Priority":"45","CreatedDate":"2026-07-22T21:22:23.000+0000","ClosedDate":"2026-07-22T21:33:08.000+0000","Age_days__c":0.01,"AccountName":"COPEL COMERCIALIZACAO S.A.","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001oA22AAE","CaseNumber":"474087584","Subject":"Not Updating to null Values in the Edit Block","Status":"Closed","Priority":"0","CreatedDate":"2026-07-14T21:14:34.000+0000","ClosedDate":"2026-07-22T20:55:48.000+0000","Age_days__c":7.99,"AccountName":"Webster Bank, N.A. (FSC Org)","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":"W-17966471,W-13787644","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000000rUuRAAU","CaseNumber":"473966566","Subject":"Request to Increase Tag Category Limit on Interest Tag Records","Status":"Closed","Priority":"27","CreatedDate":"2026-06-29T14:36:11.000+0000","ClosedDate":"2026-07-22T20:10:40.000+0000","Age_days__c":23.23,"AccountName":"Canadian Imperial Bank of Commerce","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":"W-23389375","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23389375\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000002ASLHAA4","CaseNumber":"474128316","Subject":"Unable to create Marketing Cloud specific email campaign","Status":"Closed","Priority":"45","CreatedDate":"2026-07-20T19:26:35.000+0000","ClosedDate":"2026-07-22T19:18:08.000+0000","Age_days__c":1.99,"AccountName":"Exact Asset","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001rjRRAAY","CaseNumber":"474095005","Subject":"GACK issue (similar to previous cases that never received resolution)","Status":"Closed","Priority":"45","CreatedDate":"2026-07-15T15:16:21.000+0000","ClosedDate":"2026-07-22T19:15:22.000+0000","Age_days__c":7.17,"AccountName":"Hopebridge*","OwnerName":"UmaMahesh Devabhakthuni","Product":"Sales","ProductTopic":"Sales-Developer Support","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001ZZK5AAO","CaseNumber":"474059252","Subject":"LSC4CE Search Before Create \u2013 Unable to suppress ContactPointAddress creation","Status":"Closed","Priority":"27","CreatedDate":"2026-07-10T16:01:40.000+0000","ClosedDate":"2026-07-22T19:14:43.000+0000","Age_days__c":12.13,"AccountName":"Deloitte Consulting LLP","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000016wK5AAI","CaseNumber":"474001347","Subject":"OmniStudio FlexCard with LWCs runtime error","Status":"Closed","Priority":"45","CreatedDate":"2026-07-02T20:37:57.000+0000","ClosedDate":"2026-07-22T19:13:54.000+0000","Age_days__c":19.94,"AccountName":"The Prudential Insurance Company of America","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002F6f4AAC","CaseNumber":"474137956","Subject":"omniscript_customization NPM repository access key request (Omnistudio Migration Test)","Status":"Closed","Priority":"45","CreatedDate":"2026-07-21T17:59:08.000+0000","ClosedDate":"2026-07-22T17:44:20.000+0000","Age_days__c":0.99,"AccountName":"His Majesty the King in Right of the Province of British Columbia BC MOH HBC","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001rLTxAAM","CaseNumber":"474093931","Subject":"[TA Prod] Monthly Order Count Query","Status":"Closed","Priority":"27","CreatedDate":"2026-07-15T13:49:58.000+0000","ClosedDate":"2026-07-22T17:30:35.000+0000","Age_days__c":7.15,"AccountName":"Telecom Argentina S.A.","OwnerName":"Sathyavathi K N","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001WSGmAAO","CaseNumber":"474052926","Subject":"Users in production are unable to generate invoice documents","Status":"Closed","Priority":"0","CreatedDate":"2026-07-09T22:18:45.000+0000","ClosedDate":"2026-07-22T16:20:15.000+0000","Age_days__c":12.75,"AccountName":"Vizio - Media Advertising  (Walmart)","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001aUNBAA2","CaseNumber":"474061355","Subject":"Omnistudio error with latest chrome version","Status":"Closed","Priority":"27","CreatedDate":"2026-07-10T20:51:53.000+0000","ClosedDate":"2026-07-22T15:54:58.000+0000","Age_days__c":11.79,"AccountName":"Unity Environmental University - Education Cloud Org","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Document Generation","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi0000021xbBAAQ","CaseNumber":"474117233","Subject":"Error in Marketing Setup Objects Data Kit","Status":"Closed","Priority":"45","CreatedDate":"2026-07-17T19:17:32.000+0000","ClosedDate":"2026-07-22T13:09:03.000+0000","Age_days__c":4.74,"AccountName":"Ascension Health Alliance","OwnerName":"Aniruddha Kishor Bagde","Product":"Marketing App (Marketing Cloud Growth/Advanced)","ProductTopic":"Marketing App-Content","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001QpXmAAK","CaseNumber":"474039769","Subject":"SegmentName inconsistency upon Amendments creation","Status":"Closed","Priority":"45","CreatedDate":"2026-07-08T18:10:39.000+0000","ClosedDate":"2026-07-22T13:07:18.000+0000","Age_days__c":13.79,"AccountName":"Dayforce US, Inc.","OwnerName":"Pallavi Pandey","Product":"Revenue Cloud (Core)","ProductTopic":"Revenue Cloud (Core)-Transaction Management","Reason":"Unassigned","IssueType":null,"Bug":"W-23431572","GUSInvestigation":"W-23401766","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23401766\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000001rkFRAAY","CaseNumber":"474095039","Subject":"Error when viewing history record table","Status":"Closed","Priority":"45","CreatedDate":"2026-07-15T15:18:17.000+0000","ClosedDate":"2026-07-22T13:03:29.000+0000","Age_days__c":6.91,"AccountName":"Medtronic MiniMed, Inc.","OwnerName":"UmaMahesh Devabhakthuni","Product":"Sales","ProductTopic":"Sales-Developer Support","Reason":"Unassigned","IssueType":null,"Bug":"W-12485723","GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001VnzyAAC","CaseNumber":"474051242","Subject":"Urgent: Missing component \"Launch Manage Event Survey Action\" in Admin Console","Status":"Closed","Priority":"27","CreatedDate":"2026-07-09T18:30:43.000+0000","ClosedDate":"2026-07-22T12:48:59.000+0000","Age_days__c":12.76,"AccountName":"Pfizer - Commercial LSC - EMEA","OwnerName":"UmaMahesh Devabhakthuni","Product":"Industry","ProductTopic":"Industry-Life Sciences","Reason":"Unassigned","IssueType":null,"Bug":"W-23468592","GUSInvestigation":"W-23461737","GUSInvestigationLink":"<a href=\"https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=W-23461737\" target=\"_blank\">Click Here to Display</a>"},{"Id":"500hi000001oVJOAA2","CaseNumber":"474088174","Subject":"Apex Code Character Limit Increase Request \u2014 Org 00Dqe00000b7bMz (Production) & MDHStaging Sandbox","Status":"Closed","Priority":"45","CreatedDate":"2026-07-14T23:15:00.000+0000","ClosedDate":"2026-07-22T12:35:43.000+0000","Age_days__c":7.56,"AccountName":"My Digital Health","OwnerName":"UmaMahesh Devabhakthuni","Product":"Sales","ProductTopic":"Sales-Developer Support","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000002FpdlAAC","CaseNumber":"474139532","Subject":"Approval process error with vlocity_cmt.MediaAdSalesAppHandler","Status":"Closed","Priority":"27","CreatedDate":"2026-07-21T21:27:07.000+0000","ClosedDate":"2026-07-21T23:29:12.000+0000","Age_days__c":0.08,"AccountName":"Nueva Wal-Mart de Mexico, S. de R.L. de C.V.","OwnerName":"Gouse Mohiuddin Mohammad","Product":"Industry","ProductTopic":"Industry-CPQ / Order Management / Digital Commerce","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001jZ13AAE","CaseNumber":"474076926","Subject":"Pages frozen on Omniscript call","Status":"Closed","Priority":"27","CreatedDate":"2026-07-13T21:07:40.000+0000","ClosedDate":"2026-07-21T23:14:38.000+0000","Age_days__c":8.09,"AccountName":"Laboratory Corporation of America Holdings","OwnerName":"Lokesh Reddy Koya","Product":"Industry","ProductTopic":"Industry-Omnistudio","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001nEUHAA2","CaseNumber":"474084931","Subject":"Actualizaciones de seguridad - Accesos Asesores de la l\u00ednea","Status":"Closed","Priority":"27","CreatedDate":"2026-07-14T16:15:49.000+0000","ClosedDate":"2026-07-21T23:06:14.000+0000","Age_days__c":7.29,"AccountName":"Colmena Seguros Riesgos Laborales S.A","OwnerName":"Kaushik Jagatap","Product":"Industry","ProductTopic":"Industry-Security & Activations","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001iRn7AAE","CaseNumber":"474073861","Subject":"Gold Members with June Birthdays were not issued Birthday Certificates","Status":"Closed","Priority":"27","CreatedDate":"2026-07-13T16:07:30.000+0000","ClosedDate":"2026-07-21T23:03:58.000+0000","Age_days__c":8.29,"AccountName":"Williams-Sonoma, Inc.","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Loyalty Management","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001MfVNAA0","CaseNumber":"474029832","Subject":"Unable to find relationship between Product2 to AdSpaceSpecification","Status":"Closed","Priority":"45","CreatedDate":"2026-07-07T19:13:53.000+0000","ClosedDate":"2026-07-21T22:48:55.000+0000","Age_days__c":14.15,"AccountName":"Nueva Wal-Mart de Mexico, S. de R.L. de C.V.","OwnerName":"Abhi Chohan","Product":"Industry","ProductTopic":"Industry-Media Cloud","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001ABb8AAG","CaseNumber":"474008012","Subject":"User encounters an error when amending the Asset","Status":"Closed","Priority":"45","CreatedDate":"2026-07-03T17:51:46.000+0000","ClosedDate":"2026-07-21T22:12:58.000+0000","Age_days__c":18.18,"AccountName":"Vertex Inc. (Enterprise)","OwnerName":"Pallavi Pandey","Product":"Revenue","ProductTopic":"Revenue-Salesforce CPQ","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null},{"Id":"500hi000001o5f3AAA","CaseNumber":"474087213","Subject":"Receiving AccountContactRelation Read Access error while executing Privacy Policy in the Lead objects with Tasks, Events, Feed Items and Feed comments due to FSC triggers","Status":"Closed","Priority":"25","CreatedDate":"2026-07-14T20:14:27.000+0000","ClosedDate":"2026-07-21T21:59:07.000+0000","Age_days__c":7.07,"AccountName":"Fisher Asset Management, LLC (d/b/a Fisher Investments)","OwnerName":"Jayesh Naik","Product":"Industry","ProductTopic":"Industry-Financial Services","Reason":"Unassigned","IssueType":null,"Bug":null,"GUSInvestigation":null,"GUSInvestigationLink":null}]
+;
+const SF_BASE = "https://orgcs.lightning.force.com/lightning/r/Case/";
+const SF_SUFFIX = "/view";
+
+// ── theme toggle ──
+function toggleTheme() {
+  const el = document.documentElement;
+  const isDark = el.getAttribute("data-theme") === "dark";
+  el.setAttribute("data-theme", isDark ? "light" : "dark");
+  document.querySelector(".theme-btn").textContent = isDark ? "◐ Dark mode" : "☀ Light mode";
+  renderAll();
+}
+
+// ── nav ──
+function showSection(id) {
+  document.querySelectorAll(".section-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("sec-" + id).classList.add("active");
+  event.target.classList.add("active");
+  renderAll();
+}
+
+// ── filters ──
+let filteredCases = CASES;
+function applyFilters() {
+  const owner = document.getElementById("f-owner").value;
+  const product = document.getElementById("f-product").value;
+  const bug = document.getElementById("f-bug").value;
+  const age = parseFloat(document.getElementById("f-age").value) || 0;
+  const search = document.getElementById("f-search").value.toLowerCase();
+  filteredCases = CASES.filter(c => {
+    if (owner && c.OwnerName !== owner) return false;
+    if (product && c.Product !== product) return false;
+    if (bug === "bug" && !c.Bug) return false;
+    if (bug === "gus" && !c.GUSInvestigation) return false;
+    if (bug === "any" && !c.Bug && !c.GUSInvestigation) return false;
+    if (age && c.Age_days__c < age) return false;
+    if (search) {
+      const haystack = (c.Subject + " " + c.AccountName + " " + c.CaseNumber + " " + (c.OwnerName||"") + " " + (c.ProductTopic||"")).toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+  currentPage = 0;
+  renderAll();
+}
+
+// ── populate filters ──
+function populateFilters() {
+  const owners = [...new Set(CASES.map(c => c.OwnerName))].sort();
+  const products = [...new Set(CASES.map(c => c.Product))].sort();
+  const ownerSel = document.getElementById("f-owner");
+  owners.forEach(o => { const opt = document.createElement("option"); opt.value = o; opt.textContent = o; ownerSel.appendChild(opt); });
+  const prodSel = document.getElementById("f-product");
+  products.forEach(p => { const opt = document.createElement("option"); opt.value = p; opt.textContent = p; prodSel.appendChild(opt); });
+}
+
+// ── helpers ──
+function avg(arr) { return arr.length ? arr.reduce((s,v)=>s+v,0)/arr.length : 0; }
+function median(arr) {
+  if (!arr.length) return 0;
+  const s = [...arr].sort((a,b)=>a-b);
+  const m = Math.floor(s.length/2);
+  return s.length % 2 ? s[m] : (s[m-1]+s[m])/2;
+}
+function fmt(n) { return n.toFixed(1); }
+function fmtDate(iso) { return iso ? iso.slice(0,10) : ""; }
+function caseLink(c) {
+  return `<a class="case-link" href="${SF_BASE}${c.Id}${SF_SUFFIX}" target="_blank">${c.CaseNumber}</a>`;
+}
+function truncate(s, n=55) { return s && s.length > n ? s.slice(0,n)+"…" : s; }
+function esc(s) { const d = document.createElement("div"); d.textContent = s||""; return d.innerHTML; }
+
+// Product → color slot
+const PRODUCT_ORDER = ["Industry","Revenue Cloud (Core)","Marketing App (Marketing Cloud Growth/Advanced)","Sales","Revenue"];
+const PRODUCT_COLORS_KEYS = ["--series-1","--series-2","--series-3","--series-4","--series-5","--series-6","--series-7","--series-8"];
+function getCSSVar(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function productColor(p) {
+  const idx = PRODUCT_ORDER.findIndex(x => p && p.startsWith(x.split(" ")[0]));
+  const slot = idx >= 0 ? idx : (PRODUCT_ORDER.length + [...new Set(CASES.map(c=>c.Product))].sort().indexOf(p)) % 8;
+  return getCSSVar(PRODUCT_COLORS_KEYS[Math.min(slot, 7)]);
+}
+
+// ── SVG bar chart (horizontal) ──
+function buildHBar(svgId, data, {colorFn, showValue=true, maxWidth, labelKey="label", valueKey="value", avgKey=null, height=220, tooltip=true}={}) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = "";
+  const W = svg.parentElement.clientWidth - 40;
+  if (!data || !data.length) { svg.setAttribute("height",40); svg.innerHTML = `<text x="10" y="24" fill="var(--text-muted)" font-size="13">No data</text>`; return; }
+  const labelPad = 140, right = 60, barH = 16, gap = 10;
+  const totalH = data.length * (barH + gap) + 30;
+  svg.setAttribute("height", totalH);
+  svg.setAttribute("viewBox", `0 0 ${W+labelPad+right} ${totalH}`);
+  const max = maxWidth || Math.max(...data.map(d=>d[valueKey]));
+  const bw = W - 10;
+
+  data.forEach((d, i) => {
+    const y = i * (barH + gap) + 4;
+    const barW = max > 0 ? (d[valueKey] / max) * bw : 0;
+    const color = colorFn ? colorFn(d) : getCSSVar("--series-1");
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("cursor","pointer");
+
+    // label
+    const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute("x", labelPad - 6);
+    text.setAttribute("y", y + barH/2 + 4);
+    text.setAttribute("text-anchor","end");
+    text.setAttribute("font-size","12");
+    text.setAttribute("fill","var(--text-secondary)");
+    text.textContent = truncate(d[labelKey], 18);
+    g.appendChild(text);
+
+    // bar bg
+    const bg = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    bg.setAttribute("x", labelPad); bg.setAttribute("y", y);
+    bg.setAttribute("width", bw); bg.setAttribute("height", barH);
+    bg.setAttribute("rx","4"); bg.setAttribute("fill","var(--gridline)");
+    g.appendChild(bg);
+
+    // bar fill
+    const bar = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    bar.setAttribute("x", labelPad); bar.setAttribute("y", y);
+    bar.setAttribute("width", Math.max(4, barW)); bar.setAttribute("height", barH);
+    bar.setAttribute("rx","4"); bar.setAttribute("fill", color);
+    g.appendChild(bar);
+
+    // value
+    if (showValue) {
+      const vt = document.createElementNS("http://www.w3.org/2000/svg","text");
+      vt.setAttribute("x", labelPad + Math.max(4, barW) + 5);
+      vt.setAttribute("y", y + barH/2 + 4);
+      vt.setAttribute("font-size","11"); vt.setAttribute("fill","var(--text-secondary)");
+      vt.textContent = d[valueKey] + (avgKey ? " ("+fmt(d[avgKey])+"d)" : "");
+      g.appendChild(vt);
+    }
+
+    // avg marker
+    if (avgKey && d[avgKey]) {
+      const avgX = labelPad + (d[avgKey] / max) * bw;
+      const mk = document.createElementNS("http://www.w3.org/2000/svg","line");
+      mk.setAttribute("x1",avgX); mk.setAttribute("x2",avgX);
+      mk.setAttribute("y1",y+1); mk.setAttribute("y2",y+barH-1);
+      mk.setAttribute("stroke","var(--text-primary)"); mk.setAttribute("stroke-width","1.5");
+      mk.setAttribute("stroke-dasharray","2,2");
+      g.appendChild(mk);
+    }
+
+    if (tooltip) {
+      g.addEventListener("mouseenter", e => showTooltip(e, d, valueKey, avgKey, labelKey));
+      g.addEventListener("mouseleave", hideTooltip);
+      g.addEventListener("mousemove", e => moveTooltip(e));
+    }
+    svg.appendChild(g);
+  });
+}
+
+// ── column chart (vertical) ──
+function buildVBar(svgId, data, {colorFn, labelKey="label", valueKey="value", height=200}={}) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = "";
+  const W = svg.parentElement.clientWidth - 40;
+  if (!data||!data.length) return;
+  const top=20, bot=50, barAreaH = height-top-bot;
+  const n = data.length;
+  const slotW = (W-30) / n;
+  const barW = Math.min(22, slotW * 0.6);
+  const max = Math.max(...data.map(d=>d[valueKey]));
+  svg.setAttribute("height", height);
+  svg.setAttribute("viewBox", `0 0 ${W} ${height}`);
+
+  // gridlines
+  [0, Math.ceil(max/4), Math.ceil(max/2), Math.ceil(3*max/4), max].forEach(v => {
+    const y = top + barAreaH - (v/max)*barAreaH;
+    const gl = document.createElementNS("http://www.w3.org/2000/svg","line");
+    gl.setAttribute("x1","30"); gl.setAttribute("x2", W-10);
+    gl.setAttribute("y1",y); gl.setAttribute("y2",y);
+    gl.setAttribute("stroke","var(--gridline)"); gl.setAttribute("stroke-width","1");
+    svg.appendChild(gl);
+    const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+    t.setAttribute("x","28"); t.setAttribute("y",y+4);
+    t.setAttribute("text-anchor","end"); t.setAttribute("font-size","10");
+    t.setAttribute("fill","var(--text-muted)"); t.textContent = v;
+    svg.appendChild(t);
+  });
+
+  data.forEach((d, i) => {
+    const cx = 30 + i*slotW + slotW/2;
+    const barH = max > 0 ? (d[valueKey]/max)*barAreaH : 0;
+    const x = cx - barW/2;
+    const y = top + barAreaH - barH;
+    const color = colorFn ? colorFn(d) : getCSSVar("--series-1");
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("cursor","pointer");
+
+    const bar = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    bar.setAttribute("x",x); bar.setAttribute("y",y);
+    bar.setAttribute("width",barW); bar.setAttribute("height",barH);
+    bar.setAttribute("rx","4"); bar.setAttribute("fill",color);
+    g.appendChild(bar);
+
+    const lbl = document.createElementNS("http://www.w3.org/2000/svg","text");
+    lbl.setAttribute("x",cx); lbl.setAttribute("y", top+barAreaH+14);
+    lbl.setAttribute("text-anchor","middle"); lbl.setAttribute("font-size","10");
+    lbl.setAttribute("fill","var(--text-secondary)");
+    const name = d[labelKey];
+    lbl.textContent = name.length > 10 ? name.slice(0,9)+"…" : name;
+    g.appendChild(lbl);
+
+    g.addEventListener("mouseenter", e => showTooltip(e, d, valueKey, null, labelKey));
+    g.addEventListener("mouseleave", hideTooltip);
+    g.addEventListener("mousemove", e => moveTooltip(e));
+    svg.appendChild(g);
+  });
+}
+
+// ── tooltip helpers ──
+const tt = document.getElementById("tooltip");
+function showTooltip(e, d, vk, ak, lk) {
+  let html = `<div class="tt-title">${esc(d[lk]||"")}</div>`;
+  html += `<div class="tt-row"><span class="tt-label">Cases</span><span class="tt-val">${d[vk]}</span></div>`;
+  if (ak && d[ak] != null) html += `<div class="tt-row"><span class="tt-label">Avg age</span><span class="tt-val">${fmt(d[ak])}d</span></div>`;
+  if (d.median != null) html += `<div class="tt-row"><span class="tt-label">Median age</span><span class="tt-val">${fmt(d.median)}d</span></div>`;
+  if (d.maxAge != null) html += `<div class="tt-row"><span class="tt-label">Max age</span><span class="tt-val">${fmt(d.maxAge)}d</span></div>`;
+  tt.innerHTML = html;
+  tt.style.display = "block";
+  moveTooltip(e);
+}
+function moveTooltip(e) {
+  const x = e.clientX + 14, y = e.clientY - 30;
+  tt.style.left = Math.min(x, window.innerWidth - 340) + "px";
+  tt.style.top = Math.max(4, y) + "px";
+}
+function hideTooltip() { tt.style.display = "none"; }
+
+// ── aggregate helpers ──
+function groupBy(arr, key) {
+  const m = {};
+  arr.forEach(c => { const k = c[key]||"Unknown"; (m[k]||(m[k]=[])).push(c); });
+  return m;
+}
+function groupStats(arr, key) {
+  const g = groupBy(arr, key);
+  return Object.entries(g).map(([label, cases]) => {
+    const ages = cases.map(c=>c.Age_days__c||0);
+    return {
+      label, count: cases.length,
+      avgAge: avg(ages), median: median(ages),
+      maxAge: Math.max(...ages),
+      bugLinked: cases.filter(c=>c.Bug).length,
+      gusLinked: cases.filter(c=>c.GUSInvestigation).length
+    };
+  }).sort((a,b)=>b.count-a.count);
+}
+
+// Theme classifier (simple keyword)
+function classifyTheme(c) {
+  const txt = ((c.Subject||"")+" "+(c.Description||"")).toLowerCase();
+  if (/mfa|phishing.resistant|authentication|passkey|security key|mfa enforcement/.test(txt)) return "MFA / Security / Auth";
+  if (/dkim|email.*deliver|marketing.*channel|journey builder|marketing cloud|mce|mce\+/.test(txt)) return "Email / Marketing";
+  if (/ipad|mobile app|lsc mobile|offline/.test(txt)) return "Mobile App Issue";
+  if (/apex.*heap|cpu limit|heap size|performance|scalab|bulk edit|queueable|dpe.*batch|batch.*exec/.test(txt)) return "Performance / Scalability";
+  if (/limit|extension request|increase.*limit|static resource|debug log|tag category/.test(txt)) return "Limit / Extension Request";
+  if (/billing|invoice|price.*waterfall|waterfall|unit price|cpq.*amend|price override|billing schedule|transaction journal|cart.*price/.test(txt)) return "Billing / Pricing / CPQ";
+  if (/integration procedure|api.*fail|assettobasket|data pipeline|data cloud|callout|cache.*miss|dcapi|integration.*error/.test(txt)) return "Integration / API Issue";
+  if (/not render|not display|not show|spinner|stuck|ui.*issue|display.*issue|missing.*in.*ui|layout|navigation|calendar.*view|filter.*label/.test(txt)) return "UI / Display Issue";
+  if (/how.?to|question|guidance|best practice|how do i|confirm.*version|fsC.*licen|migration.*engag|grantmaking/.test(txt)) return "How-To / Guidance";
+  if (/deleted|restore|data.*sync|dcr.*bypass|soql.*vs.*ui|incorrect.*data|recycle bin|record.*id.*instead/.test(txt)) return "Data / Record Issues";
+  if (/bug|compile.*error|summer.*release|regression|w-\d{5,}/.test(txt)) return "Bug / Known Defect";
+  if (/permission|psg|permission set|not.*access|access.*denied|psl.*assign|vip.*cache|omnistudio.*tab|docgen.*not|api access control|enable.*indexing|enable.*replication|package.*link|install|activation/.test(txt)) return "Configuration / Setup Error";
+  return "Configuration / Setup Error"; // default
+}
+
+// ── RENDER ALL ──
+function renderAll() {
+  renderStats();
+  renderProductChart();
+  renderEngineerChart();
+  renderAgeDistChart();
+  renderThemeChart();
+  renderTopicAgeChart();
+  renderProductSection();
+  renderTopicSection();
+  renderAccountSection();
+  renderEngineerSection();
+  renderSlowFast();
+  renderBugs();
+  renderAllCases();
+}
+
+// ── stat tiles ──
+function renderStats() {
+  const ages = filteredCases.map(c=>c.Age_days__c||0);
+  const bugCases = filteredCases.filter(c=>c.Bug||c.GUSInvestigation);
+  const accts = new Set(filteredCases.map(c=>c.AccountName)).size;
+  document.getElementById("stat-row").innerHTML = `
+    <div class="stat-tile accent"><div class="label">Total Cases</div><div class="value">${filteredCases.length}</div><div class="sub">${accts} accounts</div></div>
+    <div class="stat-tile"><div class="label">Avg Age</div><div class="value">${fmt(avg(ages))}<span style="font-size:18px;font-weight:400">d</span></div><div class="sub">Median ${fmt(median(ages))}d</div></div>
+    <div class="stat-tile warn"><div class="label">Slowest Case</div><div class="value">${fmt(Math.max(...ages,0))}<span style="font-size:18px;font-weight:400">d</span></div><div class="sub">Fastest ${fmt(Math.min(...ages,0))}d</div></div>
+    <div class="stat-tile"><div class="label">Bug / GUS Linked</div><div class="value">${bugCases.length}</div><div class="sub">${fmt(100*bugCases.length/Math.max(1,filteredCases.length))}% of cases</div></div>
+    <div class="stat-tile"><div class="label">Engineers</div><div class="value">${new Set(filteredCases.map(c=>c.OwnerName)).size}</div><div class="sub">of 12 in team</div></div>
+    <div class="stat-tile"><div class="label">Bug-Blocked Avg Age</div><div class="value">${bugCases.length ? fmt(avg(bugCases.map(c=>c.Age_days__c||0))) : "—"}<span style="font-size:18px;font-weight:400">${bugCases.length?"d":""}</span></div><div class="sub">vs ${fmt(avg(filteredCases.filter(c=>!c.Bug&&!c.GUSInvestigation).map(c=>c.Age_days__c||0)))}d unblocked</div></div>
+  `;
+}
+
+// ── product chart ──
+function renderProductChart() {
+  const stats = groupStats(filteredCases, "Product").slice(0,8);
+  const data = stats.map(s=>({label:s.label, value:s.count, avgAge:s.avgAge, median:s.median, maxAge:s.maxAge}));
+  const colors = {};
+  CASES.forEach(c=>{if(c.Product)colors[c.Product]=productColor(c.Product);});
+  const lgd = document.getElementById("legend-product");
+  if(lgd) { lgd.innerHTML=""; [...new Set(data.map(d=>d.label))].forEach(p=>{lgd.innerHTML+=`<div class="legend-item"><div class="legend-swatch" style="background:${colors[p]||getCSSVar("--series-1")}"></div><span>${p}</span></div>`;}); }
+  buildHBar("chart-product", data, {colorFn:d=>colors[d.label]||getCSSVar("--series-1"), valueKey:"value", avgKey:"avgAge", labelKey:"label"});
+}
+
+// ── engineer chart ──
+function renderEngineerChart() {
+  const stats = groupStats(filteredCases,"OwnerName");
+  const data = stats.map(s=>({label:s.label, value:s.count, avgAge:s.avgAge, median:s.median, maxAge:s.maxAge}));
+  buildHBar("chart-engineer", data, {colorFn:d=>{
+    const topProd = groupBy(filteredCases.filter(c=>c.OwnerName===d.label),"Product");
+    const tp = Object.entries(topProd).sort((a,b)=>b[1].length-a[1].length)[0];
+    return tp ? productColor(tp[0]) : getCSSVar("--series-1");
+  }, valueKey:"value", avgKey:"avgAge"});
+}
+
+// ── age distribution ──
+function renderAgeDistChart() {
+  const svg = document.getElementById("chart-age-dist");
+  if (!svg) return;
+  svg.innerHTML = "";
+  const buckets = [{label:"0–1d",min:0,max:1},{label:"1–3d",min:1,max:3},{label:"3–7d",min:3,max:7},
+    {label:"7–14d",min:7,max:14},{label:"14–21d",min:14,max:21},{label:"21–30d",min:21,max:30},
+    {label:"30–50d",min:30,max:50},{label:"50d+",min:50,max:Infinity}];
+  const counts = buckets.map(b=>({label:b.label, value:filteredCases.filter(c=>{const a=c.Age_days__c||0; return a>=b.min&&a<b.max;}).length}));
+  buildVBar("chart-age-dist", counts, {height:180});
+}
+
+// ── theme chart ──
+function renderThemeChart() {
+  const svg = document.getElementById("chart-theme");
+  if (!svg) return;
+  const themes = {};
+  filteredCases.forEach(c=>{const t=classifyTheme(c); themes[t]=(themes[t]||0)+1;});
+  const data = Object.entries(themes).sort((a,b)=>b[1]-a[1]).map(([label,value])=>({label,value}));
+  buildHBar("chart-theme", data, {colorFn:(_,i)=>getCSSVar(PRODUCT_COLORS_KEYS[data.indexOf(_)%8]), valueKey:"value"});
+}
+
+// ── topic age chart ──
+function renderTopicAgeChart() {
+  const stats = groupStats(filteredCases,"ProductTopic");
+  const data = stats.sort((a,b)=>b.avgAge-a.avgAge).slice(0,12)
+    .map(s=>({label:s.label.replace(/^.*?-/,""), value:Math.round(s.avgAge*10)/10, count:s.count, median:s.median, maxAge:s.maxAge}));
+  buildHBar("chart-topic-age", data, {colorFn:(d,i)=>{
+    const v = d.value;
+    if(v>30) return getCSSVar("--status-critical");
+    if(v>14) return getCSSVar("--status-serious");
+    if(v>7) return getCSSVar("--series-4");
+    return getCSSVar("--series-3");
+  }, valueKey:"value", labelKey:"label"});
+}
+
+// ── product section ──
+function renderProductSection() {
+  const stats = groupStats(filteredCases,"Product");
+  const tbody = document.querySelector("#tbl-product tbody");
+  if(!tbody) return;
+  tbody.innerHTML = stats.map(s=>`<tr>
+    <td>${esc(s.label)}</td>
+    <td>${s.count}</td>
+    <td>${fmt(s.avgAge)}d</td>
+    <td>${fmt(s.median)}d</td>
+    <td>${fmt(s.maxAge)}d</td>
+    <td>${s.bugLinked}</td>
+    <td>${s.gusLinked}</td>
+  </tr>`).join("");
+  buildHBar("chart-prod-vol", stats.map(s=>({label:s.label,value:s.count,avgAge:s.avgAge})),
+    {colorFn:d=>productColor(d.label),valueKey:"value",avgKey:"avgAge"});
+  buildHBar("chart-prod-age", stats.sort((a,b)=>b.avgAge-a.avgAge).map(s=>({label:s.label,value:parseFloat(fmt(s.avgAge))})),
+    {colorFn:(d)=>{const v=d.value;return v>14?getCSSVar("--status-critical"):v>7?getCSSVar("--series-4"):getCSSVar("--series-3");},valueKey:"value"});
+}
+
+// ── topic section ──
+function renderTopicSection() {
+  const stats = groupStats(filteredCases,"ProductTopic").slice(0,20);
+  const tbody = document.querySelector("#tbl-topic tbody");
+  if(!tbody) return;
+  tbody.innerHTML = stats.map(s=>`<tr>
+    <td>${esc(s.label)}</td><td>${s.count}</td><td>${fmt(s.avgAge)}d</td>
+    <td>${fmt(s.median)}d</td><td>${fmt(s.maxAge)}d</td>
+    <td>${s.bugLinked+s.gusLinked > 0 ? `<span class="badge badge-gus">${s.bugLinked+s.gusLinked}</span>` : 0}</td>
+  </tr>`).join("");
+  const top15 = groupStats(filteredCases,"ProductTopic").slice(0,15)
+    .map(s=>({label:s.label.replace(/^.*?-/,""), value:s.count, avgAge:s.avgAge, median:s.median, maxAge:s.maxAge}));
+  buildHBar("chart-topic-vol", top15, {colorFn:(d,i)=>{
+    const full = groupStats(filteredCases,"ProductTopic").find(x=>x.label.endsWith("-"+d.label)||x.label===d.label);
+    return full ? productColor(full.label.split("-")[0]) : getCSSVar("--series-1");
+  }, valueKey:"value", avgKey:"avgAge", height:300});
+}
+
+// ── account section ──
+function renderAccountSection() {
+  const g = groupBy(filteredCases,"AccountName");
+  const stats = Object.entries(g).map(([acct,cases])=>({
+    label:acct, count:cases.length,
+    avgAge:avg(cases.map(c=>c.Age_days__c||0)),
+    maxAge:Math.max(...cases.map(c=>c.Age_days__c||0)),
+    products:[...new Set(cases.map(c=>c.Product))].join(", "),
+    engineers:[...new Set(cases.map(c=>c.OwnerName))].join(", "),
+    bugGus:cases.filter(c=>c.Bug||c.GUSInvestigation).length
+  })).sort((a,b)=>b.count-a.count);
+  const tbody = document.querySelector("#tbl-account tbody");
+  if(tbody) tbody.innerHTML = stats.slice(0,30).map(s=>`<tr>
+    <td>${esc(s.label)}</td><td>${s.count}</td><td>${fmt(s.avgAge)}d</td><td>${fmt(s.maxAge)}d</td>
+    <td class="muted" style="font-size:12px">${esc(s.products)}</td>
+    <td class="muted" style="font-size:12px">${esc(s.engineers)}</td>
+    <td>${s.bugGus>0?`<span class="badge badge-gus">${s.bugGus}</span>`:0}</td>
+  </tr>`).join("");
+  const top20 = stats.slice(0,20).map(s=>({label:s.label,value:s.count,avgAge:s.avgAge,median:0,maxAge:s.maxAge}));
+  buildHBar("chart-acct-vol", top20, {colorFn:()=>getCSSVar("--series-1"), valueKey:"value", avgKey:"avgAge"});
+}
+
+// ── engineer section ──
+function renderEngineerSection() {
+  const stats = groupStats(filteredCases,"OwnerName");
+  const tbody = document.querySelector("#tbl-engineer tbody");
+  if(tbody) tbody.innerHTML = stats.map(s=>{
+    const g = groupBy(filteredCases.filter(c=>c.OwnerName===s.label),"Product");
+    const topProd = Object.entries(g).sort((a,b)=>b[1].length-a[1].length)[0];
+    return `<tr>
+      <td>${esc(s.label)}</td><td>${s.count}</td><td>${fmt(s.avgAge)}d</td>
+      <td>${fmt(s.median)}d</td><td>${fmt(s.maxAge)}d</td>
+      <td class="muted">${esc(topProd?topProd[0]:"")}</td>
+      <td>${(s.bugLinked+s.gusLinked)>0?`<span class="badge badge-gus">${s.bugLinked+s.gusLinked}</span>`:0}</td>
+    </tr>`;
+  }).join("");
+  buildHBar("chart-eng-vol", stats.map(s=>({label:s.label,value:s.count,avgAge:s.avgAge,median:s.median,maxAge:s.maxAge})),
+    {colorFn:d=>{const g=groupBy(filteredCases.filter(c=>c.OwnerName===d.label),"Product");const t=Object.entries(g).sort((a,b)=>b[1].length-a[1].length)[0];return t?productColor(t[0]):getCSSVar("--series-1");},valueKey:"value",avgKey:"avgAge"});
+  buildHBar("chart-eng-age", stats.sort((a,b)=>b.avgAge-a.avgAge).map(s=>({label:s.label,value:parseFloat(fmt(s.avgAge)),count:s.count,median:s.median,maxAge:s.maxAge})),
+    {colorFn:d=>{const v=d.value;return v>12?getCSSVar("--status-critical"):v>9?getCSSVar("--series-4"):getCSSVar("--series-3");},valueKey:"value"});
+}
+
+// ── slow / fast ──
+function renderSlowFast() {
+  const sorted = [...filteredCases].sort((a,b)=>(b.Age_days__c||0)-(a.Age_days__c||0));
+  const slow = sorted.slice(0,15);
+  const fast = [...filteredCases].sort((a,b)=>(a.Age_days__c||0)-(b.Age_days__c||0)).slice(0,15);
+  const bugBadge = c => {
+    let b="";
+    if(c.Bug) b+=`<span class="badge badge-bug">${esc(c.Bug)}</span> `;
+    if(c.GUSInvestigation) b+=`<span class="badge badge-gus">${esc(c.GUSInvestigation.split(",")[0])}</span>`;
+    return b||"—";
+  };
+  const tbody1 = document.querySelector("#tbl-slow tbody");
+  if(tbody1) tbody1.innerHTML = slow.map(c=>`<tr>
+    <td>${caseLink(c)}</td>
+    <td title="${esc(c.Subject)}">${esc(truncate(c.Subject,50))}</td>
+    <td class="muted">${esc(c.OwnerName)}</td>
+    <td class="muted">${esc(truncate(c.AccountName,28))}</td>
+    <td><strong style="color:var(--status-critical)">${fmt(c.Age_days__c||0)}</strong></td>
+    <td class="muted" style="font-size:12px">${esc((c.ProductTopic||"").replace(/^.*?-/,""))}</td>
+    <td>${bugBadge(c)}</td>
+  </tr>`).join("");
+  const tbody2 = document.querySelector("#tbl-fast tbody");
+  if(tbody2) tbody2.innerHTML = fast.map(c=>`<tr>
+    <td>${caseLink(c)}</td>
+    <td title="${esc(c.Subject)}">${esc(truncate(c.Subject,50))}</td>
+    <td class="muted">${esc(c.OwnerName)}</td>
+    <td class="muted">${esc(truncate(c.AccountName,28))}</td>
+    <td><strong style="color:var(--status-good)">${fmt(c.Age_days__c||0)}</strong></td>
+    <td class="muted" style="font-size:12px">${esc((c.ProductTopic||"").replace(/^.*?-/,""))}</td>
+  </tr>`).join("");
+}
+
+// ── bugs section ──
+function renderBugs() {
+  const bugCases = filteredCases.filter(c=>c.Bug||c.GUSInvestigation)
+    .sort((a,b)=>(b.Age_days__c||0)-(a.Age_days__c||0));
+  const longBugs = bugCases.filter(c=>(c.Age_days__c||0)>10);
+  document.getElementById("bug-stat-row").innerHTML = `
+    <div class="stat-tile warn"><div class="label">Bug/GUS Cases</div><div class="value">${bugCases.length}</div><div class="sub">${fmt(100*bugCases.length/Math.max(1,filteredCases.length))}% of filtered</div></div>
+    <div class="stat-tile warn"><div class="label">&gt;10 Days Old</div><div class="value">${longBugs.length}</div><div class="sub">flagged</div></div>
+    <div class="stat-tile"><div class="label">Avg Age (Bug/GUS)</div><div class="value">${fmt(avg(bugCases.map(c=>c.Age_days__c||0)))}<span style="font-size:18px;font-weight:400">d</span></div><div class="sub">vs ${fmt(avg(filteredCases.filter(c=>!c.Bug&&!c.GUSInvestigation).map(c=>c.Age_days__c||0)))}d unblocked</div></div>
+    <div class="stat-tile"><div class="label">Unique Bugs</div><div class="value">${new Set(bugCases.map(c=>c.Bug).filter(Boolean)).size}</div></div>
+    <div class="stat-tile"><div class="label">Unique GUS Inv.</div><div class="value">${new Set(bugCases.flatMap(c=>(c.GUSInvestigation||"").split(",").map(x=>x.trim())).filter(Boolean)).size}</div></div>
+  `;
+  const tbody = document.querySelector("#tbl-bugs tbody");
+  if(!tbody) return;
+  tbody.innerHTML = bugCases.map(c=>{
+    const isLong = (c.Age_days__c||0)>10;
+    // extract GUS links
+    let gusHtml = "—";
+    if(c.GUSInvestigation) {
+      const nums = c.GUSInvestigation.split(",").map(x=>x.trim()).filter(Boolean);
+      gusHtml = nums.map(n=>`<a class="case-link" href="https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=${encodeURIComponent(n)}" target="_blank"><span class="badge badge-gus">${esc(n)}</span></a>`).join(" ");
+    }
+    let bugHtml = "—";
+    if(c.Bug) {
+      const nums = c.Bug.split(",").map(x=>x.trim()).filter(Boolean);
+      bugHtml = nums.map(n=>`<a class="case-link" href="https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=${encodeURIComponent(n)}" target="_blank"><span class="badge badge-bug">${esc(n)}</span></a>`).join(" ");
+    }
+    return `<tr${isLong?" style=\"background:var(--surface-2)\"":""}>
+      <td>${caseLink(c)}${isLong?" ⚠️":""}</td>
+      <td title="${esc(c.Subject)}">${esc(truncate(c.Subject,52))}</td>
+      <td class="muted">${esc(c.OwnerName)}</td>
+      <td class="muted">${esc(truncate(c.AccountName,28))}</td>
+      <td><strong${isLong?" style=\"color:var(--status-critical)\"":""}>${fmt(c.Age_days__c||0)}</strong></td>
+      <td class="muted" style="font-size:12px">${esc((c.ProductTopic||"").replace(/^.*?-/,""))}</td>
+      <td>${bugHtml}</td>
+      <td>${gusHtml}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ── all cases table ──
+let currentPage = 0;
+const PAGE_SIZE = 50;
+let sortKey = "ClosedDate", sortDir = -1;
+function sortTable(key) {
+  if(sortKey===key) sortDir*=-1; else { sortKey=key; sortDir=-1; }
+  document.querySelectorAll("#tbl-all-cases thead th").forEach(th=>{
+    th.classList.remove("sorted");
+    const arrow = th.querySelector(".sort-arrow");
+    if(arrow) arrow.textContent="↕";
+  });
+  const ths = document.querySelectorAll("#tbl-all-cases thead th");
+  const keys = ["CaseNumber","Subject","OwnerName","AccountName","Product","ProductTopic","Age_days__c","ClosedDate",""];
+  const idx = keys.indexOf(key);
+  if(idx>=0&&ths[idx]) {
+    ths[idx].classList.add("sorted");
+    const arrow = ths[idx].querySelector(".sort-arrow");
+    if(arrow) arrow.textContent = sortDir>0?"↑":"↓";
+  }
+  currentPage=0;
+  renderAllCases();
+}
+function changePage(dir) {
+  const total = Math.ceil(filteredCases.length/PAGE_SIZE);
+  currentPage = Math.max(0, Math.min(currentPage+dir, total-1));
+  renderAllCases();
+}
+function renderAllCases() {
+  const sorted = [...filteredCases].sort((a,b)=>{
+    const av=a[sortKey]||"", bv=b[sortKey]||"";
+    if(typeof av==="number") return sortDir*(av-bv);
+    return sortDir*String(av).localeCompare(String(bv));
+  });
+  const total = sorted.length;
+  const start = currentPage*PAGE_SIZE, end = Math.min(start+PAGE_SIZE, total);
+  const page = sorted.slice(start,end);
+  document.getElementById("all-count").textContent = `${total} cases (showing ${start+1}–${end})`;
+  document.getElementById("page-info").textContent = `Page ${currentPage+1} / ${Math.ceil(total/PAGE_SIZE)}`;
+  document.getElementById("prev-btn").disabled = currentPage===0;
+  document.getElementById("next-btn").disabled = end>=total;
+  const tbody = document.getElementById("tbl-all-body");
+  if(!tbody) return;
+  tbody.innerHTML = page.map(c=>{
+    let bugHtml="";
+    if(c.Bug) {
+      const n=c.Bug.split(",")[0].trim();
+      bugHtml+=`<a href="https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=${encodeURIComponent(n)}" target="_blank"><span class="badge badge-bug">${esc(n)}</span></a> `;
+    }
+    if(c.GUSInvestigation) {
+      const n=c.GUSInvestigation.split(",")[0].trim();
+      bugHtml+=`<a href="https://gus.my.salesforce.com/apex/ADM_WorkLocator?bugorworknumber=${encodeURIComponent(n)}" target="_blank"><span class="badge badge-gus">${esc(n)}</span></a>`;
+    }
+    return `<tr>
+      <td>${caseLink(c)}</td>
+      <td title="${esc(c.Subject)}">${esc(truncate(c.Subject,52))}</td>
+      <td class="muted">${esc(c.OwnerName)}</td>
+      <td class="muted">${esc(truncate(c.AccountName,26))}</td>
+      <td class="muted" style="font-size:12px">${esc(c.Product||"")}</td>
+      <td class="muted" style="font-size:12px">${esc((c.ProductTopic||"").replace(/^.*?-/,""))}</td>
+      <td style="font-variant-numeric:tabular-nums">${fmt(c.Age_days__c||0)}</td>
+      <td class="muted" style="font-variant-numeric:tabular-nums">${fmtDate(c.ClosedDate)}</td>
+      <td>${bugHtml||"—"}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ── init ──
+populateFilters();
+renderAll();
+</script>
+</body>
+</html>
