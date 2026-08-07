@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industry Cloud Go-Live Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1a1a2e;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    .subtitle {
+      color: #8899aa;
+      margin-bottom: 28px;
+      font-size: 13px;
+    }
+    .card {
+      background: #16213e;
+      border: 1px solid #2a3a5c;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #c8d8f0;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #2a3a5c;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    /* Summary bar */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+    .stat-tile {
+      background: #0f3460;
+      border: 1px solid #2a3a5c;
+      border-radius: 10px;
+      padding: 18px 20px;
+      text-align: center;
+    }
+    .stat-tile .value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0176d3;
+      line-height: 1.1;
+    }
+    .stat-tile .label {
+      font-size: 11px;
+      color: #8899aa;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 4px;
+    }
+    .stat-tile.live .value { color: #2ecc71; }
+    .stat-tile.prog .value { color: #f1c40f; }
+    .stat-tile.grey .value { color: #95a5a6; }
+    .stat-tile.red .value { color: #e74c3c; }
+    .afv-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #556688;
+      margin: 20px 0 10px;
+    }
+    .afv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .afv-tile {
+      background: #0d2847;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+    }
+    .afv-tile .afv-count { font-size: 22px; font-weight: 700; }
+    .afv-tile .afv-label { font-size: 10px; color: #8899aa; margin-top: 4px; }
+    .afv-tile .afv-sub { font-size: 11px; color: #aabbcc; margin-top: 6px; }
+    /* Legend */
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #aabbcc;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-line {
+      width: 22px;
+      height: 3px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    /* Chart containers */
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+    }
+    .chart-wrap-tall { height: 900px; }
+    .chart-wrap-med { height: 360px; }
+    /* Table */
+    .table-controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .table-controls input {
+      background: #0f3460;
+      border: 1px solid #2a3a5c;
+      border-radius: 6px;
+      color: #ffffff;
+      padding: 7px 12px;
+      font-size: 13px;
+      width: 220px;
+    }
+    .table-controls input:focus { outline: none; border-color: #0176d3; }
+    .table-controls input::placeholder { color: #556688; }
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    thead th {
+      background: #0f3460;
+      color: #c8d8f0;
+      padding: 10px 12px;
+      text-align: left;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 2px solid #2a3a5c;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    thead th:hover { background: #1a4a80; color: #ffffff; }
+    thead th .sort-arrow { margin-left: 4px; opacity: 0.5; font-size: 10px; }
+    thead th.sorted .sort-arrow { opacity: 1; color: #0176d3; }
+    tbody tr:nth-child(odd) { background: #141e35; }
+    tbody tr:nth-child(even) { background: #16213e; }
+    tbody tr:hover { background: #1a3a6a; }
+    tbody td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #1e2e48;
+      white-space: nowrap;
+    }
+    td.afv-live { color: #2ecc71; font-weight: 600; }
+    td.afv-prog { color: #f1c40f; font-weight: 600; }
+    td.afv-notstarted { color: #95a5a6; font-weight: 600; }
+    td.afv-other { color: #aabbcc; }
+    .trend-up { color: #2ecc71; font-size: 15px; }
+    .trend-down { color: #e74c3c; font-size: 15px; }
+    .trend-flat { color: #8899aa; font-size: 15px; }
+    .badge {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .badge-esc { background: rgba(231,76,60,0.2); color: #e74c3c; }
+    /* Heatmap */
+    .heatmap-wrap { overflow-x: auto; }
+    .heatmap-table {
+      border-collapse: separate;
+      border-spacing: 3px;
+      width: 100%;
+    }
+    .heatmap-table th {
+      font-size: 11px;
+      color: #8899aa;
+      font-weight: 500;
+      padding: 4px 8px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .heatmap-table th.row-header {
+      text-align: right;
+      font-weight: 600;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+    .heatmap-table td {
+      text-align: center;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 10px 6px;
+      min-width: 70px;
+      transition: opacity 0.15s;
+    }
+    .heatmap-table td:hover { opacity: 0.8; cursor: default; }
+    .page-info {
+      font-size: 12px;
+      color: #8899aa;
+      margin-top: 12px;
+    }
+    .pagination {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .pagination button {
+      background: #0f3460;
+      border: 1px solid #2a3a5c;
+      border-radius: 6px;
+      color: #aabbcc;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .pagination button:hover { background: #1a4a80; color: #fff; }
+    .pagination button.active { background: #0176d3; color: #fff; border-color: #0176d3; }
+  </style>
+</head>
+<body>
+  <h1>Industry Cloud Go-Live Dashboard</h1>
+  <p class="subtitle">2,000 cases &bull; 172 accounts &bull; Data as of 2026-08-07</p>
+
+  <script>
+    const DASHBOARD_DATA = {"summary": {"total_accounts": 172, "total_cases": 2000, "afv_account_counts": {"Implementation Not Started": 1, "null": 165, "Implementation in Progress": 3, "Lost": 1, "Live in Production": 2}, "afv_case_counts": {"Implementation Not Started": 1, "null": 1937, "Implementation in Progress": 54, "Lost": 2, "Live in Production": 6}, "live_cases": 6, "non_live_cases": 1994}, "top40": [{"id": "0010M00001P0jWBQAZ", "name": "Telecom Argentina S.A.", "segment": "Mega", "region": "LACA", "csm": "Pablo Calvino", "afv100": null, "total": 154, "open": 14, "escalated": 2, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001W3L6vQAF", "name": "Claro América Latina", "segment": "Top", "region": "LACA", "csm": "Oscar Esteban Lopez Tellez", "afv100": null, "total": 144, "open": 6, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001TzfkEQAR", "name": "AT&T Business", "segment": "Mega", "region": "AMER", "csm": "Aaron Imler", "afv100": null, "total": 135, "open": 4, "escalated": 4, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001TGPvIQAX", "name": "ORANGE BELGIUM NV/SA", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 103, "open": 0, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001TFuEJQA1", "name": "Telstra Limited", "segment": "Top", "region": "APAC", "csm": "Alison Angelos", "afv100": null, "total": 90, "open": 3, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001WAM8AQAX", "name": "PLDT, Inc.", "segment": "Mega", "region": "APAC", "csm": "Anish Uppal", "afv100": null, "total": 70, "open": 2, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001QbbKTQAZ", "name": "CCI Corporate Services, LLC.", "segment": "Mega", "region": "AMER", "csm": "William Chitwood", "afv100": null, "total": 60, "open": 1, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001UXfm6QAD", "name": "TPG Telecom Limited", "segment": "Top", "region": "APAC", "csm": null, "afv100": null, "total": 56, "open": 4, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001SJe2MQAT", "name": "WorkSafe Victoria", "segment": "Flagship", "region": "APAC", "csm": "Marcus Fung", "afv100": null, "total": 44, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001SJu8mQAD", "name": "Belong (New Org)", "segment": "Medium", "region": "APAC", "csm": "Alison Angelos", "afv100": null, "total": 44, "open": 2, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001UXYCWQA5", "name": "Xcel Energy Services Inc - New Org", "segment": "Flagship", "region": "AMER", "csm": null, "afv100": "Implementation in Progress", "total": 44, "open": 1, "escalated": 1, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001QoeHaQAJ", "name": "M1 Limited", "segment": "Top", "region": "APAC", "csm": "Stewart James Hunter", "afv100": null, "total": 41, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001Qq01oQAB", "name": "Xtelify Limited", "segment": "Large", "region": "APAC", "csm": null, "afv100": null, "total": 37, "open": 5, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001TGjjtQAD", "name": "Unilever UK Central Resources Ltd (EU)", "segment": "Very Small", "region": "EMEA", "csm": "Matthew Shilvock", "afv100": null, "total": 35, "open": 2, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-06", "trend": "↑"}, {"id": "0010M00001TzQYFQA3", "name": "NTUC Fairprice Co-operative Limited", "segment": "Top", "region": "APAC", "csm": "Venus Chen", "afv100": null, "total": 33, "open": 1, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001UWs3rQAD", "name": "Cigna Corporate Services, LLC", "segment": "Mega", "region": "AMER", "csm": "Laura Dunn", "afv100": null, "total": 33, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001WAZ4uQAH", "name": "Hong Kong Telecommunications (HKT) Limited", "segment": "Top", "region": "APAC", "csm": "Johnson Pan", "afv100": null, "total": 33, "open": 0, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001PvUOuQAN", "name": "Odido", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 28, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001QoaMoQAJ", "name": "SaskTel", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 26, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001V33N9QAJ", "name": "Unilever UK Central Resources Ltd (AMS)", "segment": "Small", "region": "EMEA", "csm": "Matthew Shilvock", "afv100": null, "total": 25, "open": 5, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001P0iYoQAJ", "name": "INWI", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 22, "open": 1, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001Q6qP6QAJ", "name": "UDAF, Agricultural Information Management System", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 22, "open": 2, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-07", "trend": "↓"}, {"id": "0010M00001Qq0fyQAB", "name": "AXA Health UK", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 21, "open": 2, "escalated": 1, "top_cloud": "Industry-Health & Insurance", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001PxRWIQA3", "name": "Barclays Execution Services Limited", "segment": "Platinum", "region": "EMEA", "csm": "Martin Davies", "afv100": null, "total": 20, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "↑"}, {"id": "0010M00001V3T3tQAF", "name": "City of New York - Employees Retirement System", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 20, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001Q6lwvQAB", "name": "Digital Canberra", "segment": "Top", "region": "APAC", "csm": null, "afv100": null, "total": 19, "open": 1, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001TyBLvQAN", "name": "Unilever UK Central Resources Ltd (SEAA)", "segment": "Very Small", "region": "EMEA", "csm": "Matthew Shilvock", "afv100": null, "total": 19, "open": 0, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-05", "trend": "↓"}, {"id": "0010M00001W2iBNQAZ", "name": "Transport Canberra City Services Directorate", "segment": "Very Small", "region": "APAC", "csm": null, "afv100": null, "total": 18, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001NZdbOQAT", "name": "GIE COVEA AGORA", "segment": "Mega", "region": "EMEA", "csm": "Justine Blanchoz", "afv100": null, "total": 17, "open": 1, "escalated": 3, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001SfX36QAF", "name": "ABSA Bank Limited", "segment": "Mega", "region": "EMEA", "csm": "Caimin McGovern", "afv100": null, "total": 17, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001QbkDYQAZ", "name": "Verizon Sourcing LLC", "segment": "Very Small", "region": "AMER", "csm": "Sridhar Radhakrishnan", "afv100": null, "total": 16, "open": 0, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001RMJDqQAP", "name": "Elevance Health - Commercial 2.0", "segment": "Mega", "region": "AMER", "csm": "Matt Wittorf", "afv100": null, "total": 16, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001RN9Q5QAL", "name": "Ohio Department Of Job And Family Services - Case Management", "segment": "Flagship", "region": "AMER", "csm": "Talmadge Zipperer", "afv100": null, "total": 16, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001U4JM6QAN", "name": "INWI", "segment": "Large", "region": "EMEA", "csm": null, "afv100": null, "total": 16, "open": 0, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001SesLiQAJ", "name": "SSC - Main", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 15, "open": 1, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001TxQG7QAN", "name": "Truist Bank", "segment": "Mega", "region": "AMER", "csm": "Teri Povinelli", "afv100": null, "total": 15, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001W2Q9TQAV", "name": "The Travelers Indemnity Company", "segment": "Mega", "region": "AMER", "csm": "Sharon Bartol", "afv100": null, "total": 15, "open": 0, "escalated": 1, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001SKLrnQAH", "name": "The Toronto-Dominion Bank", "segment": "Large", "region": "AMER", "csm": "Annie Yang", "afv100": null, "total": 14, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "↑"}, {"id": "0010M00001Qp2oZQAR", "name": "ENGIE INFORMATION ET TECHNOLOGIES SA", "segment": "Flagship", "region": "EMEA", "csm": "Helene Stavridis", "afv100": null, "total": 13, "open": 0, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001TGgZuQAL", "name": "Edward D. Jones & Co., L.P.", "segment": "Platinum", "region": "AMER", "csm": "Sunil George", "afv100": null, "total": 13, "open": 0, "escalated": 1, "top_cloud": "Industry-Financial Services", "peak_month": "2026-05", "trend": "↑"}], "all_accounts": [{"id": "0010M00001P0jWBQAZ", "name": "Telecom Argentina S.A.", "segment": "Mega", "region": "LACA", "csm": "Pablo Calvino", "afv100": null, "total": 154, "open": 14, "escalated": 2, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001W3L6vQAF", "name": "Claro América Latina", "segment": "Top", "region": "LACA", "csm": "Oscar Esteban Lopez Tellez", "afv100": null, "total": 144, "open": 6, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001TzfkEQAR", "name": "AT&T Business", "segment": "Mega", "region": "AMER", "csm": "Aaron Imler", "afv100": null, "total": 135, "open": 4, "escalated": 4, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001TGPvIQAX", "name": "ORANGE BELGIUM NV/SA", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 103, "open": 0, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001TFuEJQA1", "name": "Telstra Limited", "segment": "Top", "region": "APAC", "csm": "Alison Angelos", "afv100": null, "total": 90, "open": 3, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001WAM8AQAX", "name": "PLDT, Inc.", "segment": "Mega", "region": "APAC", "csm": "Anish Uppal", "afv100": null, "total": 70, "open": 2, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001QbbKTQAZ", "name": "CCI Corporate Services, LLC.", "segment": "Mega", "region": "AMER", "csm": "William Chitwood", "afv100": null, "total": 60, "open": 1, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001UXfm6QAD", "name": "TPG Telecom Limited", "segment": "Top", "region": "APAC", "csm": null, "afv100": null, "total": 56, "open": 4, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001SJe2MQAT", "name": "WorkSafe Victoria", "segment": "Flagship", "region": "APAC", "csm": "Marcus Fung", "afv100": null, "total": 44, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001SJu8mQAD", "name": "Belong (New Org)", "segment": "Medium", "region": "APAC", "csm": "Alison Angelos", "afv100": null, "total": 44, "open": 2, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001UXYCWQA5", "name": "Xcel Energy Services Inc - New Org", "segment": "Flagship", "region": "AMER", "csm": null, "afv100": "Implementation in Progress", "total": 44, "open": 1, "escalated": 1, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001QoeHaQAJ", "name": "M1 Limited", "segment": "Top", "region": "APAC", "csm": "Stewart James Hunter", "afv100": null, "total": 41, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001Qq01oQAB", "name": "Xtelify Limited", "segment": "Large", "region": "APAC", "csm": null, "afv100": null, "total": 37, "open": 5, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001TGjjtQAD", "name": "Unilever UK Central Resources Ltd (EU)", "segment": "Very Small", "region": "EMEA", "csm": "Matthew Shilvock", "afv100": null, "total": 35, "open": 2, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-06", "trend": "↑"}, {"id": "0010M00001TzQYFQA3", "name": "NTUC Fairprice Co-operative Limited", "segment": "Top", "region": "APAC", "csm": "Venus Chen", "afv100": null, "total": 33, "open": 1, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001UWs3rQAD", "name": "Cigna Corporate Services, LLC", "segment": "Mega", "region": "AMER", "csm": "Laura Dunn", "afv100": null, "total": 33, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001WAZ4uQAH", "name": "Hong Kong Telecommunications (HKT) Limited", "segment": "Top", "region": "APAC", "csm": "Johnson Pan", "afv100": null, "total": 33, "open": 0, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001PvUOuQAN", "name": "Odido", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 28, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001QoaMoQAJ", "name": "SaskTel", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 26, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001V33N9QAJ", "name": "Unilever UK Central Resources Ltd (AMS)", "segment": "Small", "region": "EMEA", "csm": "Matthew Shilvock", "afv100": null, "total": 25, "open": 5, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001P0iYoQAJ", "name": "INWI", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 22, "open": 1, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001Q6qP6QAJ", "name": "UDAF, Agricultural Information Management System", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 22, "open": 2, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-07", "trend": "↓"}, {"id": "0010M00001Qq0fyQAB", "name": "AXA Health UK", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 21, "open": 2, "escalated": 1, "top_cloud": "Industry-Health & Insurance", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001PxRWIQA3", "name": "Barclays Execution Services Limited", "segment": "Platinum", "region": "EMEA", "csm": "Martin Davies", "afv100": null, "total": 20, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "↑"}, {"id": "0010M00001V3T3tQAF", "name": "City of New York - Employees Retirement System", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 20, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001Q6lwvQAB", "name": "Digital Canberra", "segment": "Top", "region": "APAC", "csm": null, "afv100": null, "total": 19, "open": 1, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001TyBLvQAN", "name": "Unilever UK Central Resources Ltd (SEAA)", "segment": "Very Small", "region": "EMEA", "csm": "Matthew Shilvock", "afv100": null, "total": 19, "open": 0, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-05", "trend": "↓"}, {"id": "0010M00001W2iBNQAZ", "name": "Transport Canberra City Services Directorate", "segment": "Very Small", "region": "APAC", "csm": null, "afv100": null, "total": 18, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001NZdbOQAT", "name": "GIE COVEA AGORA", "segment": "Mega", "region": "EMEA", "csm": "Justine Blanchoz", "afv100": null, "total": 17, "open": 1, "escalated": 3, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001SfX36QAF", "name": "ABSA Bank Limited", "segment": "Mega", "region": "EMEA", "csm": "Caimin McGovern", "afv100": null, "total": 17, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001QbkDYQAZ", "name": "Verizon Sourcing LLC", "segment": "Very Small", "region": "AMER", "csm": "Sridhar Radhakrishnan", "afv100": null, "total": 16, "open": 0, "escalated": 1, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001RMJDqQAP", "name": "Elevance Health - Commercial 2.0", "segment": "Mega", "region": "AMER", "csm": "Matt Wittorf", "afv100": null, "total": 16, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001RN9Q5QAL", "name": "Ohio Department Of Job And Family Services - Case Management", "segment": "Flagship", "region": "AMER", "csm": "Talmadge Zipperer", "afv100": null, "total": 16, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001U4JM6QAN", "name": "INWI", "segment": "Large", "region": "EMEA", "csm": null, "afv100": null, "total": 16, "open": 0, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001SesLiQAJ", "name": "SSC - Main", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 15, "open": 1, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001TxQG7QAN", "name": "Truist Bank", "segment": "Mega", "region": "AMER", "csm": "Teri Povinelli", "afv100": null, "total": 15, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001W2Q9TQAV", "name": "The Travelers Indemnity Company", "segment": "Mega", "region": "AMER", "csm": "Sharon Bartol", "afv100": null, "total": 15, "open": 0, "escalated": 1, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001SKLrnQAH", "name": "The Toronto-Dominion Bank", "segment": "Large", "region": "AMER", "csm": "Annie Yang", "afv100": null, "total": 14, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "↑"}, {"id": "0010M00001Qp2oZQAR", "name": "ENGIE INFORMATION ET TECHNOLOGIES SA", "segment": "Flagship", "region": "EMEA", "csm": "Helene Stavridis", "afv100": null, "total": 13, "open": 0, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001TGgZuQAL", "name": "Edward D. Jones & Co., L.P.", "segment": "Platinum", "region": "AMER", "csm": "Sunil George", "afv100": null, "total": 13, "open": 0, "escalated": 1, "top_cloud": "Industry-Financial Services", "peak_month": "2026-05", "trend": "↑"}, {"id": "0010M00001TyzKFQAZ", "name": "GIE LA MONDIALE GROUPE", "segment": "Flagship", "region": "EMEA", "csm": null, "afv100": null, "total": 13, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "↑"}, {"id": "0010M00001VY4K1QAL", "name": "Nationale-Nederlanden ABN AMRO Verzekeringen Holding BV", "segment": "Large", "region": "EMEA", "csm": null, "afv100": null, "total": 13, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001RMJN4QAP", "name": "AbbVie", "segment": "Flagship", "region": "AMER", "csm": "Leeza Bassiri", "afv100": null, "total": 12, "open": 1, "escalated": 0, "top_cloud": "Industry-Health Cloud", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001PwaonQAB", "name": "Criteo Technology SAS", "segment": "Flagship", "region": "EMEA", "csm": null, "afv100": null, "total": 11, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001UWrJOQA1", "name": "Geisinger System Services", "segment": "Flagship", "region": "AMER", "csm": "Christine Miller", "afv100": null, "total": 10, "open": 0, "escalated": 1, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001NZdr8QAD", "name": "Blue Cross Blue Shield of Michigan", "segment": "Mega", "region": "AMER", "csm": "Matt Wittorf", "afv100": null, "total": 9, "open": 0, "escalated": 0, "top_cloud": "Industry-Health & Insurance", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001PvW1RQAV", "name": "Johnson & Johnson Services, Inc.", "segment": "Mega", "region": "AMER", "csm": "Tom Iatesta", "afv100": null, "total": 9, "open": 1, "escalated": 0, "top_cloud": "Industry-Security & Activations", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001PwHtdQAF", "name": "Gant AB", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 9, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001QasZ0QAJ", "name": "Pentagon Federal Credit Union", "segment": "Mega", "region": "AMER", "csm": "Wende Stever", "afv100": "Implementation in Progress", "total": 9, "open": 3, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001RNBPjQAP", "name": "Indiana Public Retirement System", "segment": "Small", "region": "AMER", "csm": null, "afv100": null, "total": 9, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001NZSQBQA5", "name": "The Standard Bank of South Africa LTD", "segment": null, "region": "EMEA", "csm": "Philip Cabessa", "afv100": null, "total": 8, "open": 1, "escalated": 0, "top_cloud": "Industry-Developer Support", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001RLoSJQA1", "name": "Wealth Enhancement Group, Llc", "segment": "Flagship", "region": "AMER", "csm": "Pragathi Kotha", "afv100": null, "total": 8, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001SnPDNQA3", "name": "Zurich Employment Services Limited", "segment": "Large", "region": "EMEA", "csm": null, "afv100": null, "total": 8, "open": 0, "escalated": 0, "top_cloud": "Industry-Document Generation", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001U12v4QAB", "name": "JPMorgan Chase Bank, National Association", "segment": "Top", "region": "AMER", "csm": "Jonathan Snyder", "afv100": null, "total": 8, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001UEFK9QAP", "name": "Humana - Group & Specialty", "segment": "Top", "region": "AMER", "csm": "Dan Fowler", "afv100": null, "total": 8, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001QcB99QAF", "name": "KeyBank National Association - Wealth Management", "segment": "Top", "region": "AMER", "csm": "Scott Conway", "afv100": null, "total": 7, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001SJYJ8QAP", "name": "Arvest Bank Operations, Inc.", "segment": "Mega", "region": "AMER", "csm": "Kathleen Chromicz", "afv100": null, "total": 7, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001V2mWwQAJ", "name": "Philip Morris International IT Service Center Sàrl", "segment": "Medium", "region": "EMEA", "csm": null, "afv100": null, "total": 7, "open": 0, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "↑"}, {"id": "0010M00001QdPn7QAF", "name": "iA B2B CRM", "segment": "Medium", "region": "AMER", "csm": null, "afv100": null, "total": 6, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001TyxvyQAB", "name": "GoodLeap (formerly Loanpal) - Consumer Finance", "segment": "Flagship", "region": "AMER", "csm": null, "afv100": null, "total": 6, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "↓"}, {"id": "0010M00001TzqY0QAJ", "name": "Foxtel Management Pty Ltd", "segment": "Small", "region": "APAC", "csm": "Nadine Hughes", "afv100": null, "total": 6, "open": 0, "escalated": 0, "top_cloud": "Industry-CPQ / Order Management / Digital Commerce", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001UYwtKQAT", "name": "Canadian Imperial Bank of Commerce", "segment": "Top", "region": "AMER", "csm": "Bruce Plaskett", "afv100": null, "total": 6, "open": 1, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001NaLgYQAV", "name": "Organizacion Terpel S.A.", "segment": "Top", "region": "LACA", "csm": "Natalia Martinez", "afv100": null, "total": 5, "open": 0, "escalated": 1, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001NauHzQAJ", "name": "Principal Life Insurance Company", "segment": "Medium", "region": "AMER", "csm": null, "afv100": null, "total": 5, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001QbbOQQAZ", "name": "Valley National Bank*", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 5, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001RKvKDQA1", "name": "Focus Financial Partners, LLC", "segment": "Flagship", "region": "AMER", "csm": null, "afv100": null, "total": 5, "open": 1, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001TzVHHQA3", "name": "PANDORA A/S", "segment": "Mega", "region": "EMEA", "csm": null, "afv100": "Live in Production", "total": 5, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001U0bTLQAZ", "name": "Beacon Pointe Advisors, LLC", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 5, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001U13BlQAJ", "name": "Department of Education", "segment": "Small", "region": "APAC", "csm": null, "afv100": null, "total": 5, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001U1BvyQAF", "name": "AI inside Inc.", "segment": "Large", "region": "JP", "csm": null, "afv100": null, "total": 5, "open": 1, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001UGTdvQAH", "name": "Carson Group Holdings, LLC d/b/a Carson Group", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 5, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001UXJEiQAP", "name": "Eu Yan Sang Singapore Pte Ltd", "segment": "Large", "region": "APAC", "csm": null, "afv100": null, "total": 5, "open": 1, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001V2jsNQAR", "name": "PETRONAS DIGITAL SDN BHD", "segment": "Top", "region": "APAC", "csm": "Shikha Rehan", "afv100": null, "total": 5, "open": 0, "escalated": 0, "top_cloud": "Industry-Document Generation", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001NZW5RQAX", "name": "Ohio Department of Commerce", "segment": "Medium", "region": "AMER", "csm": null, "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001P0imXQAR", "name": "Iren Mercato", "segment": "Mega", "region": "EMEA", "csm": "Simona Serena", "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001PvEMoQAN", "name": "Cencora - Lash Group - Patient Services", "segment": "Top", "region": "AMER", "csm": "Patrick Lally", "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001QcoElQAJ", "name": "Liberty Mutual Insurance Company (Comparion)", "segment": "Top", "region": "AMER", "csm": "Michael Dexter", "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Security & Activations", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001RNo3WQAT", "name": "John Hancock Life Insurance Company (U.S.A.)", "segment": "Small", "region": "AMER", "csm": "Annie Yang", "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001SK0BRQA1", "name": "HEINEKEN ESPAÑA, S.A.", "segment": "Very Small", "region": "EMEA", "csm": null, "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001SeyrpQAB", "name": "gsk", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Document Generation", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001SfG1pQAF", "name": "Hong Leong Bank Bhd", "segment": "Large", "region": "APAC", "csm": null, "afv100": null, "total": 4, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-05", "trend": "↑"}, {"id": "0010M00001UWo5pQAD", "name": "Elevance Health - CarelonRx Sales", "segment": "Large", "region": "AMER", "csm": "Matt Wittorf", "afv100": null, "total": 4, "open": 0, "escalated": 1, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001Q6RoQQAV", "name": "PricewaterhouseCoopers Global Licensing Services Corporation", "segment": "Large", "region": "AMER", "csm": "Joe Danon", "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Energy & Utilities Cloud", "peak_month": "2026-07", "trend": "→"}, {"id": "0010M00001Qb88gQAB", "name": "Northwell Health, Inc.", "segment": "Small", "region": "AMER", "csm": "Megan Halawa", "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Health Cloud", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001Qbmq2QAB", "name": "Bell Canada COCD 1000", "segment": "Top", "region": "AMER", "csm": "Mitch Cooper", "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Communication Cloud", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001QdQ4XQAV", "name": "American Equity Investment Life Insurance Company", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Security & Activations", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001Qq81gQAB", "name": "National Australia Bank PTY Limited", "segment": "Flagship", "region": "APAC", "csm": "Jay Swaminathan", "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001SJerxQAD", "name": "Philip Morris Products S.A., OC Division ***", "segment": "Large", "region": "EMEA", "csm": "Ruslan Horbenko", "afv100": null, "total": 3, "open": 1, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001SnXrvQAF", "name": "Frontline Technologies Group LLC", "segment": "Top", "region": "AMER", "csm": "Brandi Hubbard", "afv100": null, "total": 3, "open": 1, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001TFzYGQA1", "name": "Sally Holdings LLC  (New Service Org)", "segment": "Flagship", "region": "AMER", "csm": "Cynthia Dillard-Rodgers", "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001TzGxTQAV", "name": "HUMAN APPEAL", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-02", "trend": "↓"}, {"id": "0010M00001U0YFSQA3", "name": "State of New Hampshire", "segment": "Flagship", "region": "AMER", "csm": "Hilary Zarenejad", "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-03", "trend": "↑"}, {"id": "0010M00001U0ru5QAB", "name": "Air Force Personnel Center (AFPC)", "segment": "Platinum", "region": "AMER", "csm": "Alissa Nuttall", "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001UYOY1QAP", "name": "AbbVie Inc.", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Health Cloud", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001V3FUkQAN", "name": "ISED - Innovation Canada - Codey", "segment": "Large", "region": "AMER", "csm": null, "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001V3FxcQAF", "name": "PG&E - COE", "segment": null, "region": "AMER", "csm": null, "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001VXGBHQA5", "name": "Government Technology Agency (Singapore)", "segment": "Top", "region": "APAC", "csm": null, "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001WAU7UQAX", "name": "Australian Association of Social Workers Limited (AASW)", "segment": "Large", "region": "APAC", "csm": null, "afv100": null, "total": 3, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001NaITdQAN", "name": "Health Care Services Corp - CareAllies - 00D410000012GlE", "segment": "Large", "region": "AMER", "csm": "Laura Dunn", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001QatRRQAZ", "name": "BP International Ltd", "segment": "Medium", "region": "EMEA", "csm": "Andrew McIlwraith", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Document Generation", "peak_month": "2026-05", "trend": "↓"}, {"id": "0010M00001QbeVIQAZ", "name": "NSW Department Climate Change Energy Environment and Water", "segment": "Very Small", "region": "APAC", "csm": null, "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001QbvtlQAB", "name": "STELLANTIS AUTO SAS France", "segment": "Very Small", "region": "EMEA", "csm": "David Le Roux", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Automotive Cloud", "peak_month": "2026-04", "trend": "↓"}, {"id": "0010M00001Qpgw2QAB", "name": "BNC - Marchés Financiers Clients Commerciaux - 00D1I000001YLps (5227)", "segment": "Flagship", "region": "AMER", "csm": "Mario Lollino", "afv100": "Lost", "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001RMIv0QAH", "name": "Rapid7", "segment": "Flagship", "region": "AMER", "csm": "Christine Prescott", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001SJbNVQA1", "name": "Bank Vontobel AG - AM", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001SfUWhQAN", "name": "MATMUT", "segment": "Top", "region": "EMEA", "csm": "Valentine Vanhack", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001TFPGnQAP", "name": "SMI MUTUELLE (Org #3)", "segment": "Small", "region": "EMEA", "csm": "Claire de Vismes", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001TFj5PQAT", "name": "AFP Cuprum", "segment": "Very Small", "region": "LACA", "csm": null, "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001TFvnYQAT", "name": "Forest Lawn Mortuary", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Document Generation", "peak_month": "2026-05", "trend": "↑"}, {"id": "0010M00001TzCAwQAN", "name": "H.J. HEINZ COMPANY AUSTRALIA LIMITED", "segment": "Medium", "region": "APAC", "csm": null, "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Retail and Consumer Goods", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001U1HtaQAF", "name": "Telefonica Global Technology, SAU*", "segment": "Top", "region": "EMEA", "csm": "Fernando Calvo Lozano", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001U4EvZQAV", "name": "Mitsubishi UFJ Morgan Stanley Securities Co., Ltd.", "segment": "Top", "region": "JP", "csm": "Kensuke Suito", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001UWMlbQAH", "name": "Scotiabank - Commercial (FSC)", "segment": "Large", "region": "AMER", "csm": "Sean Roseland-Barnes", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Email Delivery & Desktop Integrations", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001V4u15QAB", "name": "R+V Allgemeine Versicherung AG", "segment": "Flagship", "region": "EMEA", "csm": null, "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "↓"}, {"id": "0010M00001V5j7PQAR", "name": "RHSC", "segment": "Large", "region": "AMER", "csm": "Joel Flagg", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001V5nnzQAB", "name": "BBVA México, S.A., Institución de Banca Múltiple, Grupo Financiero, BBVA México", "segment": "Platinum", "region": "LACA", "csm": "Oscar Esteban Lopez Tellez", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001Vx9hDQAR", "name": "Banco C6 S.A.", "segment": "Mega", "region": "LACA", "csm": "Alexandre Siqueira", "afv100": null, "total": 2, "open": 0, "escalated": 0, "top_cloud": "Industry-Health & Insurance", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001MyrJbQAJ", "name": "LK Packaging", "segment": "Large", "region": "AMER", "csm": "Julie Kovacevich", "afv100": "Implementation Not Started", "total": 1, "open": 1, "escalated": 0, "top_cloud": "Industry-Manufacturing Cloud", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001NanLmQAJ", "name": "Mariner Wealth Advisors, LLC", "segment": "Large", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001PvGjvQAF", "name": "Pearson Education, Inc US Restricted", "segment": "Medium", "region": "AMER", "csm": "Tony Ryan", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Security & Activations", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001PvVbRQAV", "name": "New York Life Insurance Company", "segment": "Mega", "region": "AMER", "csm": "Avani Damboise", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001PvY6TQAV", "name": "Town of Cary", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Public Sector Solutions", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001PvbTTQAZ", "name": "CAINZ CORPORATION.", "segment": "Top", "region": "JP", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Email Delivery & Desktop Integrations", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001PvmoPQAR", "name": "Al Tayer Insignia LLC", "segment": "Large", "region": "EMEA", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Net Zero Cloud", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001PxPP7QAN", "name": "Pan American Energy, S.L., Sucursal Argentina", "segment": "Top", "region": "LACA", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001Q6q2IQAR", "name": "MS Financing LLC", "segment": "Top", "region": "AMER", "csm": "Sydney Bloom", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001Qaut9QAB", "name": "Bank Hapoalim B.M. (Business Devision)", "segment": "Very Small", "region": "EMEA", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Developer Support", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001Qb0BYQAZ", "name": "Wells Fargo Bank, N.A.", "segment": "Large", "region": "AMER", "csm": "Julie Walczak", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001QbdsYQAR", "name": "Meta Platforms Inc - HR / Recruiting", "segment": "Very Small", "region": "AMER", "csm": "Cole Watanabe", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Developer Support", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001QcGKuQAN", "name": "B2C (Premier / Community / Mortgage / PBWM)", "segment": "Very Small", "region": "EMEA", "csm": "Martin Davies", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001QciQMQAZ", "name": "Stanbic IBTC", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 1, "open": 1, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001QdHYDQA3", "name": "Affinity Federal Credit Union*", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001QpYxcQAF", "name": "Amazon Hub PARP (Ops)", "segment": "Very Small", "region": "AMER", "csm": "Jeff Fioresi", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Document Generation", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001QphsBQAR", "name": "MasterCard Worldwide", "segment": "Very Small", "region": "AMER", "csm": "Silvia Badilla Arroyo", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-How-to, Setup, Configuration, Reports & Dashboards", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001Qq1wKQAR", "name": "The University of Tennessee, Knoxville (MAIN)", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Education Cloud", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001RJnOTQA1", "name": "John Hancock Life Insurance Company", "segment": "Small", "region": "AMER", "csm": "Annie Yang", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Health Cloud", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001RKutOQAT", "name": "AMERICAN CANCER SOCIETY, INC.", "segment": "Top", "region": "AMER", "csm": "Susan Kolb", "afv100": "Implementation in Progress", "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Developer Support", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001RL0BeQAL", "name": "Insulet Corporation", "segment": "Large", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Security & Activations", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001RM2QzQAL", "name": "KURARAY CO., LTD.", "segment": "Top", "region": "JP", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001RNFw7QAH", "name": "The Prudential Insurance Company of America - P360", "segment": "Large", "region": "AMER", "csm": "Rob Pal", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001S84fbQAB", "name": "JPMorgan Chase Bank, National Association", "segment": "Platinum", "region": "AMER", "csm": "Jonathan Snyder", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001S8Tk4QAF", "name": "Thames Water Utilities Ltd - WFM Service Operations", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001S8tjWQAR", "name": "Granicus, Inc. (2nd Org)", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001SJz2DQAT", "name": "The Travel Chapter Limited", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001SfHpnQAF", "name": "Liberty Mutual - National Insurance", "segment": "Large", "region": "AMER", "csm": "Michael Dexter", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Disability and Product Accessibility", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001SnJLaQAN", "name": "The Hospitals Contribution Fund Of Australia Ltd", "segment": "Flagship", "region": "APAC", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001Snc21QAB", "name": "British American Shared Services (GSD) Limited", "segment": "Medium", "region": "EMEA", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-06", "trend": "↓"}, {"id": "0010M00001Snj22QAB", "name": "Mars Information Services, Inc.", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001TDo2xQAD", "name": "Australia and New Zealand Banking Group Limited", "segment": "Top", "region": "APAC", "csm": "Brendan Griffin", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001TE25qQAD", "name": "Philip Morris Products S.A., OC Division****", "segment": "Very Small", "region": "EMEA", "csm": "Ruslan Horbenko", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001TFm5zQAD", "name": "James Hardie Building Products Inc.", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-07", "trend": "↓"}, {"id": "0010M00001TGIRvQAP", "name": "Deutsche Glasfaser Holding GmbH", "segment": "Top", "region": "EMEA", "csm": null, "afv100": null, "total": 1, "open": 1, "escalated": 0, "top_cloud": "Industry-Communication Cloud", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001TGaztQAD", "name": "Southern New Hampshire University*", "segment": "Flagship", "region": "AMER", "csm": "Ryan Gunderson", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001TytaqQAB", "name": "Stericycle, Inc. (Monarch) - Org ID 00Df40000023wCj", "segment": "Flagship", "region": "AMER", "csm": "Roozbeh Arshadi", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001Tz4YtQAJ", "name": "Six Continents Hotels, Inc.", "segment": "Top", "region": "AMER", "csm": "Douglas Ohlstrom", "afv100": null, "total": 1, "open": 1, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-07", "trend": "↓"}, {"id": "0010M00001TzMe9QAF", "name": "Endesa Medios y Sistemas S.L. (Endesa B2C Cosmos)", "segment": "Medium", "region": "EMEA", "csm": "Pedro Diezhandino", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Loyalty Management", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001Tzte5QAB", "name": "Highmark Inc. Wholesale Commercial Sales and Tableau Server", "segment": "Very Small", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001U05V9QAJ", "name": "JPMorgan Chase Bank, National Association", "segment": "Small", "region": "AMER", "csm": "Jonathan Snyder", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Developer Support", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001U163EQAR", "name": "biBerk Insurance Services Inc.", "segment": "Top", "region": "AMER", "csm": null, "afv100": "Live in Production", "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-04", "trend": "→"}, {"id": "0010M00001U4CwyQAF", "name": "The Nebraska Medical Center", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 1, "escalated": 0, "top_cloud": "Industry-Health Cloud", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001U4FrxQAF", "name": "Gallagher Affinity", "segment": "Medium", "region": "AMER", "csm": "Sharon Bartol", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001UEDJsQAP", "name": "Vietnam Airlines Joint Stock Company", "segment": "Large", "region": "APAC", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Omnistudio", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001UF1tHQAT", "name": "JPMorgan Chase Bank, National Association", "segment": "Small", "region": "AMER", "csm": "Jonathan Snyder", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-How-to, Setup, Configuration, Reports & Dashboards", "peak_month": "2026-07", "trend": "↑"}, {"id": "0010M00001UWAp2QAH", "name": "International SoS Government Services", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001UWVXaQAP", "name": "Molina Healthcare  Enterprise CRM [Molina 5]", "segment": "Mega", "region": "AMER", "csm": "Therese Kaltenecker", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Health Cloud", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001UX3kAQAT", "name": "Fox Corporation", "segment": "Very Small", "region": "AMER", "csm": "Jenni Dillon", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Net Zero Cloud", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001UXfhzQAD", "name": "GODREJ AND BOYCE MANUFACTURING COMPANY LIMITED", "segment": "Top", "region": "APAC", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Life Sciences", "peak_month": "2026-06", "trend": "→"}, {"id": "0010M00001V3SluQAF", "name": "Baxter Credit Union", "segment": "Top", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Financial Services", "peak_month": "2026-02", "trend": "→"}, {"id": "0010M00001V3UAPQA3", "name": "El Palacio de Hierro, SA de CV - RFC - PHI830429MG6", "segment": "Flagship", "region": "LACA", "csm": null, "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-CRM Analytics", "peak_month": "2026-03", "trend": "→"}, {"id": "0010M00001V516wQAB", "name": "Automobile Club of Southern California", "segment": "Flagship", "region": "AMER", "csm": "Maya Hill", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Developer Support", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001W7hHRQAZ", "name": "Six Continents Hotels, Inc.", "segment": "Top", "region": "AMER", "csm": "Douglas Ohlstrom", "afv100": null, "total": 1, "open": 0, "escalated": 0, "top_cloud": "Industry-Document Generation", "peak_month": "2026-05", "trend": "→"}, {"id": "0010M00001WASgcQAH", "name": "One_Pinnacol", "segment": "Large", "region": "AMER", "csm": null, "afv100": null, "total": 1, "open": 1, "escalated": 0, "top_cloud": "Industry-Security & Activations", "peak_month": "2026-02", "trend": "→"}], "weekly_labels": ["2026-01-26", "2026-02-02", "2026-02-09", "2026-02-16", "2026-02-23", "2026-03-02", "2026-03-09", "2026-03-16", "2026-03-23", "2026-03-30", "2026-04-06", "2026-04-13", "2026-04-20", "2026-04-27", "2026-05-04", "2026-05-11", "2026-05-18", "2026-05-25", "2026-06-01", "2026-06-08", "2026-06-15", "2026-06-22", "2026-06-29", "2026-07-06", "2026-07-13", "2026-07-20", "2026-07-27", "2026-08-03"], "weekly_series": {"Live in Production": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], "Implementation in Progress": [0, 4, 6, 4, 1, 4, 2, 3, 1, 2, 0, 0, 0, 0, 2, 4, 1, 6, 1, 3, 2, 0, 0, 0, 1, 5, 1, 1], "Implementation Not Started": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], "other": [1, 117, 98, 72, 127, 91, 97, 89, 72, 71, 65, 68, 85, 73, 55, 72, 68, 72, 50, 67, 83, 61, 45, 59, 54, 47, 44, 36]}, "heatmap_data": [{"name": "Telecom Argentina S.A.", "afv100": null, "months": {"2026-02": 24, "2026-03": 26, "2026-04": 40, "2026-05": 29, "2026-06": 13, "2026-07": 15, "2026-08": 7}}, {"name": "Claro América Latina", "afv100": null, "months": {"2026-02": 34, "2026-03": 32, "2026-04": 2, "2026-05": 22, "2026-06": 31, "2026-07": 21, "2026-08": 2}}, {"name": "AT&T Business", "afv100": null, "months": {"2026-02": 41, "2026-03": 17, "2026-04": 20, "2026-05": 14, "2026-06": 13, "2026-07": 27, "2026-08": 3}}, {"name": "ORANGE BELGIUM NV/SA", "afv100": null, "months": {"2026-02": 12, "2026-03": 24, "2026-04": 32, "2026-05": 15, "2026-06": 13, "2026-07": 7, "2026-08": 0}}, {"name": "Telstra Limited", "afv100": null, "months": {"2026-02": 18, "2026-03": 13, "2026-04": 17, "2026-05": 15, "2026-06": 19, "2026-07": 8, "2026-08": 0}}, {"name": "PLDT, Inc.", "afv100": null, "months": {"2026-02": 6, "2026-03": 16, "2026-04": 4, "2026-05": 14, "2026-06": 12, "2026-07": 16, "2026-08": 2}}, {"name": "CCI Corporate Services, LLC.", "afv100": null, "months": {"2026-02": 12, "2026-03": 9, "2026-04": 12, "2026-05": 10, "2026-06": 10, "2026-07": 7, "2026-08": 0}}, {"name": "TPG Telecom Limited", "afv100": null, "months": {"2026-02": 8, "2026-03": 5, "2026-04": 13, "2026-05": 9, "2026-06": 11, "2026-07": 8, "2026-08": 2}}, {"name": "WorkSafe Victoria", "afv100": null, "months": {"2026-02": 6, "2026-03": 19, "2026-04": 7, "2026-05": 1, "2026-06": 8, "2026-07": 3, "2026-08": 0}}, {"name": "Belong (New Org)", "afv100": null, "months": {"2026-02": 16, "2026-03": 8, "2026-04": 6, "2026-05": 3, "2026-06": 7, "2026-07": 3, "2026-08": 1}}, {"name": "Xcel Energy Services Inc - New Org", "afv100": "Implementation in Progress", "months": {"2026-02": 14, "2026-03": 8, "2026-04": 2, "2026-05": 12, "2026-06": 5, "2026-07": 3, "2026-08": 0}}, {"name": "M1 Limited", "afv100": null, "months": {"2026-02": 6, "2026-03": 12, "2026-04": 9, "2026-05": 2, "2026-06": 10, "2026-07": 2, "2026-08": 0}}, {"name": "Xtelify Limited", "afv100": null, "months": {"2026-02": 11, "2026-03": 6, "2026-04": 3, "2026-05": 4, "2026-06": 4, "2026-07": 5, "2026-08": 4}}, {"name": "Unilever UK Central Resources Ltd (EU)", "afv100": null, "months": {"2026-02": 6, "2026-03": 5, "2026-04": 2, "2026-05": 6, "2026-06": 9, "2026-07": 5, "2026-08": 2}}, {"name": "NTUC Fairprice Co-operative Limited", "afv100": null, "months": {"2026-02": 2, "2026-03": 4, "2026-04": 9, "2026-05": 3, "2026-06": 12, "2026-07": 3, "2026-08": 0}}, {"name": "Cigna Corporate Services, LLC", "afv100": null, "months": {"2026-02": 6, "2026-03": 6, "2026-04": 10, "2026-05": 4, "2026-06": 5, "2026-07": 2, "2026-08": 0}}, {"name": "Hong Kong Telecommunications (HKT) Limited", "afv100": null, "months": {"2026-02": 25, "2026-03": 8, "2026-04": 0, "2026-05": 0, "2026-06": 0, "2026-07": 0, "2026-08": 0}}, {"name": "Odido", "afv100": null, "months": {"2026-02": 5, "2026-03": 11, "2026-04": 6, "2026-05": 2, "2026-06": 3, "2026-07": 1, "2026-08": 0}}, {"name": "SaskTel", "afv100": null, "months": {"2026-02": 9, "2026-03": 6, "2026-04": 1, "2026-05": 4, "2026-06": 5, "2026-07": 1, "2026-08": 0}}, {"name": "Unilever UK Central Resources Ltd (AMS)", "afv100": null, "months": {"2026-02": 5, "2026-03": 3, "2026-04": 6, "2026-05": 4, "2026-06": 3, "2026-07": 1, "2026-08": 3}}], "months": ["2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"]};
+  </script>
+
+  <!-- SECTION 1: Summary -->
+  <div class="card" id="section-summary">
+    <h2>Summary</h2>
+    <div class="summary-grid">
+      <div class="stat-tile">
+        <div class="value" id="stat-total-acct"></div>
+        <div class="label">Total Accounts</div>
+      </div>
+      <div class="stat-tile">
+        <div class="value" id="stat-total-cases"></div>
+        <div class="label">Total Cases</div>
+      </div>
+      <div class="stat-tile live">
+        <div class="value" id="stat-live-cases"></div>
+        <div class="label">Cases — Live in Prod</div>
+      </div>
+      <div class="stat-tile grey">
+        <div class="value" id="stat-nonlive-cases"></div>
+        <div class="label">Cases — Not Live</div>
+      </div>
+    </div>
+
+    <div class="afv-section-title">Go-Live Status — Accounts</div>
+    <div class="afv-grid" id="afv-acct-grid"></div>
+
+    <div class="afv-section-title">Go-Live Status — Cases</div>
+    <div class="afv-grid" id="afv-case-grid"></div>
+  </div>
+
+  <!-- SECTION 2: Top 40 Bar Chart -->
+  <div class="card" id="section-bar">
+    <h2>Top 40 Accounts by Case Volume</h2>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-line" style="background:#0176d3"></div>Total Cases</div>
+      <div class="legend-item"><div class="legend-line" style="background:#f4a23b"></div>Open Cases</div>
+      <div class="legend-item"><div class="legend-line" style="background:#e74c3c"></div>Escalated</div>
+    </div>
+    <div class="legend-row">
+      <span style="font-size:11px;color:#556688;text-transform:uppercase;letter-spacing:0.6px;margin-right:4px;">Label Color:</span>
+      <div class="legend-item"><div class="legend-dot" style="background:#2ecc71"></div>Live in Production</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f1c40f"></div>Implementation in Progress</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#95a5a6"></div>Implementation Not Started</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffffff"></div>No Go-Live Status</div>
+    </div>
+    <div class="chart-wrap chart-wrap-tall">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Weekly Line Chart -->
+  <div class="card" id="section-line">
+    <h2>Weekly Case Volume by Go-Live Status</h2>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-line" style="background:#2ecc71"></div>Live in Production</div>
+      <div class="legend-item"><div class="legend-line" style="background:#f1c40f"></div>Implementation in Progress</div>
+      <div class="legend-item"><div class="legend-line" style="background:#95a5a6"></div>Implementation Not Started</div>
+      <div class="legend-item"><div class="legend-line" style="background:#7f8c8d;border-top:2px dashed #7f8c8d;height:0;"></div>Other / No Status</div>
+    </div>
+    <div class="chart-wrap chart-wrap-med">
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Sortable Table -->
+  <div class="card" id="section-table">
+    <h2>All Accounts</h2>
+    <div class="table-controls">
+      <input type="text" id="tableSearch" placeholder="Search account, region, CSM..." oninput="filterTable()">
+      <span style="font-size:12px;color:#556688;" id="tableCount"></span>
+    </div>
+    <div class="table-wrap">
+      <table id="acctTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)" data-col="0">Account Name<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(1)" data-col="1">Segment<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(2)" data-col="2">Region<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(3)" data-col="3">CSM<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(4)" data-col="4">Go-Live Status<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(5)" data-col="5">Total<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(6)" data-col="6">Open<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(7)" data-col="7">Escalated<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(8)" data-col="8">Top Cloud<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(9)" data-col="9">Peak Month<span class="sort-arrow">&#9650;</span></th>
+            <th onclick="sortTable(10)" data-col="10">Trend<span class="sort-arrow">&#9650;</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination"></div>
+    <div class="page-info" id="pageInfo"></div>
+  </div>
+
+  <!-- SECTION 5: Heatmap -->
+  <div class="card" id="section-heatmap">
+    <h2>Top 20 Accounts — Monthly Case Heatmap (Feb – Aug 2026)</h2>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot" style="background:#2ecc71"></div>Live in Production</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f1c40f"></div>Implementation in Progress</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#95a5a6"></div>Implementation Not Started</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffffff"></div>No Status</div>
+    </div>
+    <div class="heatmap-wrap">
+      <table class="heatmap-table" id="heatmapTable"></table>
+    </div>
+  </div>
+
+  <script>
+  // ─── Helpers ──────────────────────────────────────────────────────────────
+  const D = DASHBOARD_DATA;
+
+  function afvColor(afv) {
+    if (afv === 'Live in Production') return '#2ecc71';
+    if (afv === 'Implementation in Progress') return '#f1c40f';
+    if (afv === 'Implementation Not Started') return '#95a5a6';
+    return '#ffffff';
+  }
+  function afvClass(afv) {
+    if (afv === 'Live in Production') return 'afv-live';
+    if (afv === 'Implementation in Progress') return 'afv-prog';
+    if (afv === 'Implementation Not Started') return 'afv-notstarted';
+    return 'afv-other';
+  }
+  function esc(s) {
+    if (s == null) return '—';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ─── Section 1: Summary ───────────────────────────────────────────────────
+  document.getElementById('stat-total-acct').textContent = D.summary.total_accounts.toLocaleString();
+  document.getElementById('stat-total-cases').textContent = D.summary.total_cases.toLocaleString();
+  document.getElementById('stat-live-cases').textContent = D.summary.live_cases.toLocaleString();
+  document.getElementById('stat-nonlive-cases').textContent = D.summary.non_live_cases.toLocaleString();
+
+  const AFV_ORDER = ['Live in Production', 'Implementation in Progress', 'Implementation Not Started', 'Lost', 'null'];
+  const AFV_COLORS = {
+    'Live in Production': '#2ecc71',
+    'Implementation in Progress': '#f1c40f',
+    'Implementation Not Started': '#95a5a6',
+    'Lost': '#e74c3c',
+    'null': '#556688'
+  };
+  const AFV_LABELS = {
+    'Live in Production': 'Live in Production',
+    'Implementation in Progress': 'Impl. in Progress',
+    'Implementation Not Started': 'Impl. Not Started',
+    'Lost': 'Lost',
+    'null': 'No Status'
+  };
+
+  function buildAfvGrid(containerId, counts) {
+    const grid = document.getElementById(containerId);
+    const allKeys = Object.keys(counts);
+    const ordered = [...AFV_ORDER.filter(k => allKeys.includes(k)), ...allKeys.filter(k => !AFV_ORDER.includes(k))];
+    ordered.forEach(k => {
+      const div = document.createElement('div');
+      div.className = 'afv-tile';
+      const color = AFV_COLORS[k] || '#8899aa';
+      div.innerHTML = `<div class="afv-count" style="color:${color}">${counts[k].toLocaleString()}</div><div class="afv-label">${AFV_LABELS[k] || k}</div>`;
+      grid.appendChild(div);
+    });
+  }
+  buildAfvGrid('afv-acct-grid', D.summary.afv_account_counts);
+  buildAfvGrid('afv-case-grid', D.summary.afv_case_counts);
+
+  // ─── Section 2: Bar Chart ─────────────────────────────────────────────────
+  const top40 = D.top40;
+  const barLabels = top40.map(a => a.name);
+  const barColors = top40.map(a => afvColor(a.afv100));
+
+  const barCtx = document.getElementById('barChart').getContext('2d');
+
+  // Patch label colors using a custom plugin
+  const labelColorPlugin = {
+    id: 'labelColors',
+    afterDraw(chart) {
+      const yAxis = chart.scales.y;
+      const ctx2 = chart.ctx;
+      ctx2.save();
+      yAxis.ticks.forEach((tick, i) => {
+        const label = tick.label;
+        const color = barColors[i] || '#ffffff';
+        const y = yAxis.getPixelForTick(i);
+        const x = yAxis.right - 4;
+        ctx2.fillStyle = color;
+        ctx2.font = 'bold 11px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+        ctx2.textAlign = 'right';
+        ctx2.textBaseline = 'middle';
+        // Draw colored dot
+        ctx2.beginPath();
+        ctx2.arc(x - (ctx2.measureText(label).width + 8), y, 4, 0, Math.PI * 2);
+        ctx2.fill();
+      });
+      ctx2.restore();
+    }
+  };
+
+  new Chart(barCtx, {
+    type: 'bar',
+    plugins: [],
+    data: {
+      labels: barLabels,
+      datasets: [
+        {
+          label: 'Total Cases',
+          data: top40.map(a => a.total),
+          backgroundColor: '#0176d3',
+          borderColor: '#0176d3',
+          borderRadius: 3,
+          borderSkipped: false,
+        },
+        {
+          label: 'Open Cases',
+          data: top40.map(a => a.open),
+          backgroundColor: '#f4a23b',
+          borderColor: '#f4a23b',
+          borderRadius: 3,
+          borderSkipped: false,
+        },
+        {
+          label: 'Escalated',
+          data: top40.map(a => a.escalated),
+          backgroundColor: '#e74c3c',
+          borderColor: '#e74c3c',
+          borderRadius: 3,
+          borderSkipped: false,
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', axis: 'y' },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { color: '#aabbcc', font: { size: 12 }, boxWidth: 14 }
+        },
+        tooltip: {
+          backgroundColor: '#0f3460',
+          titleColor: '#ffffff',
+          bodyColor: '#aabbcc',
+          borderColor: '#2a3a5c',
+          borderWidth: 1,
+          callbacks: {
+            afterTitle: function(ctx2) {
+              const idx = ctx2[0].dataIndex;
+              const a = top40[idx];
+              const csm = a.csm || 'No CSM assigned';
+              const afv = a.afv100 || 'No Go-Live Status';
+              return ['CSM: ' + csm, 'Status: ' + afv, 'Segment: ' + (a.segment || '—'), 'Region: ' + (a.region || '—')];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#8899aa', font: { size: 11 } },
+          grid: { color: '#2a3a5c' },
+          border: { color: '#2a3a5c' }
+        },
+        y: {
+          ticks: {
+            color: function(context) {
+              return barColors[context.index] || '#ffffff';
+            },
+            font: { size: 11 },
+            autoSkip: false,
+          },
+          grid: { color: '#2a3a5c' },
+          border: { color: '#2a3a5c' }
+        }
+      }
+    }
+  });
+
+  // ─── Section 3: Line Chart ────────────────────────────────────────────────
+  const lineLabels = D.weekly_labels.map(w => {
+    const d = new Date(w + 'T00:00:00');
+    return (d.getMonth()+1) + '/' + d.getDate();
+  });
+
+  const lineCtx = document.getElementById('lineChart').getContext('2d');
+  new Chart(lineCtx, {
+    type: 'line',
+    data: {
+      labels: lineLabels,
+      datasets: [
+        {
+          label: 'Live in Production',
+          data: D.weekly_series['Live in Production'],
+          borderColor: '#2ecc71',
+          backgroundColor: 'rgba(46,204,113,0.1)',
+          borderWidth: 2.5,
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          fill: false,
+        },
+        {
+          label: 'Implementation in Progress',
+          data: D.weekly_series['Implementation in Progress'],
+          borderColor: '#f1c40f',
+          backgroundColor: 'rgba(241,196,15,0.1)',
+          borderWidth: 2.5,
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          fill: false,
+        },
+        {
+          label: 'Implementation Not Started',
+          data: D.weekly_series['Implementation Not Started'],
+          borderColor: '#95a5a6',
+          backgroundColor: 'rgba(149,165,166,0.1)',
+          borderWidth: 2.5,
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          fill: false,
+        },
+        {
+          label: 'Other / No Status',
+          data: D.weekly_series['other'],
+          borderColor: '#7f8c8d',
+          backgroundColor: 'rgba(127,140,141,0.05)',
+          borderWidth: 2,
+          borderDash: [6, 3],
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index' },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { color: '#aabbcc', font: { size: 12 }, boxWidth: 16 }
+        },
+        tooltip: {
+          backgroundColor: '#0f3460',
+          titleColor: '#ffffff',
+          bodyColor: '#aabbcc',
+          borderColor: '#2a3a5c',
+          borderWidth: 1,
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#8899aa', font: { size: 11 }, maxRotation: 45, minRotation: 30 },
+          grid: { color: '#2a3a5c' },
+          border: { color: '#2a3a5c' }
+        },
+        y: {
+          ticks: { color: '#8899aa', font: { size: 11 } },
+          grid: { color: '#2a3a5c' },
+          border: { color: '#2a3a5c' },
+          beginAtZero: true,
+        }
+      }
+    }
+  });
+
+  // ─── Section 4: Sortable Table ────────────────────────────────────────────
+  let tableData = [...D.all_accounts];
+  let filteredData = [...tableData];
+  let sortCol = 5;
+  let sortAsc = false;
+  const PAGE_SIZE = 30;
+  let currentPage = 1;
+
+  function sortTable(col) {
+    const ths = document.querySelectorAll('#acctTable thead th');
+    ths.forEach(th => th.classList.remove('sorted'));
+    ths[col].classList.add('sorted');
+    if (sortCol === col) {
+      sortAsc = !sortAsc;
+    } else {
+      sortCol = col;
+      sortAsc = col < 5;
+    }
+    ths[col].querySelector('.sort-arrow').innerHTML = sortAsc ? '&#9650;' : '&#9660;';
+    renderTable();
+  }
+
+  function filterTable() {
+    const q = document.getElementById('tableSearch').value.toLowerCase().trim();
+    if (!q) {
+      filteredData = [...tableData];
+    } else {
+      filteredData = tableData.filter(a => {
+        return (a.name || '').toLowerCase().includes(q)
+          || (a.region || '').toLowerCase().includes(q)
+          || (a.csm || '').toLowerCase().includes(q)
+          || (a.segment || '').toLowerCase().includes(q)
+          || (a.afv100 || '').toLowerCase().includes(q)
+          || (a.top_cloud || '').toLowerCase().includes(q);
+      });
+    }
+    currentPage = 1;
+    renderTable();
+  }
+
+  function getColValue(a, col) {
+    switch(col) {
+      case 0: return (a.name || '').toLowerCase();
+      case 1: return (a.segment || '').toLowerCase();
+      case 2: return (a.region || '').toLowerCase();
+      case 3: return (a.csm || '').toLowerCase();
+      case 4: return (a.afv100 || '').toLowerCase();
+      case 5: return a.total;
+      case 6: return a.open;
+      case 7: return a.escalated;
+      case 8: return (a.top_cloud || '').toLowerCase();
+      case 9: return (a.peak_month || '').toLowerCase();
+      case 10: return (a.trend || '').toLowerCase();
+      default: return '';
+    }
+  }
+
+  function renderTable() {
+    // Sort
+    const sorted = [...filteredData].sort((a, b) => {
+      const va = getColValue(a, sortCol);
+      const vb = getColValue(b, sortCol);
+      if (va < vb) return sortAsc ? -1 : 1;
+      if (va > vb) return sortAsc ? 1 : -1;
+      return 0;
+    });
+
+    const total = sorted.length;
+    const totalPages = Math.ceil(total / PAGE_SIZE);
+    if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const page = sorted.slice(start, start + PAGE_SIZE);
+
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = page.map(a => {
+      const afvCls = afvClass(a.afv100);
+      const afvLabel = a.afv100 || '—';
+      const trendCls = a.trend === '↑' ? 'trend-up' : a.trend === '↓' ? 'trend-down' : 'trend-flat';
+      const escBadge = a.escalated > 0 ? `<span class="badge badge-esc">${a.escalated}</span>` : a.escalated;
+      return `<tr>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;" title="${esc(a.name)}">${esc(a.name)}</td>
+        <td>${esc(a.segment)}</td>
+        <td>${esc(a.region)}</td>
+        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;" title="${esc(a.csm)}">${esc(a.csm)}</td>
+        <td class="${afvCls}">${esc(afvLabel)}</td>
+        <td style="text-align:right;font-weight:600;">${a.total}</td>
+        <td style="text-align:right;">${a.open}</td>
+        <td style="text-align:right;">${escBadge}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;" title="${esc(a.top_cloud)}">${esc(a.top_cloud)}</td>
+        <td>${esc(a.peak_month)}</td>
+        <td class="${trendCls}">${a.trend}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('tableCount').textContent = `Showing ${start+1}–${Math.min(start+PAGE_SIZE, total)} of ${total} accounts`;
+
+    // Pagination
+    const pgDiv = document.getElementById('pagination');
+    pgDiv.innerHTML = '';
+    if (totalPages <= 1) return;
+    const addBtn = (label, page, active=false) => {
+      const btn = document.createElement('button');
+      btn.textContent = label;
+      if (active) btn.classList.add('active');
+      btn.onclick = () => { currentPage = page; renderTable(); };
+      pgDiv.appendChild(btn);
+    };
+    if (currentPage > 1) addBtn('‹ Prev', currentPage - 1);
+    const startP = Math.max(1, currentPage - 2);
+    const endP = Math.min(totalPages, currentPage + 2);
+    for (let p = startP; p <= endP; p++) addBtn(p, p, p === currentPage);
+    if (currentPage < totalPages) addBtn('Next ›', currentPage + 1);
+  }
+
+  renderTable();
+
+  // ─── Section 5: Heatmap ───────────────────────────────────────────────────
+  const heatmapData = D.heatmap_data;
+  const months = D.months;
+  const monthLabels = { '2026-02':'Feb', '2026-03':'Mar', '2026-04':'Apr', '2026-05':'May', '2026-06':'Jun', '2026-07':'Jul', '2026-08':'Aug' };
+
+  // Find max for color scaling
+  let maxVal = 0;
+  heatmapData.forEach(row => {
+    months.forEach(m => {
+      if ((row.months[m] || 0) > maxVal) maxVal = row.months[m];
+    });
+  });
+
+  const hmTable = document.getElementById('heatmapTable');
+  // Header row
+  const hdr = document.createElement('tr');
+  hdr.innerHTML = `<th class="row-header" style="min-width:180px">Account</th>` +
+    months.map(m => `<th>${monthLabels[m] || m}</th>`).join('') +
+    `<th>Total</th>`;
+  hmTable.appendChild(hdr);
+
+  heatmapData.forEach(row => {
+    const tr = document.createElement('tr');
+    const labelColor = afvColor(row.afv100);
+    const rowTotal = months.reduce((s, m) => s + (row.months[m] || 0), 0);
+    const nameTd = `<th class="row-header" style="color:${labelColor};min-width:180px;padding-right:10px;" title="${esc(row.name)}">${esc(row.name)}</th>`;
+    const cells = months.map(m => {
+      const v = row.months[m] || 0;
+      const intensity = maxVal > 0 ? v / maxVal : 0;
+      const bg = intensity > 0
+        ? `rgba(1,118,211,${(0.15 + intensity * 0.85).toFixed(2)})`
+        : '#0d2847';
+      const textColor = intensity > 0.5 ? '#ffffff' : (intensity > 0 ? '#c8d8f0' : '#556688');
+      return `<td style="background:${bg};color:${textColor};">${v > 0 ? v : ''}</td>`;
+    }).join('');
+    const totalBg = rowTotal > 0 ? `rgba(1,118,211,${Math.min(0.15 + (rowTotal/(maxVal*7))*0.85, 1).toFixed(2)})` : '#0d2847';
+    tr.innerHTML = nameTd + cells + `<td style="background:${totalBg};color:#ffffff;font-weight:700;">${rowTotal}</td>`;
+    hmTable.appendChild(tr);
+  });
+
+  </script>
+</body>
+</html>
