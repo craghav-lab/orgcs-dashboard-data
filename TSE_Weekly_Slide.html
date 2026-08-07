@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSE Weekly Review – Aug 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  .slide {
+    width: 1280px;
+    min-height: 720px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+    color: #fff;
+    padding: 18px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.3px; }
+  .header .meta { font-size: 13px; opacity: 0.85; text-align: right; line-height: 1.6; }
+  .header .meta strong { font-size: 15px; }
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    flex: 1;
+  }
+  .section {
+    border-right: 1px solid #e8eaed;
+    border-bottom: 1px solid #e8eaed;
+    padding: 14px 16px;
+  }
+  .section:nth-child(3n) { border-right: none; }
+  .section h2 {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #1a73e8;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #e8f0fe;
+  }
+  .kpi-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .kpi {
+    background: #e8f0fe;
+    border-radius: 6px;
+    padding: 6px 10px;
+    text-align: center;
+    flex: 1;
+    min-width: 60px;
+  }
+  .kpi .val { font-size: 20px; font-weight: 700; color: #1a73e8; line-height: 1.1; }
+  .kpi .lbl { font-size: 10px; color: #5f6368; margin-top: 2px; }
+  .kpi.green .val { color: #137333; }
+  .kpi.green { background: #e6f4ea; }
+  .kpi.orange .val { color: #b06000; }
+  .kpi.orange { background: #fef7e0; }
+  .kpi.red .val { color: #c5221f; }
+  .kpi.red { background: #fce8e6; }
+  ul { list-style: none; padding: 0; }
+  ul li {
+    font-size: 11.5px;
+    color: #3c4043;
+    padding: 2px 0 2px 12px;
+    position: relative;
+    line-height: 1.45;
+  }
+  ul li::before { content: '•'; position: absolute; left: 0; color: #1a73e8; font-size: 13px; }
+  ul li strong { color: #1a1a1a; }
+  .sub-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #5f6368;
+    margin: 5px 0 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { background: #e8f0fe; color: #1a73e8; font-weight: 700; padding: 4px 6px; text-align: left; }
+  td { padding: 3px 6px; color: #3c4043; border-bottom: 1px solid #f1f3f4; }
+  tr:last-child td { border-bottom: none; }
+  .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .skill-box { background: #f8f9fa; border-radius: 5px; padding: 6px 8px; }
+  .skill-box .day-label {
+    font-size: 10px; font-weight: 700; color: #1a73e8;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .pill {
+    background: #e8f0fe; color: #1a73e8; border-radius: 12px;
+    padding: 2px 8px; font-size: 10.5px; font-weight: 600;
+  }
+  .pill.green { background: #e6f4ea; color: #137333; }
+  .pill.orange { background: #fef7e0; color: #b06000; }
+  .callout-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .callout {
+    flex: 1; min-width: 80px; background: #e6f4ea;
+    border-left: 3px solid #137333; border-radius: 4px;
+    padding: 4px 7px; font-size: 11px; color: #1a1a1a; line-height: 1.35;
+  }
+  .callout.blue { background: #e8f0fe; border-left-color: #1a73e8; }
+  .callout.orange { background: #fef7e0; border-left-color: #b06000; }
+  .callout.red { background: #fce8e6; border-left-color: #c5221f; }
+  .callout .c-title { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
+  .footer {
+    background: #1a73e8; color: #fff; font-size: 10.5px;
+    padding: 6px 32px; display: flex; justify-content: space-between;
+    align-items: center; opacity: 0.9;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="header">
+    <div>
+      <h1>TSE Weekly Review — Signature Team</h1>
+      <div style="font-size:13px; margin-top:3px; opacity:0.85;">Manager: David Moruzzi &nbsp;|&nbsp; Period: August 2026</div>
+    </div>
+    <div class="meta">
+      <strong>Aug 7, 2026</strong><br>
+      Signature &amp; Premier Support<br>
+      Industry Cloud Focus
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- 1. CSAT -->
+    <div class="section">
+      <h2>CSAT</h2>
+      <div class="kpi-row">
+        <div class="kpi green"><div class="val">4.79</div><div class="lbl">Overall</div></div>
+        <div class="kpi orange"><div class="val">4.00</div><div class="lbl">Premier</div></div>
+        <div class="kpi orange"><div class="val">4.00</div><div class="lbl">Standard</div></div>
+        <div class="kpi green"><div class="val">4.88</div><div class="lbl">Signature</div></div>
+      </div>
+    </div>
+
+    <!-- 2. VOLUME & TTR -->
+    <div class="section">
+      <h2>Volume, TTR &amp; Productivity</h2>
+      <div class="kpi-row">
+        <div class="kpi"><div class="val">265</div><div class="lbl">Inflow</div></div>
+        <div class="kpi"><div class="val">264</div><div class="lbl">Closure</div></div>
+        <div class="kpi orange"><div class="val">8.68</div><div class="lbl">Ovr. TTR</div></div>
+        <div class="kpi orange"><div class="val">9.30</div><div class="lbl">SIG TTR</div></div>
+        <div class="kpi green"><div class="val">92%</div><div class="lbl">Ovr. Prod.</div></div>
+        <div class="kpi orange"><div class="val">82%</div><div class="lbl">Cls. Prod.</div></div>
+      </div>
+    </div>
+
+    <!-- 3. CROSS TRAINING -->
+    <div class="section">
+      <h2>Cross Training &amp; Additional</h2>
+      <ul>
+        <li><strong>Abhi Chohan</strong> — Onboarded: CME, EU, Media</li>
+        <li><strong>Gouse</strong> — Onboarded: CME Sev 1; Backup swarm PST</li>
+        <li><strong>Jayesh</strong> — LSC trained; case-taking all severities</li>
+        <li><strong>AI Tool:</strong> Dashboard for top SIG SA engagement accounts</li>
+        <li><strong>Aug Priority:</strong> Onboard Palavi Yadav for RCA Sev 1 &amp; reduce CPQ load; LSC training via Salesforce Go; MFA support for Sales Cloud</li>
+      </ul>
+    </div>
+
+    <!-- 4. SA ENGAGEMENT -->
+    <div class="section">
+      <h2>SA Engagement Impact</h2>
+      <div class="sub-label">Logged &amp; Engaged</div>
+      <ul>
+        <li>Cornerstone OnDemand, Inc.</li>
+        <li>DAT Solutions, LLC</li>
+        <li>Xcel Energy</li>
+      </ul>
+      <div class="sub-label">In Pipeline</div>
+      <ul>
+        <li>AT&amp;T Business — Offered; awaiting CSM response</li>
+      </ul>
+      <div class="sub-label">Denied</div>
+      <ul>
+        <li>Verizon LLC — Multiple offers declined</li>
+        <li>Bell Canada — Denied</li>
+      </ul>
+    </div>
+
+    <!-- 5. INFLOW TRENDS -->
+    <div class="section">
+      <h2>Top 5 P&amp;T Inflow Trends</h2>
+      <table>
+        <tr><th>Product / Technology</th><th style="text-align:center;">Wk 1</th><th style="text-align:center;">Wk 2</th></tr>
+        <tr><td>Industry – Life Sciences</td><td style="text-align:center;">52</td><td style="text-align:center;">53</td></tr>
+        <tr><td>Industry – OmniStudio</td><td style="text-align:center;">45</td><td style="text-align:center;">45</td></tr>
+        <tr><td>Industry – CPQ / Order Mgmt</td><td style="text-align:center;">33</td><td style="text-align:center;">33</td></tr>
+        <tr><td>Industry – Doc Generation</td><td style="text-align:center;">17</td><td style="text-align:center;">16</td></tr>
+        <tr><td>Industry – Financial Services</td><td style="text-align:center;">15</td><td style="text-align:center;">16</td></tr>
+      </table>
+    </div>
+
+    <!-- 6. ACCOUNT SIGNALS & HIGHLIGHTS -->
+    <div class="section">
+      <h2>Account Signals &amp; Highlights</h2>
+      <div class="callout-row">
+        <div class="callout blue"><div class="c-title">AT&amp;T</div>Live Jul 17 — low inflow expected</div>
+        <div class="callout blue"><div class="c-title">Williams Sonoma</div>Go-live done — low inflow</div>
+      </div>
+      <div class="sub-label" style="margin-top:8px;">Positives</div>
+      <ul>
+        <li>No escalations from the team</li>
+        <li>16 Premier + 10 Standard cases picked up during low SIG inflow</li>
+        <li>Aniruddha: 23 Marketing Cloud cases (separate count)</li>
+      </ul>
+    </div>
+
+    <!-- 7. CHALLENGES & WATCH -->
+    <div class="section">
+      <h2>Challenges &amp; Watch</h2>
+      <div class="callout orange">
+        <div class="c-title">Skill Spread Risk</div>
+        Multiple skills (RCA, CPQ, Industries CPQ, Core, HINS/OS) can place engineers on WOC simultaneously — attendance may dip on certain days per leave plan.
+      </div>
+      <div class="callout red" style="margin-top:6px;">
+        <div class="c-title">Bottom Performer</div>
+        Aniruddha Kisore Bagde — Productivity 42% (23 cases)
+      </div>
+    </div>
+
+    <!-- 8. TEAM SKILL DISTRIBUTION -->
+    <div class="section">
+      <h2>Team Skill Distribution</h2>
+      <div class="skill-grid">
+        <div class="skill-box">
+          <div class="day-label">Weekday</div>
+          <div class="pills">
+            <span class="pill">HINS/OS ×2</span>
+            <span class="pill">RCA ×3</span>
+            <span class="pill">CPQ ×1</span>
+            <span class="pill green">Core ×4</span>
+            <span class="pill orange">Ind. CPQ ×2</span>
+          </div>
+        </div>
+        <div class="skill-box">
+          <div class="day-label">Weekend</div>
+          <div class="pills">
+            <span class="pill">HINS/OS ×4</span>
+            <span class="pill">RCA ×3</span>
+            <span class="pill">CPQ ×1</span>
+            <span class="pill green">Core ×2</span>
+            <span class="pill orange">Ind. CPQ ×2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. EMPTY / FUTURE USE -->
+    <div class="section" style="background:#fafafa;">
+      <h2>Notes</h2>
+      <ul>
+        <li>Inflow vs. Closure near-balanced (265 vs. 264) — healthy queue management</li>
+        <li>SIG CSAT (4.88) significantly above Premier/Standard (4.00)</li>
+        <li>SIG TTR (9.30) slightly above overall TTR (8.68) — monitor trend</li>
+        <li>Life Sciences &amp; OmniStudio remain the dominant inflow drivers</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>Signature Support | Industry Cloud — David Moruzzi</span>
+    <span>CSAT: 4.79 Overall &nbsp;|&nbsp; 4.88 SIG &nbsp;|&nbsp; Productivity: 92% Overall / 82% Closure</span>
+    <span>August 7, 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
