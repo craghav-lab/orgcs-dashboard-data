@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chaten's Team Weekly – Aug 2–8, 2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Google Sans','Segoe UI',Arial,sans-serif;background:#e8eaed;
+     display:flex;justify-content:center;padding:16px;}
+.slide{width:1280px;background:#fff;border-radius:6px;
+       box-shadow:0 4px 20px rgba(0,0,0,.18);overflow:hidden;display:flex;flex-direction:column;}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#0b5225,#137333);color:#fff;
+     padding:10px 28px;display:flex;justify-content:space-between;align-items:center;}
+.hdr h1{font-size:20px;font-weight:700;}
+.hdr .sub{font-size:11px;margin-top:3px;opacity:.85;}
+.hdr .right{font-size:10px;text-align:right;opacity:.85;line-height:1.7;}
+
+/* BANNER */
+.banner{background:#e6f4ea;border-left:5px solid #137333;
+        padding:5px 20px;font-size:10px;font-weight:700;color:#0b5225;text-align:center;}
+
+/* KPI STRIP */
+.kpi-strip{background:#f8f9fa;padding:6px 10px;display:flex;gap:0;border-bottom:1px solid #e0e0e0;}
+.kpi-group{display:flex;flex-direction:column;padding:0 8px;}
+.kpi-group:not(:last-child){border-right:1px solid #dadce0;}
+.kg-label{font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+          color:#137333;background:#e6f4ea;border-radius:3px;padding:2px 6px;margin-bottom:5px;
+          text-align:center;}
+.kpi-tiles{display:flex;gap:5px;}
+.kpi{border-radius:5px;padding:5px 8px;text-align:center;min-width:62px;}
+.kpi .v{font-size:18px;font-weight:800;line-height:1;}
+.kpi .l{font-size:8px;color:#5f6368;margin-top:2px;}
+.kpi .s{font-size:7.5px;color:#80868b;}
+.gold{background:#fff8e1;} .gold .v{color:#7b5800;}
+.blue{background:#e8f0fe;} .blue .v{color:#1a73e8;}
+.green{background:#e6f4ea;} .green .v{color:#137333;}
+.orange{background:#fef7e0;} .orange .v{color:#b06000;}
+
+/* BODY */
+.body{display:grid;grid-template-columns:1fr 1fr 1fr;flex:1;}
+.col{border-right:1px solid #dadce0;display:flex;flex-direction:column;}
+.col:last-child{border-right:none;}
+.sec{flex:1;padding:8px 12px;border-bottom:1px solid #f1f3f4;}
+.sec:last-child{border-bottom:none;}
+.sec h3{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+        color:#137333;background:#e6f4ea;border-radius:3px;padding:2px 7px;
+        margin-bottom:7px;display:inline-block;}
+ul{list-style:none;}
+ul li{font-size:10px;color:#3c4043;padding:2px 0 2px 11px;position:relative;line-height:1.4;}
+ul li::before{content:'•';position:absolute;left:0;color:#137333;font-size:11px;}
+ul li strong{color:#1a1a1a;}
+.lbl{font-size:9px;font-weight:700;color:#5f6368;text-transform:uppercase;
+     letter-spacing:.4px;margin:5px 0 2px;}
+
+/* Inflow rows */
+.irow{padding:4px 6px;margin-bottom:3px;border-radius:4px;}
+.irow:nth-child(odd){background:#f8f9fa;}
+.irow-top{display:flex;justify-content:space-between;align-items:center;}
+.irow-name{font-size:10px;font-weight:700;color:#1a1a1a;}
+.badge{border-radius:4px;padding:1px 7px;font-size:9px;font-weight:800;color:#fff;}
+.bar-bg{background:#e8eaed;border-radius:3px;height:5px;margin:3px 0 2px;}
+.bar{height:5px;border-radius:3px;}
+.note{font-size:8.5px;color:#5f6368;line-height:1.35;}
+
+/* Account cards */
+.acct{border-radius:4px;margin-bottom:5px;overflow:hidden;display:flex;}
+.acct-bar{width:5px;flex-shrink:0;}
+.acct-body{padding:5px 8px;flex:1;}
+.acct-name{font-size:10px;font-weight:700;margin-bottom:2px;}
+.acct-detail{font-size:8.5px;color:#3c4043;line-height:1.4;}
+
+/* Positives */
+.pos-item{display:flex;gap:5px;padding:2px 0;font-size:10px;color:#3c4043;line-height:1.4;}
+.pos-icon{color:#137333;font-weight:700;flex-shrink:0;}
+
+/* Footer */
+.footer{background:#137333;color:#fff;font-size:8.5px;padding:5px 20px;
+        display:flex;justify-content:space-between;align-items:center;}
+</style>
+</head>
+<body>
+<div class="slide">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <h1>Chaten's Team — Weekly Updates</h1>
+    <div class="sub">2nd August to 8th August 2026</div>
+  </div>
+  <div class="right">Aug 8, 2026<br>SIG · Premier · Standard · Industry Cloud</div>
+</div>
+
+<!-- BANNER -->
+<div class="banner">
+  ⭐ &nbsp;PERFECT WEEK — CSAT 5.0 All Tiers &nbsp;|&nbsp; 0% Escalations &nbsp;|&nbsp; 0% SLA Miss &nbsp;|&nbsp; 119% Overall Productivity&nbsp; ⭐
+</div>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi-group" style="flex:2.4">
+    <div class="kg-label">CSAT (Survey Count)</div>
+    <div class="kpi-tiles">
+      <div class="kpi gold"><div class="v">5.0</div><div class="l">Overall</div><div class="s">n=8</div></div>
+      <div class="kpi gold"><div class="v">5.0</div><div class="l">Premier</div><div class="s">n=4</div></div>
+      <div class="kpi gold"><div class="v">5.0</div><div class="l">Standard</div><div class="s">n=3</div></div>
+      <div class="kpi gold"><div class="v">5.0</div><div class="l">Signature</div><div class="s">n=1</div></div>
+    </div>
+  </div>
+  <div class="kpi-group" style="flex:2">
+    <div class="kg-label">Volume &amp; SLA</div>
+    <div class="kpi-tiles">
+      <div class="kpi blue"><div class="v">78</div><div class="l">Inflow</div></div>
+      <div class="kpi blue"><div class="v">76</div><div class="l">Capacity</div></div>
+      <div class="kpi green"><div class="v">88</div><div class="l">Closure</div></div>
+      <div class="kpi green"><div class="v">0%</div><div class="l">Esc</div></div>
+      <div class="kpi green"><div class="v">0%</div><div class="l">SLA Miss</div></div>
+    </div>
+  </div>
+  <div class="kpi-group" style="flex:1.7">
+    <div class="kg-label">TTR &amp; Productivity</div>
+    <div class="kpi-tiles">
+      <div class="kpi orange"><div class="v">8.11</div><div class="l">Ovr. TTR</div></div>
+      <div class="kpi orange"><div class="v">8.38</div><div class="l">SIG TTR</div></div>
+      <div class="kpi green"><div class="v">119%</div><div class="l">Ovr. Prod.</div></div>
+      <div class="kpi green"><div class="v">109%</div><div class="l">Cls. Prod.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body">
+
+  <!-- COL 1: PRIORITIES + POSITIVES -->
+  <div class="col">
+    <div class="sec">
+      <h3>Priorities</h3>
+      <ul>
+        <li><strong>Team Collaboration:</strong> Work in collaboration with new team members.</li>
+        <li><strong>Skill Enhancement:</strong> Onboard Pallavi Yadav for RCA Sev 1 and reduce CPQ load.</li>
+        <li><strong>Training:</strong> LSC installation training via Salesforce Go (success guide support if required).</li>
+        <li><strong>MFA Cases:</strong> Provide support to Sales Cloud by picking MFA cases.</li>
+      </ul>
+    </div>
+    <div class="sec">
+      <h3>Positives &amp; Highlights</h3>
+      <div class="pos-item"><span class="pos-icon">✓</span><span>No escalations from the team</span></div>
+      <div class="pos-item"><span class="pos-icon">✓</span><span><strong>19 Premier cases</strong> picked up proactively during low SIG inflow</span></div>
+      <div class="pos-item"><span class="pos-icon">✓</span><span><strong>11 Sales Security cases</strong> additionally picked up</span></div>
+      <div class="pos-item"><span class="pos-icon">✓</span><span>Aniruddha: 9 Mktg Cloud (3 Premier + 6 Standard — separate count)</span></div>
+      <div class="pos-item"><span class="pos-icon">✓</span><span>Closure (88) exceeded Inflow (78) — backlog cleared</span></div>
+      <div class="pos-item"><span class="pos-icon">✓</span><span>Overall productivity <strong>119%</strong> — team above target</span></div>
+    </div>
+  </div>
+
+  <!-- COL 2: INFLOW TRENDS -->
+  <div class="col">
+    <div class="sec" style="flex:unset;height:100%;">
+      <h3>Top 5 P&amp;T Inflow Trends</h3>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">OmniStudio</span>
+          <span class="badge" style="background:#1a73e8;">23</span>
+        </div>
+        <div class="bar-bg"><div class="bar" style="width:100%;background:#1a73e8;"></div></div>
+        <div class="note">FlexCard/OmniScript data issues, Data Mapper errors, picklist errors, lookup &amp; merge field errors, component setup &amp; access issues</div>
+      </div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">Life Sciences</span>
+          <span class="badge" style="background:#137333;">15</span>
+        </div>
+        <div class="bar-bg"><div class="bar" style="width:65%;background:#137333;"></div></div>
+        <div class="note">Activity Plan errors, Map Pin issues, Sample Transfer errors, general UI/Display issues</div>
+      </div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">Industry CPQ (Comm. Cloud)</span>
+          <span class="badge" style="background:#b06000;">7</span>
+        </div>
+        <div class="bar-bg"><div class="bar" style="width:30%;background:#b06000;"></div></div>
+      </div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">FSC</span>
+          <span class="badge" style="background:#b06000;">6</span>
+        </div>
+        <div class="bar-bg"><div class="bar" style="width:26%;background:#b06000;"></div></div>
+        <div class="note">Object access related questions</div>
+      </div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">RCA (Configurator)</span>
+          <span class="badge" style="background:#5f6368;">5</span>
+        </div>
+        <div class="bar-bg"><div class="bar" style="width:22%;background:#5f6368;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COL 3: ACCOUNT SIGNALS -->
+  <div class="col">
+    <div class="sec" style="flex:unset;height:100%;">
+      <h3>Account Signals</h3>
+
+      <div class="acct" style="background:#e6f4ea;">
+        <div class="acct-bar" style="background:#137333;"></div>
+        <div class="acct-body">
+          <div class="acct-name" style="color:#137333;">Claro</div>
+          <div class="acct-detail">Recommendations shared with PS team — customer will be onboarded on improvements. CSM follow-up on Slack pending; case to close after CSM confirmation.</div>
+        </div>
+      </div>
+
+      <div class="acct" style="background:#fef7e0;">
+        <div class="acct-bar" style="background:#f9ab00;"></div>
+        <div class="acct-body">
+          <div class="acct-name" style="color:#b06000;">Veeam &nbsp;🔴 Running Hot</div>
+          <div class="acct-detail">Meeting scheduled to work on transactional issues. Customer running hot due to multiple implementation issues. RCA SA is engaged.</div>
+        </div>
+      </div>
+
+      <div class="acct" style="background:#e8f0fe;">
+        <div class="acct-bar" style="background:#1a73e8;"></div>
+        <div class="acct-body">
+          <div class="acct-name" style="color:#1a73e8;">Pfizer</div>
+          <div class="acct-detail">Event monitoring cases open — new alignment needs to be clarified with Harish Raja by @tushar. Follow-up call scheduled for tomorrow.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end body -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Chaten's Team &nbsp;|&nbsp; Signature &amp; Premier Support &nbsp;|&nbsp; Industry Cloud</span>
+  <span>CSAT 5.0 All Tiers &nbsp;|&nbsp; Prod 119%/109% &nbsp;|&nbsp; Esc 0% &nbsp;|&nbsp; SLA Miss 0% &nbsp;|&nbsp; TTR 8.11 / SIG 8.38</span>
+  <span>Aug 2 – 8, 2026</span>
+</div>
+
+</div>
+</body>
+</html>
