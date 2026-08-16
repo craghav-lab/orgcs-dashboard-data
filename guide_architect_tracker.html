@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Signature Case Review — Guide & Architect Dashboard</title>
+<style>
+/* ── Design tokens ── */
+:root {
+  --surface-1:      #fcfcfb;
+  --surface-2:      #f9f9f7;
+  --surface-card:   #ffffff;
+  --text-primary:   #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted:     #898781;
+  --grid:           #e1e0d9;
+  --baseline:       #c3c2b7;
+  --border:         rgba(11,11,11,0.10);
+  --series-1:       #2a78d6;   /* blue   — Architect */
+  --series-2:       #eb6834;   /* orange — Guide */
+  --series-3:       #1baf7a;   /* aqua   — Accepted */
+  --series-4:       #eda100;   /* yellow — Declined */
+  --series-8:       #e34948;   /* red    — Escalated */
+  --status-good:    #0ca30c;
+  --status-warn:    #fab219;
+  --status-serious: #ec835a;
+  --status-crit:    #d03b3b;
+  --shadow:         0 1px 3px rgba(11,11,11,0.08), 0 1px 2px rgba(11,11,11,0.06);
+}
+[data-theme="dark"] {
+  --surface-1:      #1a1a19;
+  --surface-2:      #0d0d0d;
+  --surface-card:   #222221;
+  --text-primary:   #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted:     #898781;
+  --grid:           #2c2c2a;
+  --baseline:       #383835;
+  --border:         rgba(255,255,255,0.10);
+  --series-1:       #3987e5;
+  --series-2:       #d95926;
+  --series-3:       #199e70;
+  --series-4:       #c98500;
+  --series-8:       #e66767;
+  --status-good:    #0ca30c;
+  --status-warn:    #fab219;
+  --status-serious: #ec835a;
+  --status-crit:    #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --surface-1:    #1a1a19;
+    --surface-2:    #0d0d0d;
+    --surface-card: #222221;
+    --text-primary: #ffffff;
+    --text-secondary:#c3c2b7;
+    --grid:         #2c2c2a;
+    --baseline:     #383835;
+    --border:       rgba(255,255,255,0.10);
+    --series-1:     #3987e5;
+    --series-2:     #d95926;
+    --series-3:     #199e70;
+    --series-4:     #c98500;
+    --series-8:     #e66767;
+  }
+}
+
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--surface-2);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* ── Layout ── */
+.app-header {
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--grid);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.app-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-header .badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--series-1);
+  color: #fff;
+}
+.header-actions { display: flex; align-items: center; gap: 12px; }
+
+/* Theme toggle */
+.theme-btn {
+  width: 32px; height: 32px;
+  border: 1px solid var(--grid);
+  border-radius: 6px;
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: background 0.15s;
+}
+.theme-btn:hover { background: var(--grid); }
+
+.slack-link {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px;
+  color: var(--series-1);
+  text-decoration: none;
+  font-weight: 500;
+}
+.slack-link:hover { text-decoration: underline; }
+
+/* ── Filter bar ── */
+.filter-bar {
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--grid);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.filter-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-right: 4px; }
+.filter-group { display: flex; align-items: center; gap: 4px; }
+.filter-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--grid);
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  font-family: inherit;
+}
+.filter-btn:hover { background: var(--grid); }
+.filter-btn.active {
+  background: var(--series-1);
+  border-color: var(--series-1);
+  color: #fff;
+  font-weight: 600;
+}
+.filter-sep { width: 1px; height: 20px; background: var(--grid); margin: 0 4px; }
+select.filter-select {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--grid);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+}
+select.filter-select:focus { border-color: var(--series-1); }
+
+/* ── Main content ── */
+.main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+/* KPI row */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--surface-card);
+  border: 1px solid var(--grid);
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+.kpi-card.k-total::before  { background: var(--series-1); }
+.kpi-card.k-arch::before   { background: var(--series-1); }
+.kpi-card.k-guide::before  { background: var(--series-2); }
+.kpi-card.k-accept::before { background: var(--status-good); }
+.kpi-card.k-decline::before{ background: var(--status-crit); }
+.kpi-card.k-await::before  { background: var(--status-warn); }
+.kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.kpi-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.kpi-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.kpi-delta {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.kpi-delta.up   { color: var(--status-good); }
+.kpi-delta.warn { color: var(--status-warn); }
+
+/* Chart grid */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.chart-grid.wide { grid-template-columns: 2fr 1fr; }
+@media (max-width: 900px) {
+  .chart-grid, .chart-grid.wide { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+  background: var(--surface-card);
+  border: 1px solid var(--grid);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.chart-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.legend-swatch {
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.legend-line {
+  width: 18px; height: 2px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* SVG charts */
+svg { display: block; overflow: visible; }
+.axis-text {
+  font-size: 11px;
+  fill: var(--text-muted);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.grid-line { stroke: var(--grid); stroke-width: 1; }
+.baseline-line { stroke: var(--baseline); stroke-width: 1; }
+.bar-rect { cursor: pointer; transition: filter 0.1s; }
+.bar-rect:hover { filter: brightness(1.12); }
+.tooltip-anchor { position: relative; }
+
+/* Tooltip */
+.viz-tooltip {
+  position: fixed;
+  background: var(--surface-card);
+  border: 1px solid var(--grid);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--text-primary);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+  pointer-events: none;
+  z-index: 999;
+  max-width: 220px;
+  display: none;
+}
+.viz-tooltip.visible { display: block; }
+.tt-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+.tt-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.tt-swatch { width: 10px; height: 2px; border-radius: 1px; flex-shrink: 0; }
+.tt-name  { color: var(--text-secondary); flex: 1; }
+.tt-val   { font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+/* Table view */
+.table-toggle {
+  font-size: 11px;
+  color: var(--series-1);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  margin-top: 10px;
+  text-decoration: underline;
+}
+.table-view {
+  display: none;
+  margin-top: 12px;
+  border-top: 1px solid var(--grid);
+  padding-top: 12px;
+}
+.table-view.open { display: block; }
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.data-table th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px 8px;
+  border-bottom: 1px solid var(--grid);
+  font-variant-numeric: tabular-nums;
+}
+.data-table td {
+  padding: 6px 8px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--grid);
+  font-variant-numeric: tabular-nums;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.dot-cell { display: flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Cases table ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.section-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.cases-card {
+  background: var(--surface-card);
+  border: 1px solid var(--grid);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--grid);
+  padding: 0 20px;
+  background: var(--surface-1);
+}
+.tab-btn {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.12s;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--series-1);
+  font-weight: 600;
+}
+.tab-count {
+  font-size: 11px;
+  background: var(--grid);
+  color: var(--text-secondary);
+  border-radius: 10px;
+  padding: 1px 6px;
+}
+.tab-btn.active .tab-count {
+  background: var(--series-1);
+  color: #fff;
+}
+
+.table-container { overflow-x: auto; }
+.cases-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.cases-table th {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--grid);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.cases-table th.sortable { cursor: pointer; user-select: none; }
+.cases-table th.sortable:hover { color: var(--text-primary); }
+.cases-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--grid);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+.cases-table tr:last-child td { border-bottom: none; }
+.cases-table tr:hover td { background: var(--surface-1); }
+
+.case-link {
+  color: var(--series-1);
+  text-decoration: none;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.case-link:hover { text-decoration: underline; }
+.account-name { color: var(--text-primary); font-weight: 500; }
+.subject-text {
+  color: var(--text-secondary);
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.csm-name { color: var(--text-secondary); }
+
+/* Status badges */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-sent     { background: rgba(42,120,214,0.12); color: var(--series-1); }
+.badge-accepted { background: rgba(12,163,12,0.12);  color: var(--status-good); }
+.badge-declined { background: rgba(208,59,59,0.12);  color: var(--status-crit); }
+.badge-escalated{ background: rgba(250,178,25,0.12); color: #b07c00; }
+.badge-awaiting { background: rgba(236,131,90,0.12); color: #a04c1f; }
+.badge-premier  {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(250,178,25,0.15);
+  color: #8a5a00;
+  margin-left: 4px;
+}
+.type-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.type-arch  { background: rgba(42,120,214,0.10); color: var(--series-1); }
+.type-guide { background: rgba(235,104,52,0.10); color: var(--series-2); }
+
+.reasoning-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid var(--grid);
+  background: var(--surface-1);
+}
+.page-info { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.page-btns { display: flex; gap: 4px; }
+.page-btn {
+  width: 28px; height: 28px;
+  border: 1px solid var(--grid);
+  border-radius: 6px;
+  background: var(--surface-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s;
+  font-family: inherit;
+}
+.page-btn:hover { background: var(--grid); }
+.page-btn.active {
+  background: var(--series-1);
+  border-color: var(--series-1);
+  color: #fff;
+  font-weight: 600;
+}
+.page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── Summary footer ── */
+.summary-footer {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px 0 32px;
+}
+.summary-footer a { color: var(--series-1); }
+</style>
+</head>
+<body>
+
+<!-- Tooltip (shared) -->
+<div class="viz-tooltip" id="viz-tooltip">
+  <div class="tt-label" id="tt-label"></div>
+  <div id="tt-rows"></div>
+</div>
+
+<!-- ── Header ── -->
+<header class="app-header">
+  <h1>
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M9 5v4l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    Signature Case Review
+    <span class="badge">Live</span>
+  </h1>
+  <div class="header-actions">
+    <a class="slack-link" href="https://salesforce.enterprise.slack.com/archives/C0BQDSRL5HB" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M5.5 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 0V5.5a1.5 1.5 0 1 1 3 0V7m-3 3h5.5m0 0a1.5 1.5 0 1 0 3 0V7a1.5 1.5 0 1 0-3 0v3Zm0 0v4.5a1.5 1.5 0 1 1-3 0V10"/>
+      </svg>
+      #guide-architect-recommendations
+    </a>
+    <a class="slack-link" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ29RLCH5" target="_blank">
+      📄 Canvas Tracker
+    </a>
+    <button class="theme-btn" id="themeBtn" title="Toggle dark mode">🌙</button>
+  </div>
+</header>
+
+<!-- ── Filter bar ── -->
+<div class="filter-bar">
+  <span class="filter-label">Window:</span>
+  <div class="filter-group">
+    <button class="filter-btn active" data-window="7">Last 7 days</button>
+    <button class="filter-btn" data-window="14">14 days</button>
+    <button class="filter-btn" data-window="30">30 days</button>
+  </div>
+  <div class="filter-sep"></div>
+  <span class="filter-label">Type:</span>
+  <div class="filter-group">
+    <button class="filter-btn active" data-type="all">All</button>
+    <button class="filter-btn" data-type="Architect">Architect</button>
+    <button class="filter-btn" data-type="Guide">Guide</button>
+  </div>
+  <div class="filter-sep"></div>
+  <span class="filter-label">Status:</span>
+  <select class="filter-select" id="statusFilter">
+    <option value="all">All statuses</option>
+    <option value="Sent">Sent</option>
+    <option value="Accepted">Accepted</option>
+    <option value="Declined">Declined</option>
+    <option value="Awaiting">Awaiting</option>
+    <option value="Escalated">Escalated</option>
+  </select>
+</div>
+
+<!-- ── Main ── -->
+<main class="main">
+
+  <!-- KPI row -->
+  <div class="kpi-row">
+    <div class="kpi-card k-total">
+      <div class="kpi-label">Reviewed</div>
+      <div class="kpi-value" id="kpi-total">121</div>
+      <div class="kpi-sub">cases this week</div>
+    </div>
+    <div class="kpi-card k-arch">
+      <div class="kpi-label">Architect</div>
+      <div class="kpi-value" id="kpi-arch">16</div>
+      <div class="kpi-sub">recommendations</div>
+    </div>
+    <div class="kpi-card k-guide">
+      <div class="kpi-label">Guide</div>
+      <div class="kpi-value" id="kpi-guide">16</div>
+      <div class="kpi-sub">recommendations</div>
+    </div>
+    <div class="kpi-card k-accept">
+      <div class="kpi-label">Accepted</div>
+      <div class="kpi-value" id="kpi-accept">0</div>
+      <div class="kpi-sub">of 32 total</div>
+      <div class="kpi-delta warn" id="kpi-accept-rate">0% acceptance</div>
+    </div>
+    <div class="kpi-card k-decline">
+      <div class="kpi-label">Declined</div>
+      <div class="kpi-value" id="kpi-decline">0</div>
+      <div class="kpi-sub">of 32 total</div>
+    </div>
+    <div class="kpi-card k-await">
+      <div class="kpi-label">Awaiting</div>
+      <div class="kpi-value" id="kpi-await">32</div>
+      <div class="kpi-sub">pending response</div>
+    </div>
+  </div>
+
+  <!-- Charts row 1 -->
+  <div class="chart-grid wide">
+
+    <!-- Bar chart: Classification breakdown -->
+    <div class="chart-card">
+      <div class="chart-title">Classification Breakdown</div>
+      <div class="chart-sub">Cases reviewed this window by category</div>
+      <div class="legend" id="breakdown-legend"></div>
+      <div class="tooltip-anchor">
+        <svg id="breakdown-chart" width="100%" height="220"></svg>
+      </div>
+      <button class="table-toggle" onclick="toggleTable('breakdown-table')">Show data table</button>
+      <div class="table-view" id="breakdown-table">
+        <table class="data-table">
+          <thead><tr><th>Category</th><th>Count</th><th>Share</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dot-cell"><span class="dot" style="background:var(--series-1)"></span>Architect</span></td><td>16</td><td>13.2%</td></tr>
+            <tr><td><span class="dot-cell"><span class="dot" style="background:var(--series-2)"></span>Guide</span></td><td>16</td><td>13.2%</td></tr>
+            <tr><td><span class="dot-cell"><span class="dot" style="background:var(--text-muted)"></span>Neither</span></td><td>82</td><td>67.8%</td></tr>
+            <tr><td><span class="dot-cell"><span class="dot" style="background:var(--series-4)"></span>Unclear</span></td><td>7</td><td>5.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Donut: Response status -->
+    <div class="chart-card">
+      <div class="chart-title">Response Status</div>
+      <div class="chart-sub">32 cards posted — awaiting action</div>
+      <div class="legend" id="status-legend"></div>
+      <svg id="status-chart" width="100%" height="220" viewBox="0 0 260 220"></svg>
+      <button class="table-toggle" onclick="toggleTable('status-table')">Show data table</button>
+      <div class="table-view" id="status-table">
+        <table class="data-table">
+          <thead><tr><th>Status</th><th>Count</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dot-cell"><span class="dot" style="background:var(--series-1)"></span>Sent / Awaiting</span></td><td>32</td></tr>
+            <tr><td><span class="dot-cell"><span class="dot" style="background:var(--status-good)"></span>Accepted</span></td><td>0</td></tr>
+            <tr><td><span class="dot-cell"><span class="dot" style="background:var(--status-crit)"></span>Declined</span></td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts row 2 -->
+  <div class="chart-grid">
+
+    <!-- Horizontal bar: Top accounts -->
+    <div class="chart-card">
+      <div class="chart-title">Top Accounts by Flagged Cases</div>
+      <div class="chart-sub">Accounts with Architect or Guide recommendations</div>
+      <svg id="accounts-chart" width="100%" height="260"></svg>
+      <button class="table-toggle" onclick="toggleTable('accounts-table')">Show data table</button>
+      <div class="table-view" id="accounts-table">
+        <table class="data-table">
+          <thead><tr><th>Account</th><th>Architect</th><th>Guide</th></tr></thead>
+          <tbody id="accounts-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bar: Taxonomy breakdown -->
+    <div class="chart-card">
+      <div class="chart-title">Taxonomy Distribution</div>
+      <div class="chart-sub">Flagged cases by product area</div>
+      <div class="legend" id="tax-legend"></div>
+      <svg id="tax-chart" width="100%" height="260"></svg>
+      <button class="table-toggle" onclick="toggleTable('tax-table')">Show data table</button>
+      <div class="table-view" id="tax-table">
+        <table class="data-table">
+          <thead><tr><th>Area</th><th>Architect</th><th>Guide</th></tr></thead>
+          <tbody id="tax-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Cases table ── -->
+  <div class="cases-card">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="all">
+        All Flagged <span class="tab-count" id="tab-all-count">32</span>
+      </button>
+      <button class="tab-btn" data-tab="Architect">
+        Architect <span class="tab-count" id="tab-arch-count">16</span>
+      </button>
+      <button class="tab-btn" data-tab="Guide">
+        Guide <span class="tab-count" id="tab-guide-count">16</span>
+      </button>
+    </div>
+
+    <div class="table-container">
+      <table class="cases-table">
+        <thead>
+          <tr>
+            <th>Case #</th>
+            <th>Account</th>
+            <th>Subject</th>
+            <th>Type</th>
+            <th>CSM / Recipient</th>
+            <th>Status</th>
+            <th>Reasoning</th>
+          </tr>
+        </thead>
+        <tbody id="cases-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <div class="page-info" id="page-info">Showing 1–16 of 32</div>
+      <div class="page-btns">
+        <button class="page-btn" id="prev-btn" onclick="changePage(-1)" disabled>‹</button>
+        <button class="page-btn active" id="page-1" onclick="goPage(1)">1</button>
+        <button class="page-btn" id="page-2" onclick="goPage(2)">2</button>
+        <button class="page-btn" id="next-btn" onclick="changePage(1)">›</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-footer">
+    Run: Aug 16 2026 · Org: Primary · Window: Last 7 days · 121 cases reviewed · Slack corroboration: not run ·
+    <a href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ29RLCH5" target="_blank">Canvas tracker</a> ·
+    Next run: Aug 23 2026
+  </div>
+</main>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────
+const CASES = [
+  // ARCHITECT (16)
+  {num:"474382900",id:"500hi000003hloLAAQ",account:"Five9 Inc.",subject:"Behavioral differences between UAT and Production",type:"Architect",csm:"Matthew O'Connor",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom Apex trigger (QuoteLineTrigger) and Batch Apex behaving differently across environments"},
+  {num:"474375762",id:"500hi000003eF54AAE",account:"KnowBe4, Inc",subject:"Error trying to Amend contracts",type:"Architect",csm:"Meghan Malone",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom flows 'CPQ_Quote_Automation' failing on contract amendment"},
+  {num:"474374974",id:"500hi000003e2J7AAI",account:"ADT LLC",subject:"Audit Results - Segregation of Duties (SOD)",type:"Architect",csm:"Elizabeth Music",status:"Sent",taxonomy:"Revenue - Salesforce Billing",reasoning:"SOD remediation design across approvals, sales orders, and billing entitlements"},
+  {num:"474373451",id:"500hi000003dQNWAA2",account:"Top Golf USA, Inc.",subject:"CPQ Apex Heap Size Limit Violations (ATHR Finding)",type:"Architect",csm:"Cynthia Dillard-Rodgers",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"ATHR-identified Apex heap size violations — architecture review for CPQ performance at scale"},
+  {num:"474368830",id:"500hi000003bMhOAAU",account:"PostNL Holding BV",subject:"Validation rule on Quote Line Item",type:"Architect",csm:"Courtenay Spry",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Architecture guidance: validation rule vs Flow vs Apex trigger on QLIs post-approval"},
+  {num:"474364170",id:"500hi000003ZMS9AAO",account:"Arthur J. Gallagher & Co.",subject:"Queries about Decision Explainers / Passing values between procedures",type:"Architect",csm:"Tiffanie Kott",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Designing workarounds for pricing procedure plan limitations and cross-procedure value passing"},
+  {num:"474362023",id:"500hi000003YnMXAA0",account:"Laboratory Corporation",subject:"Revenue Cloud - Clone with QLI QTY Issue - Intermittent",type:"Architect",csm:"Clifford Chen",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom Apex 'Clone with QLI' button setting quantities to random large or negative numbers"},
+  {num:"474314620",id:"500hi000003WLpBAAW",account:"Equinix, Inc. ⚠️",subject:"Issue updating Offering Attributes through Apex Class",type:"Architect",csm:"Michelle Grossman",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom Apex class updating Offering Attributes not working — Premier account flag",premier:true},
+  {num:"474313310",id:"500hi000003VZPaAAO",account:"Gallagher Affinity",subject:"Move Quote Net Price Calculation from Start Date to Effective Date",type:"Architect",csm:"Sharon Bartol",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom context definition 'AJGInsuranceContext' mapping different date fields for net price"},
+  {num:"474303814",id:"500hi000003TronAAC",account:"Bell Canada",subject:"Mapping OrderItemDetail custom fields during assetization",type:"Architect",csm:"Tintu Jacob Shaji",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Custom field mapping through extended Sales Transaction context definition for assetization"},
+  {num:"474302621",id:"500hi000003TSNNAA4",account:"Anaplan, Inc.",subject:"CPQ fields not getting updated via Google ADK agent",type:"Architect",csm:"Matthew O'Connor",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom REST API integration for Google ADK agent to insert quote lines and trigger CPQ calc"},
+  {num:"474301712",id:"500hi000003T5x3AAC",account:"Baxter - Hillrom",subject:"CML Activation Error and Production Deployment Approach",type:"Architect",csm:"Tori Ciotoli",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"CML deployment architecture from SIT to Production — troubleshooting and approach design"},
+  {num:"474296737",id:"500hi000003Qg8LAAS",account:"Indeed, Inc",subject:"CPQ: Currency mismatch error",type:"Architect",csm:"John McIntyre",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom flow 'Flow Trigger: Update Ordered Field' failing on SBQQ__Quote__c records"},
+  {num:"474296030",id:"500hi000003QOplAAG",account:"Arthur J. Gallagher & Co.",subject:"Request for Custom Indexing of Quote, QLI, and OLI Fields",type:"Architect",csm:"Tiffanie Kott",status:"Sent",taxonomy:"Revenue Cloud - Usage & Ratings",reasoning:"Custom database indexes for fields used by Apex classes at growing data volumes"},
+  {num:"474291107",id:"500hi000003OOibAAG",account:"InformaOne",subject:"Post Hook not updating QuoteLineItem field values",type:"Architect",csm:"Martin Cowton",status:"Sent",taxonomy:"Revenue Cloud - Developer Support",reasoning:"Custom Post Hook implementation not populating QLI fields from Attributes"},
+  {num:"474289852",id:"500hi000003NrGPAA0",account:"Siemens Corp.",subject:"Attribute Values Revert After Apex Calculation During Service Config",type:"Architect",csm:"Jürgen Förster",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom LWC + Procedure Plan PreHooks + Apex causing attribute values to revert"},
+  // GUIDE (16)
+  {num:"474384379",id:"500hi000003iSOfAAM",account:"Equinix, Inc.",subject:"Order Item Action Behavior",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Asking how Amend vs No Change Order Item Action works — feature-usage clarification"},
+  {num:"474384093",id:"500hi000003iItxAAE",account:"Bluebeam Inc",subject:"RCA Bundle Use Cases and Questions",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Catalog Management",reasoning:"How-to questions about RCA bundle configuration — first time setting up bundles"},
+  {num:"474379504",id:"500hi000003gLxZAAU",account:"Cummins",subject:"RCA Enablement: Qualification Rules",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Explicit request for enablement session on Qualification Rules in Revenue Cloud"},
+  {num:"474379262",id:"500hi000003gFAbAAM",account:"Tebra",subject:"RCA Learning Sessions: Product Qualification Rules Session 1",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Weekly ARM training series covering RCA/RCB — pure enablement/feature-learning engagement"},
+  {num:"474376732",id:"500hi000003ey5NAAQ",account:"ADT LLC",subject:"Revenue: Renewals and Amendments",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce Subscription Management",reasoning:"Understanding end-to-end post-sales flow: amendments, renewals, cancellations"},
+  {num:"474375177",id:"500hi000003daLHAAY",account:"Bell Canada",subject:"External client app secret after new sandbox created",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Catalog Management",reasoning:"Best-practice guidance on handling external client app secrets after sandbox creation"},
+  {num:"474375174",id:"500hi000003e6hhAAA",account:"WP Engine, Inc",subject:"ARM: Contracting/Quoting Process Review",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce Contracts",reasoning:"Understanding OOTB quoting/contracting process including mid-term upgrades and credits"},
+  {num:"474375001",id:"500hi000003e2qzAAA",account:"Mitratech",subject:"Amendment behavior — editing list price on existing subs",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Feature clarification: expected amendment behavior around list price editing"},
+  {num:"474372233",id:"500hi000003d0EXAAY",account:"PowerSchool Group LLC",subject:"Best Practice — Structuring Opportunities for Reseller Transactions",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Explicit best-practice request for Opportunity structure, Bill-To, Signatory for resellers"},
+  {num:"474371932",id:"500hi000003cswvAAA",account:"S&P Global, Inc.",subject:"DPE Writeback — custom profile permissions",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Usage & Ratings",reasoning:"Asking whether custom profile users can be configured in DPE Writeback and what permissions"},
+  {num:"474312905",id:"500hi000003VNBVAA4",account:"ALLIED TELESIS",subject:"Why is CPQ quote visible?",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"How OWD sharing model interacts with CPQ quotes when Opportunity is private"},
+  {num:"474303406",id:"500hi000003TjcjAAC",account:"Colibri McKissock",subject:"Unable to remove/restrict Contract Attachments section",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - CLM with DocGen",reasoning:"How to remove, rename, or restrict a UI section on the Contract Documents page"},
+  {num:"474294777",id:"500hi000003PvMLAA0",account:"Equinix, Inc.",subject:"New Product Attributes on Pre-existing Assets, Orders & Quotes",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Recommended approach to roll out new attributes on existing records"},
+  {num:"474294597",id:"500hi000003Pqw9AAC",account:"Colibri - Farside",subject:"Hiding Contract Attachment Section in Revenue Cloud",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"How to hide a UI section in Revenue Cloud — feature configuration how-to"},
+  {num:"474290528",id:"500hi000003NjKUAA0",account:"Trimble Illuminate",subject:"Billing Day of Month Clarification — Annual-Upfront and Monthly-Monthly",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce Billing",reasoning:"Whether BDOM is considered in Annual-Upfront and Monthly-Monthly billing scenarios"},
+  {num:"474288502",id:"500hi000003MgBlAAK",account:"Tebra",subject:"RCA Learning Sessions: Derived Pricing & Pricing Procedure",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Weekly ARM training series for Tebra covering RCA/RCB — enablement engagement"},
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let currentTab    = "all";
+let currentPage   = 1;
+let currentType   = "all";
+let currentStatus = "all";
+const PAGE_SIZE   = 16;
+
+// ── Theme toggle ───────────────────────────────────────────────────────────
+const themeBtn = document.getElementById('themeBtn');
+let dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeBtn.textContent = dark ? '☀️' : '🌙';
+  // Redraw charts after theme change
+  setTimeout(() => { drawAll(); }, 50);
+}
+themeBtn.addEventListener('click', () => { dark = !dark; applyTheme(); });
+applyTheme();
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+function toggleTable(id) {
+  const el = document.getElementById(id);
+  const btn = el.previousElementSibling;
+  el.classList.toggle('open');
+  btn.textContent = el.classList.contains('open') ? 'Hide data table' : 'Show data table';
+}
+
+const tooltip = document.getElementById('viz-tooltip');
+function showTip(e, label, rows) {
+  document.getElementById('tt-label').textContent = label;
+  const r = document.getElementById('tt-rows');
+  r.innerHTML = '';
+  rows.forEach(row => {
+    const d = document.createElement('div');
+    d.className = 'tt-row';
+    d.innerHTML = `<span class="tt-swatch" style="background:${row.color};height:${row.isBar?'8px':'2px'};border-radius:${row.isBar?'2px':'1px'}"></span>
+      <span class="tt-name">${row.name}</span>
+      <span class="tt-val">${row.value}</span>`;
+    r.appendChild(d);
+  });
+  tooltip.classList.add('visible');
+  moveTip(e);
+}
+function moveTip(e) {
+  const x = e.clientX + 14, y = e.clientY - 8;
+  const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+  tooltip.style.left = (x + tw > window.innerWidth ? x - tw - 28 : x) + 'px';
+  tooltip.style.top  = (y + th > window.innerHeight ? y - th : y) + 'px';
+}
+function hideTip() { tooltip.classList.remove('visible'); }
+document.addEventListener('mousemove', e => { if (tooltip.classList.contains('visible')) moveTip(e); });
+
+// ── Chart 1: Classification bar ────────────────────────────────────────────
+function drawBreakdown() {
+  const svg = document.getElementById('breakdown-chart');
+  const W = svg.parentElement.offsetWidth || 500;
+  const H = 220;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+
+  const data = [
+    { label:'Architect', value:16, color: css('--series-1') },
+    { label:'Guide',     value:16, color: css('--series-2') },
+    { label:'Neither',   value:82, color: css('--text-muted') },
+    { label:'Unclear',   value:7,  color: css('--series-4') },
+  ];
+
+  // Build legend
+  const leg = document.getElementById('breakdown-legend');
+  leg.innerHTML = '';
+  data.forEach(d => {
+    leg.innerHTML += `<span class="legend-item">
+      <span class="legend-swatch" style="background:${d.color}"></span>${d.label}
+    </span>`;
+  });
+
+  const pad = { top:16, right:16, bottom:32, left:42 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+  const maxVal = Math.max(...data.map(d => d.value));
+  const ticks = [0, 25, 50, 75, 100];
+
+  // Gridlines
+  ticks.forEach(t => {
+    const y = pad.top + plotH * (1 - t / maxVal);
+    if (t > maxVal) return;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', pad.left); line.setAttribute('x2', pad.left + plotW);
+    line.setAttribute('y1', y); line.setAttribute('y2', y);
+    line.setAttribute('class','grid-line');
+    line.style.stroke = css('--grid');
+    svg.appendChild(line);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x', pad.left - 6); txt.setAttribute('y', y + 4);
+    txt.setAttribute('text-anchor','end');
+    txt.setAttribute('class','axis-text');
+    txt.style.fill = css('--text-muted');
+    txt.textContent = t;
+    svg.appendChild(txt);
+  });
+
+  // Baseline
+  const bl = document.createElementNS('http://www.w3.org/2000/svg','line');
+  bl.setAttribute('x1',pad.left); bl.setAttribute('x2',pad.left+plotW);
+  bl.setAttribute('y1',pad.top+plotH); bl.setAttribute('y2',pad.top+plotH);
+  bl.style.stroke = css('--baseline'); bl.style.strokeWidth = '1';
+  svg.appendChild(bl);
+
+  // Bars
+  const bw = Math.min(24, (plotW / data.length) * 0.5);
+  const step = plotW / data.length;
+  data.forEach((d, i) => {
+    const x = pad.left + step * i + (step - bw) / 2;
+    const barH = (d.value / maxVal) * plotH;
+    const y = pad.top + plotH - barH;
+
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x', x); rect.setAttribute('y', y);
+    rect.setAttribute('width', bw); rect.setAttribute('height', barH);
+    rect.setAttribute('fill', d.color);
+    rect.setAttribute('rx', '4'); rect.setAttribute('ry', '4');
+    rect.setAttribute('class','bar-rect');
+    rect.addEventListener('mouseenter', e => showTip(e, d.label, [{name:'Cases',value:d.value,color:d.color,isBar:true}]));
+    rect.addEventListener('mouseleave', hideTip);
+    svg.appendChild(rect);
+
+    // Value label at tip
+    const vt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    vt.setAttribute('x', x + bw/2); vt.setAttribute('y', y - 5);
+    vt.setAttribute('text-anchor','middle');
+    vt.setAttribute('class','axis-text');
+    vt.style.fill = css('--text-secondary');
+    vt.style.fontWeight = '600';
+    vt.textContent = d.value;
+    svg.appendChild(vt);
+
+    // X label
+    const xt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    xt.setAttribute('x', pad.left + step*i + step/2);
+    xt.setAttribute('y', pad.top + plotH + 18);
+    xt.setAttribute('text-anchor','middle');
+    xt.setAttribute('class','axis-text');
+    xt.style.fill = css('--text-muted');
+    xt.textContent = d.label;
+    svg.appendChild(xt);
+  });
+}
+
+// ── Chart 2: Status donut ──────────────────────────────────────────────────
+function drawStatus() {
+  const svg = document.getElementById('status-chart');
+  svg.innerHTML = '';
+  const data = [
+    { label:'Awaiting', value:32, color: css('--series-1') },
+    { label:'Accepted', value:0,  color: css('--status-good') },
+    { label:'Declined', value:0,  color: css('--status-crit') },
+  ];
+
+  // Legend
+  const leg = document.getElementById('status-legend');
+  leg.innerHTML = '';
+  data.forEach(d => {
+    leg.innerHTML += `<span class="legend-item">
+      <span class="legend-swatch" style="background:${d.color}"></span>${d.label}: <strong>${d.value}</strong>
+    </span>`;
+  });
+
+  const cx=130, cy=110, R=80, r=52;
+  const total = data.reduce((s,d)=>s+d.value,0)||1;
+  let angle = -Math.PI/2;
+
+  // Single-value (all awaiting) — draw full circle
+  const full = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  full.setAttribute('cx',cx); full.setAttribute('cy',cy); full.setAttribute('r',R);
+  full.setAttribute('fill','none');
+  full.setAttribute('stroke', css('--series-1'));
+  full.setAttribute('stroke-width','28');
+  full.style.cursor = 'pointer';
+  full.addEventListener('mouseenter', e => showTip(e,'Response Status',[{name:'Awaiting',value:32,color:css('--series-1'),isBar:true}]));
+  full.addEventListener('mouseleave', hideTip);
+  svg.appendChild(full);
+
+  // Center label
+  const cv = document.createElementNS('http://www.w3.org/2000/svg','text');
+  cv.setAttribute('x',cx); cv.setAttribute('y',cy-8);
+  cv.setAttribute('text-anchor','middle');
+  cv.style.fontSize='28px'; cv.style.fontWeight='700';
+  cv.style.fill = css('--text-primary');
+  cv.textContent = '32';
+  svg.appendChild(cv);
+  const cl = document.createElementNS('http://www.w3.org/2000/svg','text');
+  cl.setAttribute('x',cx); cl.setAttribute('y',cy+14);
+  cl.setAttribute('text-anchor','middle');
+  cl.style.fontSize='12px';
+  cl.style.fill = css('--text-muted');
+  cl.textContent = 'cards posted';
+  svg.appendChild(cl);
+}
+
+// ── Chart 3: Top accounts horizontal bar ─────────────────────────────────
+function drawAccounts() {
+  const svg = document.getElementById('accounts-chart');
+  const W = svg.parentElement.offsetWidth || 400;
+  const H = 260;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+
+  const accountMap = {};
+  CASES.forEach(c => {
+    const a = c.account.replace(' ⚠️','');
+    if (!accountMap[a]) accountMap[a] = {arch:0,guide:0};
+    if (c.type==='Architect') accountMap[a].arch++;
+    else accountMap[a].guide++;
+  });
+  let accounts = Object.entries(accountMap)
+    .map(([k,v])=>({name:k,arch:v.arch,guide:v.guide,total:v.arch+v.guide}))
+    .sort((a,b)=>b.total-a.total).slice(0,8);
+
+  // Table body
+  const tb = document.getElementById('accounts-table-body');
+  tb.innerHTML = '';
+  accounts.forEach(a => {
+    tb.innerHTML += `<tr><td>${a.name}</td><td>${a.arch||'—'}</td><td>${a.guide||'—'}</td></tr>`;
+  });
+
+  const pad = {top:8,right:16,bottom:8,left:140};
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+  const rowH  = plotH / accounts.length;
+  const bh    = Math.min(12, rowH * 0.35);
+  const maxV  = Math.max(...accounts.map(a=>a.total));
+
+  accounts.forEach((a,i) => {
+    const y = pad.top + rowH*i + rowH/2;
+
+    // Account label
+    const nt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    nt.setAttribute('x', pad.left-8); nt.setAttribute('y', y+4);
+    nt.setAttribute('text-anchor','end');
+    nt.setAttribute('class','axis-text');
+    nt.style.fill = css('--text-secondary');
+    const short = a.name.length>18 ? a.name.slice(0,17)+'…' : a.name;
+    nt.textContent = short;
+    svg.appendChild(nt);
+
+    // Arch bar
+    if (a.arch > 0) {
+      const aw = (a.arch/maxV)*plotW;
+      const ar = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      ar.setAttribute('x',pad.left); ar.setAttribute('y',y-bh-1);
+      ar.setAttribute('width',aw); ar.setAttribute('height',bh);
+      ar.setAttribute('fill',css('--series-1')); ar.setAttribute('rx','3');
+      ar.setAttribute('class','bar-rect');
+      ar.addEventListener('mouseenter',e=>showTip(e,a.name,[
+        {name:'Architect',value:a.arch,color:css('--series-1'),isBar:true},
+        {name:'Guide',value:a.guide,color:css('--series-2'),isBar:true}
+      ]));
+      ar.addEventListener('mouseleave',hideTip);
+      svg.appendChild(ar);
+    }
+
+    // Guide bar
+    if (a.guide > 0) {
+      const gw = (a.guide/maxV)*plotW;
+      const gr = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      gr.setAttribute('x',pad.left); gr.setAttribute('y',y+1);
+      gr.setAttribute('width',gw); gr.setAttribute('height',bh);
+      gr.setAttribute('fill',css('--series-2')); gr.setAttribute('rx','3');
+      gr.setAttribute('class','bar-rect');
+      gr.addEventListener('mouseenter',e=>showTip(e,a.name,[
+        {name:'Architect',value:a.arch,color:css('--series-1'),isBar:true},
+        {name:'Guide',value:a.guide,color:css('--series-2'),isBar:true}
+      ]));
+      gr.addEventListener('mouseleave',hideTip);
+      svg.appendChild(gr);
+    }
+
+    // Value label
+    const totalW = ((a.arch+a.guide)/maxV)*plotW;
+    const vt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    vt.setAttribute('x',pad.left+totalW+6); vt.setAttribute('y',y+4);
+    vt.setAttribute('class','axis-text');
+    vt.style.fill = css('--text-muted');
+    vt.textContent = a.total;
+    svg.appendChild(vt);
+
+    // Row divider
+    if (i < accounts.length-1) {
+      const div = document.createElementNS('http://www.w3.org/2000/svg','line');
+      div.setAttribute('x1',pad.left); div.setAttribute('x2',W-pad.right);
+      div.setAttribute('y1',pad.top+rowH*(i+1)); div.setAttribute('y2',pad.top+rowH*(i+1));
+      div.style.stroke = css('--grid'); div.style.strokeWidth='0.5';
+      svg.appendChild(div);
+    }
+  });
+}
+
+// ── Chart 4: Taxonomy bar ─────────────────────────────────────────────────
+function drawTaxonomy() {
+  const svg = document.getElementById('tax-chart');
+  const W = svg.parentElement.offsetWidth || 400;
+  const H = 260;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+
+  const taxMap = {};
+  CASES.forEach(c => {
+    const t = c.taxonomy.replace('Revenue Cloud - ','RC: ').replace('Revenue - ','Rev: ');
+    if (!taxMap[t]) taxMap[t]={arch:0,guide:0};
+    if (c.type==='Architect') taxMap[t].arch++;
+    else taxMap[t].guide++;
+  });
+  let taxes = Object.entries(taxMap)
+    .map(([k,v])=>({name:k,arch:v.arch,guide:v.guide,total:v.arch+v.guide}))
+    .sort((a,b)=>b.total-a.total).slice(0,7);
+
+  // Legend
+  const leg = document.getElementById('tax-legend');
+  leg.innerHTML = `
+    <span class="legend-item"><span class="legend-swatch" style="background:${css('--series-1')}"></span>Architect</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:${css('--series-2')}"></span>Guide</span>`;
+
+  // Table
+  const tb = document.getElementById('tax-table-body');
+  tb.innerHTML = '';
+  taxes.forEach(t => {
+    tb.innerHTML += `<tr><td>${t.name}</td><td>${t.arch||'—'}</td><td>${t.guide||'—'}</td></tr>`;
+  });
+
+  const pad={top:16,right:16,bottom:52,left:16};
+  const plotW=W-pad.left-pad.right;
+  const plotH=H-pad.top-pad.bottom;
+  const maxV=Math.max(...taxes.map(t=>t.total));
+  const step=plotW/taxes.length;
+  const bw=Math.min(22,step*0.4);
+  const gap=2;
+
+  // Grid
+  [0,2,4,6].forEach(t => {
+    if (t>maxV) return;
+    const y=pad.top+plotH*(1-t/maxV);
+    const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
+    gl.setAttribute('x1',pad.left); gl.setAttribute('x2',pad.left+plotW);
+    gl.setAttribute('y1',y); gl.setAttribute('y2',y);
+    gl.style.stroke=css('--grid'); gl.style.strokeWidth='1';
+    svg.appendChild(gl);
+  });
+
+  const bl=document.createElementNS('http://www.w3.org/2000/svg','line');
+  bl.setAttribute('x1',pad.left); bl.setAttribute('x2',pad.left+plotW);
+  bl.setAttribute('y1',pad.top+plotH); bl.setAttribute('y2',pad.top+plotH);
+  bl.style.stroke=css('--baseline'); bl.style.strokeWidth='1';
+  svg.appendChild(bl);
+
+  taxes.forEach((t,i) => {
+    const cx=pad.left+step*i+step/2;
+    const archH=(t.arch/maxV)*plotH;
+    const guideH=(t.guide/maxV)*plotH;
+
+    if (t.arch>0) {
+      const ar=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      ar.setAttribute('x',cx-bw-gap); ar.setAttribute('y',pad.top+plotH-archH);
+      ar.setAttribute('width',bw); ar.setAttribute('height',archH);
+      ar.setAttribute('fill',css('--series-1')); ar.setAttribute('rx','3');
+      ar.setAttribute('class','bar-rect');
+      ar.addEventListener('mouseenter',e=>showTip(e,t.name,[
+        {name:'Architect',value:t.arch,color:css('--series-1'),isBar:true},
+        {name:'Guide',value:t.guide,color:css('--series-2'),isBar:true}
+      ]));
+      ar.addEventListener('mouseleave',hideTip);
+      svg.appendChild(ar);
+    }
+    if (t.guide>0) {
+      const gr=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      gr.setAttribute('x',cx+gap); gr.setAttribute('y',pad.top+plotH-guideH);
+      gr.setAttribute('width',bw); gr.setAttribute('height',guideH);
+      gr.setAttribute('fill',css('--series-2')); gr.setAttribute('rx','3');
+      gr.setAttribute('class','bar-rect');
+      gr.addEventListener('mouseenter',e=>showTip(e,t.name,[
+        {name:'Architect',value:t.arch,color:css('--series-1'),isBar:true},
+        {name:'Guide',value:t.guide,color:css('--series-2'),isBar:true}
+      ]));
+      gr.addEventListener('mouseleave',hideTip);
+      svg.appendChild(gr);
+    }
+
+    // X label (two-line)
+    const words=t.name.split(' ');
+    const mid=Math.ceil(words.length/2);
+    const l1=words.slice(0,mid).join(' ');
+    const l2=words.slice(mid).join(' ');
+    const xt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    xt.setAttribute('x',cx); xt.setAttribute('y',pad.top+plotH+14);
+    xt.setAttribute('text-anchor','middle');
+    xt.setAttribute('class','axis-text');
+    xt.style.fill=css('--text-muted');
+    xt.innerHTML=`<tspan x="${cx}" dy="0">${l1}</tspan><tspan x="${cx}" dy="13">${l2}</tspan>`;
+    svg.appendChild(xt);
+  });
+}
+
+// ── Cases table ───────────────────────────────────────────────────────────
+function filteredCases() {
+  return CASES.filter(c => {
+    const typeOk = currentType==='all' || c.type===currentType;
+    const statOk = currentStatus==='all' || c.status===currentStatus;
+    const tabOk  = currentTab==='all' || c.type===currentTab;
+    return typeOk && statOk && tabOk;
+  });
+}
+
+function statusBadge(s) {
+  const map = {
+    'Sent':'badge-sent','Accepted':'badge-accepted',
+    'Declined':'badge-declined','Awaiting':'badge-awaiting','Escalated':'badge-escalated'
+  };
+  const label = s==='Sent'?'📤 Sent':'Accepted'===s?'✅ Accepted':'Declined'===s?'❌ Declined':'⏳ Awaiting';
+  return `<span class="badge-status ${map[s]||'badge-sent'}">${label}</span>`;
+}
+
+function renderTable() {
+  const data = filteredCases();
+  const total = data.length;
+  const start = (currentPage-1)*PAGE_SIZE;
+  const slice = data.slice(start, start+PAGE_SIZE);
+  const tbody = document.getElementById('cases-tbody');
+  tbody.innerHTML = '';
+
+  slice.forEach(c => {
+    const sfUrl = `https://salesforce.lightning.force.com/lightning/r/Case/${c.id}/view`;
+    const typeCls = c.type==='Architect'?'type-arch':'type-guide';
+    const typeIcon = c.type==='Architect'?'🏗️':'📘';
+    const premBadge = c.premier ? `<span class="badge-premier">⚠️ Premier</span>` : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><a class="case-link" href="${sfUrl}" target="_blank">${c.num}</a></td>
+      <td><span class="account-name">${c.account.replace(' ⚠️','')}</span>${premBadge}</td>
+      <td><span class="subject-text" title="${c.subject}">${c.subject}</span></td>
+      <td><span class="type-badge ${typeCls}">${typeIcon} ${c.type}</span></td>
+      <td><span class="csm-name">${c.csm}</span></td>
+      <td>${statusBadge(c.status)}</td>
+      <td><span class="reasoning-text" title="${c.reasoning}">${c.reasoning}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Pagination
+  const totalPages = Math.ceil(total/PAGE_SIZE);
+  document.getElementById('page-info').textContent =
+    `Showing ${Math.min(start+1,total)}–${Math.min(start+PAGE_SIZE,total)} of ${total}`;
+  document.getElementById('prev-btn').disabled = currentPage===1;
+  document.getElementById('next-btn').disabled = currentPage>=totalPages;
+  document.getElementById('page-1').classList.toggle('active', currentPage===1);
+  document.getElementById('page-2').classList.toggle('active', currentPage===2);
+  document.getElementById('page-2').style.display = totalPages>1?'':'none';
+  document.getElementById('next-btn').style.display = totalPages>1?'':'none';
+}
+
+function changePage(d) { currentPage = Math.max(1, currentPage+d); renderTable(); }
+function goPage(p)     { currentPage = p; renderTable(); }
+
+// ── Tab switching ─────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    currentPage = 1;
+    renderTable();
+  });
+});
+
+// ── Filter buttons ────────────────────────────────────────────────────────
+document.querySelectorAll('[data-type]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-type]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentType = btn.dataset.type;
+    currentPage = 1;
+    renderTable();
+  });
+});
+document.querySelectorAll('[data-window]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-window]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    // In production this would re-query — for now just a visual update
+  });
+});
+document.getElementById('statusFilter').addEventListener('change', e => {
+  currentStatus = e.target.value;
+  currentPage = 1;
+  renderTable();
+});
+
+// ── Draw all ──────────────────────────────────────────────────────────────
+function drawAll() {
+  drawBreakdown();
+  drawStatus();
+  drawAccounts();
+  drawTaxonomy();
+  renderTable();
+}
+
+// Redraw on resize (debounced)
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(drawAll, 120);
+});
+
+drawAll();
+</script>
+</body>
+</html>
