@@ -515,6 +515,22 @@ svg { display: block; overflow: visible; }
 .type-arch  { background: rgba(42,120,214,0.10); color: var(--series-1); }
 .type-guide { background: rgba(235,104,52,0.10); color: var(--series-2); }
 
+/* Reviewer badge */
+.reviewer-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; color: var(--text-secondary);
+}
+.reviewer-badge.pending { color: var(--text-muted); font-style: italic; }
+.reviewer-badge.named   { color: var(--status-good); font-weight: 500; }
+.product-tag {
+  font-size: 11px; color: var(--text-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;
+}
+.topic-tag {
+  font-size: 12px; color: var(--text-secondary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;
+}
+
 .reasoning-text {
   font-size: 11px;
   color: var(--text-muted);
@@ -613,6 +629,13 @@ svg { display: block; overflow: visible; }
     <button class="filter-btn" data-type="Architect">Architect</button>
     <button class="filter-btn" data-type="Guide">Guide</button>
   </div>
+  <div class="filter-sep"></div>
+  <span class="filter-label">Product:</span>
+  <select class="filter-select" id="productFilter">
+    <option value="all">All products</option>
+    <option value="Revenue Cloud">Revenue Cloud</option>
+    <option value="Revenue">Revenue (CPQ/Billing)</option>
+  </select>
   <div class="filter-sep"></div>
   <span class="filter-label">Status:</span>
   <select class="filter-select" id="statusFilter">
@@ -763,6 +786,8 @@ svg { display: block; overflow: visible; }
             <th>Account</th>
             <th>Subject</th>
             <th>Type</th>
+            <th>Product / Topic</th>
+            <th>Reviewer</th>
             <th>CSM / Recipient</th>
             <th>Status</th>
             <th>Reasoning</th>
@@ -794,47 +819,48 @@ svg { display: block; overflow: visible; }
 // ── Data ──────────────────────────────────────────────────────────────────
 const CASES = [
   // ARCHITECT (16)
-  {num:"474382900",id:"500hi000003hloLAAQ",account:"Five9 Inc.",subject:"Behavioral differences between UAT and Production",type:"Architect",csm:"Matthew O'Connor",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom Apex trigger (QuoteLineTrigger) and Batch Apex behaving differently across environments"},
-  {num:"474375762",id:"500hi000003eF54AAE",account:"KnowBe4, Inc",subject:"Error trying to Amend contracts",type:"Architect",csm:"Meghan Malone",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom flows 'CPQ_Quote_Automation' failing on contract amendment"},
-  {num:"474374974",id:"500hi000003e2J7AAI",account:"ADT LLC",subject:"Audit Results - Segregation of Duties (SOD)",type:"Architect",csm:"Elizabeth Music",status:"Sent",taxonomy:"Revenue - Salesforce Billing",reasoning:"SOD remediation design across approvals, sales orders, and billing entitlements"},
-  {num:"474373451",id:"500hi000003dQNWAA2",account:"Top Golf USA, Inc.",subject:"CPQ Apex Heap Size Limit Violations (ATHR Finding)",type:"Architect",csm:"Cynthia Dillard-Rodgers",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"ATHR-identified Apex heap size violations — architecture review for CPQ performance at scale"},
-  {num:"474368830",id:"500hi000003bMhOAAU",account:"PostNL Holding BV",subject:"Validation rule on Quote Line Item",type:"Architect",csm:"Courtenay Spry",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Architecture guidance: validation rule vs Flow vs Apex trigger on QLIs post-approval"},
-  {num:"474364170",id:"500hi000003ZMS9AAO",account:"Arthur J. Gallagher & Co.",subject:"Queries about Decision Explainers / Passing values between procedures",type:"Architect",csm:"Tiffanie Kott",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Designing workarounds for pricing procedure plan limitations and cross-procedure value passing"},
-  {num:"474362023",id:"500hi000003YnMXAA0",account:"Laboratory Corporation",subject:"Revenue Cloud - Clone with QLI QTY Issue - Intermittent",type:"Architect",csm:"Clifford Chen",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom Apex 'Clone with QLI' button setting quantities to random large or negative numbers"},
-  {num:"474314620",id:"500hi000003WLpBAAW",account:"Equinix, Inc. ⚠️",subject:"Issue updating Offering Attributes through Apex Class",type:"Architect",csm:"Michelle Grossman",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom Apex class updating Offering Attributes not working — Premier account flag",premier:true},
-  {num:"474313310",id:"500hi000003VZPaAAO",account:"Gallagher Affinity",subject:"Move Quote Net Price Calculation from Start Date to Effective Date",type:"Architect",csm:"Sharon Bartol",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom context definition 'AJGInsuranceContext' mapping different date fields for net price"},
-  {num:"474303814",id:"500hi000003TronAAC",account:"Bell Canada",subject:"Mapping OrderItemDetail custom fields during assetization",type:"Architect",csm:"Tintu Jacob Shaji",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Custom field mapping through extended Sales Transaction context definition for assetization"},
-  {num:"474302621",id:"500hi000003TSNNAA4",account:"Anaplan, Inc.",subject:"CPQ fields not getting updated via Google ADK agent",type:"Architect",csm:"Matthew O'Connor",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom REST API integration for Google ADK agent to insert quote lines and trigger CPQ calc"},
-  {num:"474301712",id:"500hi000003T5x3AAC",account:"Baxter - Hillrom",subject:"CML Activation Error and Production Deployment Approach",type:"Architect",csm:"Tori Ciotoli",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"CML deployment architecture from SIT to Production — troubleshooting and approach design"},
-  {num:"474296737",id:"500hi000003Qg8LAAS",account:"Indeed, Inc",subject:"CPQ: Currency mismatch error",type:"Architect",csm:"John McIntyre",status:"Sent",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom flow 'Flow Trigger: Update Ordered Field' failing on SBQQ__Quote__c records"},
-  {num:"474296030",id:"500hi000003QOplAAG",account:"Arthur J. Gallagher & Co.",subject:"Request for Custom Indexing of Quote, QLI, and OLI Fields",type:"Architect",csm:"Tiffanie Kott",status:"Sent",taxonomy:"Revenue Cloud - Usage & Ratings",reasoning:"Custom database indexes for fields used by Apex classes at growing data volumes"},
-  {num:"474291107",id:"500hi000003OOibAAG",account:"InformaOne",subject:"Post Hook not updating QuoteLineItem field values",type:"Architect",csm:"Martin Cowton",status:"Sent",taxonomy:"Revenue Cloud - Developer Support",reasoning:"Custom Post Hook implementation not populating QLI fields from Attributes"},
-  {num:"474289852",id:"500hi000003NrGPAA0",account:"Siemens Corp.",subject:"Attribute Values Revert After Apex Calculation During Service Config",type:"Architect",csm:"Jürgen Förster",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom LWC + Procedure Plan PreHooks + Apex causing attribute values to revert"},
+  {num:"474382900",id:"500hi000003hloLAAQ",account:"Five9 Inc.",subject:"Behavioral differences between UAT and Production",type:"Architect",csm:"Matthew O'Connor",status:"Sent",product:"Revenue",topic:"CPQ Developer Support",reviewer:"[Pending]",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom Apex trigger (QuoteLineTrigger) and Batch Apex behaving differently across environments"},
+  {num:"474375762",id:"500hi000003eF54AAE",account:"KnowBe4, Inc",subject:"Error trying to Amend contracts",type:"Architect",csm:"Meghan Malone",status:"Sent",product:"Revenue",topic:"CPQ Developer Support",reviewer:"[Pending]",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom flows 'CPQ_Quote_Automation' failing on contract amendment"},
+  {num:"474374974",id:"500hi000003e2J7AAI",account:"ADT LLC",subject:"Audit Results - Segregation of Duties (SOD)",type:"Architect",csm:"Elizabeth Music",status:"Sent",product:"Revenue",topic:"Salesforce Billing",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce Billing",reasoning:"SOD remediation design across approvals, sales orders, and billing entitlements"},
+  {num:"474373451",id:"500hi000003dQNWAA2",account:"Top Golf USA, Inc.",subject:"CPQ Apex Heap Size Limit Violations (ATHR Finding)",type:"Architect",csm:"Cynthia Dillard-Rodgers",status:"Sent",product:"Revenue",topic:"CPQ Developer Support",reviewer:"[Pending]",taxonomy:"Revenue - CPQ Developer Support",reasoning:"ATHR-identified Apex heap size violations — architecture review for CPQ performance at scale"},
+  {num:"474368830",id:"500hi000003bMhOAAU",account:"PostNL Holding BV",subject:"Validation rule on Quote Line Item",type:"Architect",csm:"Courtenay Spry",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Architecture guidance: validation rule vs Flow vs Apex trigger on QLIs post-approval"},
+  {num:"474364170",id:"500hi000003ZMS9AAO",account:"Arthur J. Gallagher & Co.",subject:"Queries about Decision Explainers / Passing values between procedures",type:"Architect",csm:"Tiffanie Kott",status:"Sent",product:"Revenue",topic:"Salesforce CPQ",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Designing workarounds for pricing procedure plan limitations and cross-procedure value passing"},
+  {num:"474362023",id:"500hi000003YnMXAA0",account:"Laboratory Corporation",subject:"Revenue Cloud - Clone with QLI QTY Issue - Intermittent",type:"Architect",csm:"Clifford Chen",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom Apex 'Clone with QLI' button setting quantities to random large or negative numbers"},
+  {num:"474314620",id:"500hi000003WLpBAAW",account:"Equinix, Inc. ⚠️",subject:"Issue updating Offering Attributes through Apex Class",type:"Architect",csm:"Michelle Grossman",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom Apex class updating Offering Attributes not working — Premier account flag",premier:true},
+  {num:"474313310",id:"500hi000003VZPaAAO",account:"Gallagher Affinity",subject:"Move Quote Net Price Calculation from Start Date to Effective Date",type:"Architect",csm:"Sharon Bartol",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom context definition 'AJGInsuranceContext' mapping different date fields for net price"},
+  {num:"474303814",id:"500hi000003TronAAC",account:"Bell Canada",subject:"Mapping OrderItemDetail custom fields during assetization",type:"Architect",csm:"Tintu Jacob Shaji",status:"Sent",product:"Revenue Cloud",topic:"Transaction Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Custom field mapping through extended Sales Transaction context definition for assetization"},
+  {num:"474302621",id:"500hi000003TSNNAA4",account:"Anaplan, Inc.",subject:"CPQ fields not getting updated via Google ADK agent",type:"Architect",csm:"Matthew O'Connor",status:"Sent",product:"Revenue",topic:"CPQ Developer Support",reviewer:"[Pending]",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom REST API integration for Google ADK agent to insert quote lines and trigger CPQ calc"},
+  {num:"474301712",id:"500hi000003T5x3AAC",account:"Baxter - Hillrom",subject:"CML Activation Error and Production Deployment Approach",type:"Architect",csm:"Tori Ciotoli",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"CML deployment architecture from SIT to Production — troubleshooting and approach design"},
+  {num:"474296737",id:"500hi000003Qg8LAAS",account:"Indeed, Inc",subject:"CPQ: Currency mismatch error",type:"Architect",csm:"John McIntyre",status:"Sent",product:"Revenue",topic:"CPQ Developer Support",reviewer:"[Pending]",taxonomy:"Revenue - CPQ Developer Support",reasoning:"Custom flow 'Flow Trigger: Update Ordered Field' failing on SBQQ__Quote__c records"},
+  {num:"474296030",id:"500hi000003QOplAAG",account:"Arthur J. Gallagher & Co.",subject:"Request for Custom Indexing of Quote, QLI, and OLI Fields",type:"Architect",csm:"Tiffanie Kott",status:"Sent",product:"Revenue Cloud",topic:"Usage & Ratings",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Usage & Ratings",reasoning:"Custom database indexes for fields used by Apex classes at growing data volumes"},
+  {num:"474291107",id:"500hi000003OOibAAG",account:"InformaOne",subject:"Post Hook not updating QuoteLineItem field values",type:"Architect",csm:"Martin Cowton",status:"Sent",product:"Revenue Cloud",topic:"Developer Support",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Developer Support",reasoning:"Custom Post Hook implementation not populating QLI fields from Attributes"},
+  {num:"474289852",id:"500hi000003NrGPAA0",account:"Siemens Corp.",subject:"Attribute Values Revert After Apex Calculation During Service Config",type:"Architect",csm:"Jürgen Förster",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Custom LWC + Procedure Plan PreHooks + Apex causing attribute values to revert"},
   // GUIDE (16)
-  {num:"474384379",id:"500hi000003iSOfAAM",account:"Equinix, Inc.",subject:"Order Item Action Behavior",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Asking how Amend vs No Change Order Item Action works — feature-usage clarification"},
-  {num:"474384093",id:"500hi000003iItxAAE",account:"Bluebeam Inc",subject:"RCA Bundle Use Cases and Questions",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Catalog Management",reasoning:"How-to questions about RCA bundle configuration — first time setting up bundles"},
-  {num:"474379504",id:"500hi000003gLxZAAU",account:"Cummins",subject:"RCA Enablement: Qualification Rules",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Explicit request for enablement session on Qualification Rules in Revenue Cloud"},
-  {num:"474379262",id:"500hi000003gFAbAAM",account:"Tebra",subject:"RCA Learning Sessions: Product Qualification Rules Session 1",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Weekly ARM training series covering RCA/RCB — pure enablement/feature-learning engagement"},
-  {num:"474376732",id:"500hi000003ey5NAAQ",account:"ADT LLC",subject:"Revenue: Renewals and Amendments",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce Subscription Management",reasoning:"Understanding end-to-end post-sales flow: amendments, renewals, cancellations"},
-  {num:"474375177",id:"500hi000003daLHAAY",account:"Bell Canada",subject:"External client app secret after new sandbox created",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Catalog Management",reasoning:"Best-practice guidance on handling external client app secrets after sandbox creation"},
-  {num:"474375174",id:"500hi000003e6hhAAA",account:"WP Engine, Inc",subject:"ARM: Contracting/Quoting Process Review",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce Contracts",reasoning:"Understanding OOTB quoting/contracting process including mid-term upgrades and credits"},
-  {num:"474375001",id:"500hi000003e2qzAAA",account:"Mitratech",subject:"Amendment behavior — editing list price on existing subs",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Feature clarification: expected amendment behavior around list price editing"},
-  {num:"474372233",id:"500hi000003d0EXAAY",account:"PowerSchool Group LLC",subject:"Best Practice — Structuring Opportunities for Reseller Transactions",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Explicit best-practice request for Opportunity structure, Bill-To, Signatory for resellers"},
-  {num:"474371932",id:"500hi000003cswvAAA",account:"S&P Global, Inc.",subject:"DPE Writeback — custom profile permissions",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Usage & Ratings",reasoning:"Asking whether custom profile users can be configured in DPE Writeback and what permissions"},
-  {num:"474312905",id:"500hi000003VNBVAA4",account:"ALLIED TELESIS",subject:"Why is CPQ quote visible?",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce CPQ",reasoning:"How OWD sharing model interacts with CPQ quotes when Opportunity is private"},
-  {num:"474303406",id:"500hi000003TjcjAAC",account:"Colibri McKissock",subject:"Unable to remove/restrict Contract Attachments section",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - CLM with DocGen",reasoning:"How to remove, rename, or restrict a UI section on the Contract Documents page"},
-  {num:"474294777",id:"500hi000003PvMLAA0",account:"Equinix, Inc.",subject:"New Product Attributes on Pre-existing Assets, Orders & Quotes",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Recommended approach to roll out new attributes on existing records"},
-  {num:"474294597",id:"500hi000003Pqw9AAC",account:"Colibri - Farside",subject:"Hiding Contract Attachment Section in Revenue Cloud",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"How to hide a UI section in Revenue Cloud — feature configuration how-to"},
-  {num:"474290528",id:"500hi000003NjKUAA0",account:"Trimble Illuminate",subject:"Billing Day of Month Clarification — Annual-Upfront and Monthly-Monthly",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue - Salesforce Billing",reasoning:"Whether BDOM is considered in Annual-Upfront and Monthly-Monthly billing scenarios"},
-  {num:"474288502",id:"500hi000003MgBlAAK",account:"Tebra",subject:"RCA Learning Sessions: Derived Pricing & Pricing Procedure",type:"Guide",csm:"[TBD by manager]",status:"Sent",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Weekly ARM training series for Tebra covering RCA/RCB — enablement engagement"},
+  {num:"474384379",id:"500hi000003iSOfAAM",account:"Equinix, Inc.",subject:"Order Item Action Behavior",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Transaction Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Asking how Amend vs No Change Order Item Action works — feature-usage clarification"},
+  {num:"474384093",id:"500hi000003iItxAAE",account:"Bluebeam Inc",subject:"RCA Bundle Use Cases and Questions",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Product Catalog Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Catalog Management",reasoning:"How-to questions about RCA bundle configuration — first time setting up bundles"},
+  {num:"474379504",id:"500hi000003gLxZAAU",account:"Cummins",subject:"RCA Enablement: Qualification Rules",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Explicit request for enablement session on Qualification Rules in Revenue Cloud"},
+  {num:"474379262",id:"500hi000003gFAbAAM",account:"Tebra",subject:"RCA Learning Sessions: Product Qualification Rules Session 1",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Weekly ARM training series covering RCA/RCB — pure enablement/feature-learning engagement"},
+  {num:"474376732",id:"500hi000003ey5NAAQ",account:"ADT LLC",subject:"Revenue: Renewals and Amendments",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue",topic:"Salesforce Subscription Management",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce Subscription Management",reasoning:"Understanding end-to-end post-sales flow: amendments, renewals, cancellations"},
+  {num:"474375177",id:"500hi000003daLHAAY",account:"Bell Canada",subject:"External client app secret after new sandbox created",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Product Catalog Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Catalog Management",reasoning:"Best-practice guidance on handling external client app secrets after sandbox creation"},
+  {num:"474375174",id:"500hi000003e6hhAAA",account:"WP Engine, Inc",subject:"ARM: Contracting/Quoting Process Review",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue",topic:"Salesforce Contracts",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce Contracts",reasoning:"Understanding OOTB quoting/contracting process including mid-term upgrades and credits"},
+  {num:"474375001",id:"500hi000003e2qzAAA",account:"Mitratech",subject:"Amendment behavior — editing list price on existing subs",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue",topic:"Salesforce CPQ",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Feature clarification: expected amendment behavior around list price editing"},
+  {num:"474372233",id:"500hi000003d0EXAAY",account:"PowerSchool Group LLC",subject:"Best Practice — Structuring Opportunities for Reseller Transactions",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue",topic:"Salesforce CPQ",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce CPQ",reasoning:"Explicit best-practice request for Opportunity structure, Bill-To, Signatory for resellers"},
+  {num:"474371932",id:"500hi000003cswvAAA",account:"S&P Global, Inc.",subject:"DPE Writeback — custom profile permissions",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Usage & Ratings",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Usage & Ratings",reasoning:"Asking whether custom profile users can be configured in DPE Writeback and what permissions"},
+  {num:"474312905",id:"500hi000003VNBVAA4",account:"ALLIED TELESIS",subject:"Why is CPQ quote visible?",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue",topic:"Salesforce CPQ",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce CPQ",reasoning:"How OWD sharing model interacts with CPQ quotes when Opportunity is private"},
+  {num:"474303406",id:"500hi000003TjcjAAC",account:"Colibri McKissock",subject:"Unable to remove/restrict Contract Attachments section",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"CLM with DocGen",reviewer:"[Pending]",taxonomy:"Revenue Cloud - CLM with DocGen",reasoning:"How to remove, rename, or restrict a UI section on the Contract Documents page"},
+  {num:"474294777",id:"500hi000003PvMLAA0",account:"Equinix, Inc.",subject:"New Product Attributes on Pre-existing Assets, Orders & Quotes",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Transaction Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"Recommended approach to roll out new attributes on existing records"},
+  {num:"474294597",id:"500hi000003Pqw9AAC",account:"Colibri - Farside",subject:"Hiding Contract Attachment Section in Revenue Cloud",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Transaction Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"How to hide a UI section in Revenue Cloud — feature configuration how-to"},
+  {num:"474290528",id:"500hi000003NjKUAA0",account:"Trimble Illuminate",subject:"Billing Day of Month Clarification — Annual-Upfront and Monthly-Monthly",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue",topic:"Salesforce Billing",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce Billing",reasoning:"Whether BDOM is considered in Annual-Upfront and Monthly-Monthly billing scenarios"},
+  {num:"474288502",id:"500hi000003MgBlAAK",account:"Tebra",subject:"RCA Learning Sessions: Derived Pricing & Pricing Procedure",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Weekly ARM training series for Tebra covering RCA/RCB — enablement engagement"},
 ];
 
 // ── State ──────────────────────────────────────────────────────────────────
-let currentTab    = "all";
-let currentPage   = 1;
-let currentType   = "all";
-let currentStatus = "all";
-const PAGE_SIZE   = 16;
+let currentTab     = "all";
+let currentPage    = 1;
+let currentType    = "all";
+let currentStatus  = "all";
+let currentProduct = "all";
+const PAGE_SIZE    = 16;
 
 // ── Theme toggle ───────────────────────────────────────────────────────────
 const themeBtn = document.getElementById('themeBtn');
@@ -1235,10 +1261,11 @@ function drawTaxonomy() {
 // ── Cases table ───────────────────────────────────────────────────────────
 function filteredCases() {
   return CASES.filter(c => {
-    const typeOk = currentType==='all' || c.type===currentType;
-    const statOk = currentStatus==='all' || c.status===currentStatus;
-    const tabOk  = currentTab==='all' || c.type===currentTab;
-    return typeOk && statOk && tabOk;
+    const typeOk    = currentType==='all'    || c.type===currentType;
+    const statOk    = currentStatus==='all'  || c.status===currentStatus;
+    const tabOk     = currentTab==='all'     || c.type===currentTab;
+    const productOk = currentProduct==='all' || c.product===currentProduct;
+    return typeOk && statOk && tabOk && productOk;
   });
 }
 
@@ -1264,12 +1291,16 @@ function renderTable() {
     const typeCls = c.type==='Architect'?'type-arch':'type-guide';
     const typeIcon = c.type==='Architect'?'🏗️':'📘';
     const premBadge = c.premier ? `<span class="badge-premier">⚠️ Premier</span>` : '';
+    const reviewerCls = (!c.reviewer || c.reviewer==='[Pending]') ? 'pending' : 'named';
+    const reviewerTxt = (!c.reviewer || c.reviewer==='[Pending]') ? '⏳ Pending' : `✅ ${c.reviewer}`;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td><a class="case-link" href="${sfUrl}" target="_blank">${c.num}</a></td>
       <td><span class="account-name">${c.account.replace(' ⚠️','')}</span>${premBadge}</td>
       <td><span class="subject-text" title="${c.subject}">${c.subject}</span></td>
       <td><span class="type-badge ${typeCls}">${typeIcon} ${c.type}</span></td>
+      <td><span class="product-tag">${c.product}</span><br><span class="topic-tag" title="${c.topic}">${c.topic}</span></td>
+      <td><span class="reviewer-badge ${reviewerCls}">${reviewerTxt}</span></td>
       <td><span class="csm-name">${c.csm}</span></td>
       <td>${statusBadge(c.status)}</td>
       <td><span class="reasoning-text" title="${c.reasoning}">${c.reasoning}</span></td>
@@ -1322,6 +1353,11 @@ document.querySelectorAll('[data-window]').forEach(btn => {
 });
 document.getElementById('statusFilter').addEventListener('change', e => {
   currentStatus = e.target.value;
+  currentPage = 1;
+  renderTable();
+});
+document.getElementById('productFilter').addEventListener('change', e => {
+  currentProduct = e.target.value;
   currentPage = 1;
   renderTable();
 });
