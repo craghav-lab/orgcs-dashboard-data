@@ -635,6 +635,8 @@ svg { display: block; overflow: visible; }
     <option value="all">All products</option>
     <option value="Revenue Cloud">Revenue Cloud</option>
     <option value="Revenue">Revenue (CPQ/Billing)</option>
+    <option value="Revenue Cloud (Core)">Revenue Cloud (Core)</option>
+    <option value="Industry">Industry</option>
   </select>
   <div class="filter-sep"></div>
   <span class="filter-label">Status:</span>
@@ -655,33 +657,33 @@ svg { display: block; overflow: visible; }
   <div class="kpi-row">
     <div class="kpi-card k-total">
       <div class="kpi-label">Reviewed</div>
-      <div class="kpi-value" id="kpi-total">121</div>
+      <div class="kpi-value" id="kpi-total">304</div>
       <div class="kpi-sub">cases this week</div>
     </div>
     <div class="kpi-card k-arch">
       <div class="kpi-label">Architect</div>
-      <div class="kpi-value" id="kpi-arch">16</div>
+      <div class="kpi-value" id="kpi-arch">22</div>
       <div class="kpi-sub">recommendations</div>
     </div>
     <div class="kpi-card k-guide">
       <div class="kpi-label">Guide</div>
-      <div class="kpi-value" id="kpi-guide">16</div>
+      <div class="kpi-value" id="kpi-guide">33</div>
       <div class="kpi-sub">recommendations</div>
     </div>
     <div class="kpi-card k-accept">
       <div class="kpi-label">Accepted</div>
       <div class="kpi-value" id="kpi-accept">0</div>
-      <div class="kpi-sub">of 32 total</div>
+      <div class="kpi-sub">of 55 total</div>
       <div class="kpi-delta warn" id="kpi-accept-rate">0% acceptance</div>
     </div>
     <div class="kpi-card k-decline">
       <div class="kpi-label">Declined</div>
       <div class="kpi-value" id="kpi-decline">0</div>
-      <div class="kpi-sub">of 32 total</div>
+      <div class="kpi-sub">of 55 total</div>
     </div>
     <div class="kpi-card k-await">
       <div class="kpi-label">Awaiting</div>
-      <div class="kpi-value" id="kpi-await">32</div>
+      <div class="kpi-value" id="kpi-await">55</div>
       <div class="kpi-sub">pending response</div>
     </div>
   </div>
@@ -809,9 +811,9 @@ svg { display: block; overflow: visible; }
   </div>
 
   <div class="summary-footer">
-    Run: Aug 17 2026 · Org: Primary · Window: Last 7 days · 121 cases reviewed · Slack corroboration: not run ·
+    Run: Aug 17 2026 · Org: Primary · Window: Last 7 days · 304 cases reviewed (2 batches) · Slack corroboration: not run ·
     <a href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BQ29RLCH5" target="_blank">Canvas tracker</a> ·
-    Next run: Aug 23 2026
+    Next run: Aug 24 2026
   </div>
 </main>
 
@@ -852,6 +854,31 @@ const CASES = [
   {num:"474294597",id:"500hi000003Pqw9AAC",account:"Colibri - Farside",subject:"Hiding Contract Attachment Section in Revenue Cloud",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Transaction Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Transaction Management",reasoning:"How to hide a UI section in Revenue Cloud — feature configuration how-to"},
   {num:"474290528",id:"500hi000003NjKUAA0",account:"Trimble Illuminate",subject:"Billing Day of Month Clarification — Annual-Upfront and Monthly-Monthly",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue",topic:"Salesforce Billing",reviewer:"[Pending]",taxonomy:"Revenue - Salesforce Billing",reasoning:"Whether BDOM is considered in Annual-Upfront and Monthly-Monthly billing scenarios"},
   {num:"474288502",id:"500hi000003MgBlAAK",account:"Tebra",subject:"RCA Learning Sessions: Derived Pricing & Pricing Procedure",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud",topic:"Product Configurator",reviewer:"[Pending]",taxonomy:"Revenue Cloud - Product Configurator",reasoning:"Weekly ARM training series for Tebra covering RCA/RCB — enablement engagement"},
+  // ARCHITECT (6) — Aug 17 batch
+  {num:"474384052",id:"500hi000003iHJZAA2",account:"CONFEDERACAO SICREDI",subject:"Avaliação para indexação do campo FinServ__SecondaryBankerIdentifier__c",type:"Architect",csm:"Joíres Bertaglia",status:"Sent",product:"Industry",topic:"Financial Services",reviewer:"[Pending]",taxonomy:"Industry-Financial Services",reasoning:"Custom FSC implementation performance bottleneck; team requests expert evaluation of field indexing feasibility as a design decision."},
+  {num:"474380348",id:"500hi000003gkRJAAY",account:"Comunicación Celular S.A.",subject:"Monitoring - Data migration to production",type:"Architect",csm:"Roberto Buendia",status:"Sent",product:"Industry",topic:"Developer Support",reviewer:"[Pending]",taxonomy:"Industry-Developer Support",reasoning:"Monthly Bulk API data migrations of 200K–3M records taking longer than expected; explicit request for technical assistance to analyze and optimize migration architecture."},
+  {num:"474312928",id:"500hi000003VM4AAAW",account:"British Telecommunications PLC",subject:"Request to create indexing for few fields in Asset object",type:"Architect",csm:"Kam Sangha",status:"Sent",product:"Industry",topic:"Communication Cloud",reviewer:"[Pending]",taxonomy:"Industry-Communication Cloud",reasoning:"Architecture-level field indexing request on custom and standard Asset fields to resolve performance problems in their implementation."},
+  {num:"474305453",id:"500hi000003U0wxAAC",account:"State of Nevada DMV",subject:"OmniScript LWC Override on OOTB Radio Button Element",type:"Architect",csm:"Patrick Frampus",status:"Sent",product:"Industry",topic:"Omnistudio",reviewer:"[Pending]",taxonomy:"Industry-Omnistudio",reasoning:"Customer built a custom LWC extending OmniScriptRadio with dynamic label rendering; override behaves incorrectly, requiring custom component code review."},
+  {num:"474296499",id:"500hi000003QT9XAAW",account:"State Employees Credit Union",subject:"SailPoint SSO / provisioning integration - RTR setting change",type:"Architect",csm:"Stephanie Culbertson",status:"Sent",product:"Industry",topic:"Mandatory Security Controls",reviewer:"[Pending]",taxonomy:"Industry-Mandatory Security Controls",reasoning:"Custom SailPoint-to-Salesforce SSO integration requires architecture-level RTR configuration change to preserve persistent session tokens."},
+  {num:"474295602",id:"500hi000003QDW9AAO",account:"CONFEDERACAO SICREDI",subject:"Apoio para configuração SAML SSO com Omnissa Workspace ONE",type:"Architect",csm:"Joíres Bertaglia",status:"Sent",product:"Industry",topic:"Mandatory Security Controls",reviewer:"[Pending]",taxonomy:"Industry-Mandatory Security Controls",reasoning:"Customer implementing SAML SSO via Omnissa Workspace ONE (VDI/Farm); needs expert validation of integration configuration to diagnose authentication failures."},
+  // GUIDE (17) — Aug 17 batch
+  {num:"474376151",id:"500hi000003ebC1AAI",account:"UDAF Agricultural Information Mgmt",subject:"Passing values from selected button on Flexcard to Omniscript",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Omnistudio",reviewer:"[Pending]",taxonomy:"Industry-Omnistudio",reasoning:"Explicit how-to question on technique for passing selected values from a FlexCard button action into an OmniScript context."},
+  {num:"474370379",id:"500hi000003cGzhAAE",account:"Goodyear Tire & Rubber Company",subject:"Permissions required for Data Processing Engine (DPE) execution",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Loyalty Management",reviewer:"[Pending]",taxonomy:"Industry-Loyalty Management",reasoning:"Customer asking which permissions must be assigned to enable successful DPE execution — classic feature-enablement guidance."},
+  {num:"474365855",id:"500hi000003a0SnAAI",account:"Toronto-Dominion Bank",subject:"Document PDF Generation Issue — Request for Root Cause Analysis",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Omnistudio",reviewer:"[Pending]",taxonomy:"Industry-Omnistudio",reasoning:"Customer explicitly requests Root Cause Analysis for recurring PDF generation issue — fits RCA/enablement Guide signal."},
+  {num:"474365840",id:"500hi000003a01NAAQ",account:"Banco de Crédito del Perú",subject:"Metadata review Mortgage FSC UsageType not available",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Financial Services",reviewer:"[Pending]",taxonomy:"Industry-Financial Services",reasoning:"Customer requesting expert session to answer questions about FSC mortgage model and ApplicationForm object — how-to/enablement engagement."},
+  {num:"474365458",id:"500hi000003ZpcDAAS",account:"BC MOH HBC",subject:"OmniStudio Hybrid",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Omnistudio",reviewer:"[Pending]",taxonomy:"Industry-Omnistudio",reasoning:"Customer asking for clarification on whether OmniStudio Hybrid mode can be disabled and what options are available — feature-usage/understanding question."},
+  {num:"474314911",id:"500hi000003WUajAAG",account:"Capital Group Companies Inc.",subject:"EAC Interaction Sync Behavior and Meeting Synchronization Scenarios",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Email Delivery & Desktop Integrations",reviewer:"[Pending]",taxonomy:"Industry-Email Delivery & Desktop Integrations",reasoning:"Customer wants Salesforce to confirm their understanding of EAC Interaction Sync scenarios — classic best-practice/clarification engagement."},
+  {num:"474312787",id:"500hi000003VB78AAG",account:"Metro Fibernet, LLC",subject:"createOrdersFromQuote uses Quote.StartDate from first QLI causing error",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Revenue Cloud (Core)",topic:"Transaction Management",reviewer:"[Pending]",taxonomy:"Revenue Cloud (Core)-Transaction Management",reasoning:"After describing observed behavior, customer explicitly asks 'Is there some way to configure this behavior?' — how-to/configuration guidance request."},
+  {num:"474305458",id:"500hi000003USDFAA4",account:"Telecom Argentina S.A.",subject:"Automatic creation of PricebookEntry records in inactive Standard Price Book",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"CPQ / Order Management / Digital Commerce",reviewer:"[Pending]",taxonomy:"Industry-CPQ / Order Management / Digital Commerce",reasoning:"Customer wants to 'validate and better understand' why PricebookEntry records are auto-created in inactive Standard Price Book — feature-behavior clarification."},
+  {num:"474303929",id:"500hi000003TWu3AAG",account:"Carlsberg IT A/S",subject:"Setting up an activity of type surveys",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Retail and Consumer Goods",reviewer:"[Pending]",taxonomy:"Industry-Retail and Consumer Goods",reasoning:"Requesting guidance on how to set up a survey-type activity — setup/enablement how-to."},
+  {num:"474298185",id:"500hi000003RUOTAA4",account:"NRG Energy DE Business",subject:"Turbo Extract Action unavailable in IP",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Omnistudio",reviewer:"[Pending]",taxonomy:"Industry-Omnistudio",reasoning:"Customer asks whether Turbo Extract Action requires a separate request to enable in Integration Procedure — feature-availability/how-to question."},
+  {num:"474296547",id:"500hi000003QaqvAAC",account:"Revision Skincare",subject:"Mass Updating Loyalty Program member point balances — Best practices",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Loyalty Management",reviewer:"[Pending]",taxonomy:"Industry-Loyalty Management",reasoning:"Customer explicitly asks for best practices for bulk-correcting incorrect Loyalty point balances — matches best-practice Guide signal exactly."},
+  {num:"474296206",id:"500hi000003QLDaAAO",account:"Leidos Inc.",subject:"Provider Search Licensing Question 2",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Health Cloud",reviewer:"[Pending]",taxonomy:"Industry-Health Cloud",reasoning:"Customer asks whether multiple Service Territories are required for Provider Search or if a single territory is sufficient — feature-usage/clarification question."},
+  {num:"474294262",id:"500hi000003PjWTAA0",account:"Pfizer Commercial LSC EMEA",subject:"Is the Managed Event automated-email feature GA or Pilot/Beta",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Life Sciences",reviewer:"[Pending]",taxonomy:"Industry-Life Sciences",reasoning:"Customer asks for clarification on GA vs Pilot/Beta status of the Managed Event automated-email feature in LSC — direct how-does-X-work question."},
+  {num:"474294240",id:"500hi000003Pj3RAAS",account:"Pfizer Commercial LSC EMEA",subject:"How does the Email Template framework integrate with Managed Event Email Participant action",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Life Sciences",reviewer:"[Pending]",taxonomy:"Industry-Life Sciences",reasoning:"Explicit 'How does X integrate with Y' question — clearest possible Guide signal."},
+  {num:"474294132",id:"500hi000003PgjtAAC",account:"Deloitte Consulting LLP",subject:"Omnistudio issue: PDF Generation — DocGen profiles for portal users",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Omnistudio",reviewer:"[Pending]",taxonomy:"Industry-Omnistudio",reasoning:"Further assistance with setting up DocGen profiles and permission sets for portal users — enablement/setup guidance engagement."},
+  {num:"474293995",id:"500hi000003PdfZAAS",account:"RBC Investor Services Trust",subject:"Need to Change the Default Sort for Interaction Summary",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Financial Services",reviewer:"[Pending]",taxonomy:"Industry-Financial Services",reasoning:"Customer asks how to change default sort field on Interaction Summary related list — how-to/configuration guidance question."},
+  {num:"474292342",id:"500hi000003OwVlAAK",account:"Needham Bank",subject:"Adding the Referral object to the Account Related List",type:"Guide",csm:"[TBD by manager]",status:"Sent",product:"Industry",topic:"Public Sector Solutions",reviewer:"[Pending]",taxonomy:"Industry-Public Sector Solutions",reasoning:"Customer asks how to add standard Referral object to Account related list after enabling Referral Management — feature-setup/how-to question."},
 ];
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -918,9 +945,9 @@ function drawBreakdown() {
   svg.innerHTML = '';
 
   const data = [
-    { label:'Architect', value:16, color: css('--series-1') },
-    { label:'Guide',     value:16, color: css('--series-2') },
-    { label:'Neither',   value:82, color: css('--text-muted') },
+    { label:'Architect', value:22, color: css('--series-1') },
+    { label:'Guide',     value:33, color: css('--series-2') },
+    { label:'Neither',   value:242, color: css('--text-muted') },
     { label:'Unclear',   value:7,  color: css('--series-4') },
   ];
 
@@ -1010,7 +1037,7 @@ function drawStatus() {
   const svg = document.getElementById('status-chart');
   svg.innerHTML = '';
   const data = [
-    { label:'Awaiting', value:32, color: css('--series-1') },
+    { label:'Awaiting', value:55, color: css('--series-1') },
     { label:'Accepted', value:0,  color: css('--status-good') },
     { label:'Declined', value:0,  color: css('--status-crit') },
   ];
@@ -1035,7 +1062,7 @@ function drawStatus() {
   full.setAttribute('stroke', css('--series-1'));
   full.setAttribute('stroke-width','28');
   full.style.cursor = 'pointer';
-  full.addEventListener('mouseenter', e => showTip(e,'Response Status',[{name:'Awaiting',value:32,color:css('--series-1'),isBar:true}]));
+  full.addEventListener('mouseenter', e => showTip(e,'Response Status',[{name:'Awaiting',value:55,color:css('--series-1'),isBar:true}]));
   full.addEventListener('mouseleave', hideTip);
   svg.appendChild(full);
 
