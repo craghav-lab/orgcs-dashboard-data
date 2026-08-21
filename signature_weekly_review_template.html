@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Signature Weekly Business Review — Template</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#0f1117;color:#e2e8f0;font-size:14px;line-height:1.5;}
+svg text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:#0f1117;border-bottom:1px solid #1f2937;display:flex;align-items:center;gap:0;padding:0 24px;height:48px;overflow-x:auto;}
+.nav-title{font-size:13px;font-weight:700;color:#e2e8f0;margin-right:16px;white-space:nowrap;flex-shrink:0;}
+.na{font-size:12px;font-weight:500;color:#6b7280;text-decoration:none;padding:0 14px;height:48px;display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+.na:hover{color:#e2e8f0;border-color:#3987e5;}
+.badge{background:#3987e5;color:#fff;font-size:10px;padding:1px 7px;border-radius:8px;font-weight:600;margin-left:6px;}
+
+/* ── SLIDE SHELL ── */
+.slide{min-height:100vh;padding:48px 40px;border-bottom:1px solid #1f2937;}
+.slide-head{margin-bottom:24px;}
+.slide-head h2{font-size:22px;font-weight:700;color:#e2e8f0;}
+.slide-head p{font-size:13px;color:#6b7280;margin-top:4px;}
+
+/* ── TITLE SLIDE ── */
+.title-slide{background:linear-gradient(135deg,#0d1b3e 0%,#0f1117 60%);display:flex;flex-direction:column;justify-content:center;min-height:100vh;padding:72px 80px;border-bottom:1px solid #1f2937;}
+.title-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#3987e5;margin-bottom:14px;}
+.title-h1{font-size:48px;font-weight:800;color:#fff;line-height:1.1;max-width:640px;}
+.title-sub{font-size:16px;color:rgba(255,255,255,.6);margin-top:16px;max-width:540px;line-height:1.6;}
+.title-meta{display:flex;gap:48px;margin-top:52px;flex-wrap:wrap;}
+.meta-block{display:flex;flex-direction:column;gap:4px;}
+.meta-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.meta-val{font-size:18px;font-weight:700;color:#fff;}
+.agenda-list{margin-top:48px;display:flex;flex-direction:column;gap:12px;}
+.agenda-item{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.75);font-size:14px;}
+.agenda-num{width:26px;height:26px;border-radius:50%;background:rgba(57,135,229,.25);border:1px solid rgba(57,135,229,.5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#3987e5;flex-shrink:0;}
+
+/* ── KPI TILES ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;}
+.kpi-tile{background:#1e2235;border:1px solid #2c2c3a;border-radius:8px;padding:14px 14px 12px;position:relative;overflow:hidden;}
+.kpi-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:8px 8px 0 0;}
+.kpi-bar.good{background:#0ca30c;}
+.kpi-bar.warn{background:#fab219;}
+.kpi-bar.serious{background:#ec835a;}
+.kpi-bar.critical{background:#d03b3b;}
+.kpi-label{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#6b7280;margin-bottom:6px;}
+.kpi-val{font-size:26px;font-weight:700;line-height:1;color:#e2e8f0;margin-bottom:4px;}
+.kpi-target{font-size:10px;color:#4b5563;margin-bottom:6px;}
+.kpi-delta{font-size:11px;font-weight:600;display:flex;align-items:center;gap:3px;margin-bottom:6px;}
+.delta-good{color:#0ca30c;}
+.delta-bad{color:#d03b3b;}
+.kpi-spark{margin-top:4px;opacity:.8;}
+
+/* ── NOT-ALIGNED CALLOUT ── */
+.callout{margin-top:20px;background:#1a1608;border:1px solid rgba(250,178,25,.25);border-radius:8px;padding:14px 18px;}
+.callout-head{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#fab219;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.callout-table{width:100%;border-collapse:collapse;font-size:12px;}
+.callout-table th{text-align:left;font-weight:600;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-bottom:1px solid #2c2c3a;}
+.callout-table td{padding:6px 10px;border-bottom:1px solid #1f2937;color:#d1d5db;}
+.callout-table tr:last-child td{border-bottom:none;}
+
+/* ── PILL STATUS ── */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:600;}
+.pill-warn{background:rgba(250,178,25,.15);color:#b88400;}
+.pill-serious{background:rgba(236,131,90,.15);color:#c0501a;}
+.pill-critical{background:rgba(208,59,59,.15);color:#d03b3b;}
+.pill-good{background:rgba(12,163,12,.12);color:#0ca30c;}
+
+/* ── TWO-COL LAYOUTS ── */
+.two-col{display:grid;gap:32px;}
+.two-col-half{grid-template-columns:1fr 1fr;}
+.two-col-wide{grid-template-columns:5fr 4fr;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;}
+
+/* ── SECTION LABEL ── */
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#4b5563;margin-bottom:10px;}
+
+/* ── HORIZONTAL BAR CHART ── */
+.hbar-list{display:flex;flex-direction:column;gap:9px;}
+.hbar-row{display:grid;grid-template-columns:130px 1fr 40px;align-items:center;gap:10px;font-size:12px;}
+.hbar-label{color:#9ca3af;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hbar-track{height:20px;background:#1f2937;border-radius:4px;overflow:hidden;}
+.hbar-fill{height:100%;border-radius:4px;}
+.hbar-val{font-size:12px;font-weight:600;color:#e2e8f0;}
+
+/* ── DATA TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table thead th{text-align:left;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#6b7280;padding:6px 10px;border-bottom:2px solid #2c2c3a;}
+.data-table tbody td{padding:7px 10px;border-bottom:1px solid #1f2937;color:#d1d5db;vertical-align:top;}
+.data-table tbody tr:last-child td{border-bottom:none;}
+.data-table tbody tr:hover td{background:rgba(57,135,229,.05);}
+.rank-dot{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#3987e5;color:#fff;font-size:10px;font-weight:700;}
+
+/* ── KPI BY CLOUD DOT MATRIX ── */
+.dot-matrix{width:100%;border-collapse:collapse;font-size:11px;}
+.dot-matrix th{text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;padding:5px 6px;border-bottom:1px solid #2c2c3a;}
+.dot-matrix th.row-head{text-align:left;}
+.dot-matrix td{padding:5px 6px;text-align:center;border-bottom:1px solid #1f2937;}
+.dot-matrix td.row-head{text-align:left;color:#9ca3af;font-size:11px;}
+.dot-matrix tr:last-child td{border-bottom:none;}
+.status-dot{display:inline-block;width:10px;height:10px;border-radius:50%;}
+.dot-good{background:#0ca30c;}
+.dot-warn{background:#fab219;}
+.dot-serious{background:#ec835a;}
+.dot-critical{background:#d03b3b;}
+
+/* ── RING FENCING STACKED BAR ── */
+.rfence-rows{display:flex;flex-direction:column;gap:12px;margin-top:4px;}
+.rfence-row{display:flex;flex-direction:column;gap:5px;}
+.rfence-cloud-label{font-size:11px;color:#9ca3af;}
+.rfence-bar{display:flex;height:22px;border-radius:4px;overflow:hidden;}
+.rfence-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:rgba(255,255,255,.9);min-width:24px;}
+.seg-full{background:#3987e5;}
+.seg-partial{background:#c98500;}
+.seg-gap{background:#d03b3b;}
+.rfence-legend{display:flex;gap:20px;margin-top:12px;}
+.rfence-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#9ca3af;}
+.rfence-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* ── COVERAGE BY SKILL ── */
+.skill-hbars{display:flex;flex-direction:column;gap:8px;}
+.skill-hbar-row{display:grid;grid-template-columns:150px 1fr 28px;align-items:center;gap:10px;font-size:12px;}
+.skill-hbar-label{color:#9ca3af;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ── TEAM COMPARISON ── */
+.team-section{display:flex;flex-direction:column;gap:16px;margin-top:8px;}
+.team-group{display:flex;flex-direction:column;gap:4px;}
+.team-group-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;margin-bottom:4px;}
+.team-bar-row{display:grid;grid-template-columns:72px 1fr 36px;align-items:center;gap:8px;font-size:11px;}
+.team-bar-label{color:#6b7280;text-align:right;}
+.team-bar-track{height:18px;background:#1f2937;border-radius:3px;overflow:hidden;}
+.team-bar-fill{height:100%;border-radius:3px;}
+.team-bar-val{color:#d1d5db;font-weight:600;}
+
+/* ── SKILL MATRIX ── */
+.skill-matrix{width:100%;border-collapse:collapse;font-size:11px;}
+.skill-matrix th{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;padding:6px 8px;border-bottom:2px solid #2c2c3a;text-align:center;}
+.skill-matrix th.row-head{text-align:left;}
+.skill-matrix td{padding:6px 8px;border-bottom:1px solid #1f2937;text-align:center;color:#d1d5db;}
+.skill-matrix td.row-head{text-align:left;color:#9ca3af;font-weight:500;}
+.skill-matrix tr:last-child td{border-bottom:none;}
+.skill-matrix .total-row td{color:#6b7280;font-size:10px;border-top:1px solid #2c2c3a;padding-top:8px;}
+.count-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:4px;font-size:11px;font-weight:700;}
+.chip-hi{background:rgba(57,135,229,.25);color:#3987e5;}
+.chip-mid{background:rgba(201,133,0,.2);color:#c98500;}
+.chip-lo{background:rgba(208,59,59,.12);color:#d03b3b;}
+.chip-zero{background:#1a1a1a;color:#374151;}
+
+/* ── FOOTER ── */
+footer{padding:20px 40px;border-top:1px solid #1f2937;font-size:11px;color:#374151;text-align:center;}
+
+/* ── TEMPLATE PLACEHOLDER STYLE ── */
+.ph{color:#374151;font-style:italic;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="nav">
+  <span class="nav-title">Signature WBR <span class="badge">Template</span></span>
+  <a href="#s0" class="na">Title</a>
+  <a href="#s1" class="na">KPIs</a>
+  <a href="#s2" class="na">Inflow</a>
+  <a href="#s3" class="na">Coverage</a>
+  <a href="#s4" class="na">Team</a>
+</nav>
+
+
+<!-- ═══════════════ SLIDE 0 — TITLE ═══════════════ -->
+<section id="s0" class="title-slide">
+  <div class="title-eyebrow">Signature Support &nbsp;·&nbsp; Weekly Business Review</div>
+  <h1 class="title-h1">Signature Weekly<br>Business Review</h1>
+  <p class="title-sub">Capacity &amp; coverage health check — keeping all KPIs aligned to business need</p>
+
+  <div class="title-meta">
+    <div class="meta-block">
+      <span class="meta-label">Week</span>
+      <span class="meta-val ph">Wk XX · Mon DD – Fri DD, YYYY</span>
+    </div>
+    <div class="meta-block">
+      <span class="meta-label">Total Engineers</span>
+      <span class="meta-val ph">— (AMER) + — (India)</span>
+    </div>
+    <div class="meta-block">
+      <span class="meta-label">Active Cases</span>
+      <span class="meta-val ph">—</span>
+    </div>
+    <div class="meta-block">
+      <span class="meta-label">Presented by</span>
+      <span class="meta-val ph">[ Name ]</span>
+    </div>
+  </div>
+
+  <div class="agenda-list">
+    <div class="agenda-item"><span class="agenda-num">1</span> KPI Dashboard — CSAT · Inflow · Closure · TTR · Escalations · SLO Miss · Productivity</div>
+    <div class="agenda-item"><span class="agenda-num">2</span> Inflow by Cloud — Top 5 Product &amp; Topic · Sev 1 breakdown · KPI health per cloud</div>
+    <div class="agenda-item"><span class="agenda-num">3</span> Coverage by Primary Skill &amp; Ring Fencing</div>
+    <div class="agenda-item"><span class="agenda-num">4</span> Team Coverage — Skill matrix · Inflow &amp; Closure by engineer count (AMER vs India)</div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ SLIDE 1 — KPI DASHBOARD ═══════════════ -->
+<section id="s1" class="slide">
+  <div class="slide-head">
+    <h2>Slide 1 — KPI Dashboard</h2>
+    <p>Week-over-week trend · Status bar = alignment with target · Red/orange = needs focus</p>
+  </div>
+
+  <!-- KPI tile row -->
+  <div class="kpi-grid">
+
+    <!-- CSAT -->
+    <div class="kpi-tile">
+      <div class="kpi-bar good"></div><!-- good / warn / serious / critical -->
+      <div class="kpi-label">CSAT</div>
+      <div class="kpi-val ph">—</div>
+      <div class="kpi-target ph">Target: ≥ —</div>
+      <div class="kpi-delta delta-good ph">▲ +— WoW</div><!-- delta-good / delta-bad -->
+      <svg class="kpi-spark" width="80" height="24" viewBox="0 0 80 24">
+        <!-- Replace points with 8-week trend values normalized to 0–20 y range -->
+        <polyline points="0,18 11,16 22,17 33,14 44,15 55,12 66,11 80,10"
+          fill="none" stroke="#0ca30c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="80" cy="10" r="2.5" fill="#0ca30c"/>
+      </svg>
+    </div>
+
+    <!-- Inflow -->
+    <div class="kpi-tile">
+      <div class="kpi-bar warn"></div>
+      <div class="kpi-label">Inflow</div>
+      <div class="kpi-val ph">—</div>
+      <div class="kpi-target ph">Target: ≤ —</div>
+      <div class="kpi-delta delta-bad ph">▲ +— WoW</div>
+      <svg class="kpi-spark" width="80" height="24" viewBox="0 0 80 24">
+        <polyline points="0,16 11,17 22,14 33,13 44,14 55,11 66,10 80,8"
+          fill="none" stroke="#fab219" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="80" cy="8" r="2.5" fill="#fab219"/>
+      </svg>
+    </div>
+
+    <!-- Closure -->
+    <div class="kpi-tile">
+      <div class="kpi-bar warn"></div>
+      <div class="kpi-label">Closure</div>
+      <div class="kpi-val ph">—</div>
+      <div class="kpi-target ph">Target: ≥ —</div>
+      <div class="kpi-delta delta-bad ph">▼ −— WoW</div>
+      <svg class="kpi-spark" width="80" height="24" viewBox="0 0 80 24">
+        <polyline points="0,12 11,11 22,10 33,9 44,10 55,11 66,13 80,14"
+          fill="none" stroke="#fab219" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="80" cy="14" r="2.5" fill="#fab219"/>
+      </svg>
+    </div>
+
+    <!-- TTR -->
+    <div class="kpi-tile">
+      <div class="kpi-bar serious"></div>
+      <div class="kpi-label">TTR (days)</div>
+      <div class="kpi-val ph">—</div>
+      <div class="kpi-target ph">Target: ≤ — days</div>
+      <div class="kpi-delta delta-bad ph">▲ +— WoW</div>
+      <svg class="kpi-spark" width="80" height="24" viewBox="0 0 80 24">
+        <polyline points="0,14 11,13 22,14 33,12 44,11 55,10 66,8 80,7"
+          fill="none" stroke="#ec835a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="80" cy="7" r="2.5" fill="#ec835a"/>
+      </svg>
+    </div>
+
+    <!-- Escalations -->
+    <div class="kpi-tile">
+      <div class="kpi-bar good"></div>
+      <div class="kpi-label">Escalations</div>
+      <div class="kpi-val ph">—</div>
+      <div class="kpi-target ph">Target: ≤ —</div>
+      <div class="kpi-delta delta-good ph">▼ −— WoW</div>
+      <svg class="kpi-spark" width="80" height="24" viewBox="0 0 80 24">
+        <polyline points="0,8 11,10 22,11 33,13 44,12 55,14 66,15 80,16"
+          fill="none" stroke="#0ca30c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="80" cy="16" r="2.5" fill="#0ca30c"/>
+      </svg>
+    </div>
+
+    <!-- SLO Miss -->
+    <div class="kpi-tile">
+      <div class="kpi-bar warn"></div>
+      <div class="kpi-label">SLO Miss</div>
+      <div class="kpi-val ph">—%</div>
+      <div class="kpi-target ph">Target: ≤ —%</div>
+      <div class="kpi-delta delta-bad ph">▲ +—% WoW</div>
+      <svg class="kpi-spark" width="80" height="24" viewBox="0 0 80 24">
+        <polyline points="0,16 11,15 22,16 33,14 44,12 55,11 66,10 80,8"
+          fill="none" stroke="#fab219" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="80" cy="8" r="2.5" fill="#fab219"/>
+      </svg>
+    </div>
+
+    <!-- Productivity -->
+    <div class="kpi-tile">
+      <div class="kpi-bar good"></div>
+      <div class="kpi-label">Productivity</div>
+      <div class="kpi-val ph">—%</div>
+      <div class="kpi-target ph">Target: ≥ —%</div>
+      <div class="kpi-delta delta-good ph">▲ +—% WoW</div>
+      <svg class="kpi-spark" width="80" height="24" viewBox="0 0 80 24">
+        <polyline points="0,16 11,15 22,14 33,13 44,12 55,11 66,10 80,9"
+          fill="none" stroke="#0ca30c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="80" cy="9" r="2.5" fill="#0ca30c"/>
+      </svg>
+    </div>
+
+  </div><!-- /kpi-grid -->
+
+  <!-- Out-of-alignment callout -->
+  <div class="callout">
+    <div class="callout-head">⚠ Out-of-Alignment KPIs — Cloud Impact</div>
+    <table class="callout-table">
+      <thead>
+        <tr>
+          <th style="width:90px">KPI</th>
+          <th style="width:100px">Status</th>
+          <th style="width:180px">Impacted Cloud</th>
+          <th>Action / Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ph">[ KPI ]</td>
+          <td><span class="pill pill-serious">● Serious</span></td>
+          <td class="ph">[ Cloud Name ]</td>
+          <td class="ph">[ Describe action and owner ]</td>
+        </tr>
+        <tr>
+          <td class="ph">[ KPI ]</td>
+          <td><span class="pill pill-warn">● Warning</span></td>
+          <td class="ph">[ Cloud Name ]</td>
+          <td class="ph">[ Describe action and owner ]</td>
+        </tr>
+        <tr>
+          <td class="ph">[ KPI ]</td>
+          <td><span class="pill pill-warn">● Warning</span></td>
+          <td class="ph">[ Cloud Name ]</td>
+          <td class="ph">[ Describe action and owner ]</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ═══════════════ SLIDE 2 — INFLOW ANALYSIS ═══════════════ -->
+<section id="s2" class="slide">
+  <div class="slide-head">
+    <h2>Slide 2 — Inflow Analysis</h2>
+    <p>Inflow by cloud · Top 5 product &amp; topic · Sev 1 breakdown · KPI health by cloud</p>
+  </div>
+
+  <div class="two-col two-col-wide" style="margin-bottom:24px;">
+
+    <!-- LEFT: Inflow by Cloud + Sev 1 -->
+    <div>
+      <div class="sec-label">Inflow by Cloud — This Week</div>
+      <div class="hbar-list">
+        <!-- Repeat one .hbar-row per cloud. Adjust width% of .hbar-fill to reflect relative volume -->
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 1 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:100%;background:#3987e5;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 2 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:80%;background:#d95926;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 3 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:65%;background:#199e70;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 4 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:52%;background:#c98500;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 5 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:42%;background:#d55181;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+      </div>
+
+      <div class="sec-label" style="margin-top:24px;">Sev 1 Inflow by Cloud</div>
+      <div class="hbar-list">
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 1 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:100%;background:#d03b3b;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 2 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:70%;background:#d03b3b;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 3 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:45%;background:#d03b3b;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-label ph">[ Cloud 4 ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:25%;background:#d03b3b;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Top 5 table -->
+    <div>
+      <div class="sec-label">Top 5 Product &amp; Topic — Reason &amp; Example</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:24px">#</th>
+            <th>Product / Cloud</th>
+            <th>Topic</th>
+            <th>Reason</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="rank-dot">1</span></td>
+            <td class="ph">[ Cloud ]</td>
+            <td class="ph">[ Topic ]</td>
+            <td class="ph">[ Reason ]</td>
+            <td class="ph">[ Brief example ]</td>
+          </tr>
+          <tr>
+            <td><span class="rank-dot" style="background:#d95926;">2</span></td>
+            <td class="ph">[ Cloud ]</td>
+            <td class="ph">[ Topic ]</td>
+            <td class="ph">[ Reason ]</td>
+            <td class="ph">[ Brief example ]</td>
+          </tr>
+          <tr>
+            <td><span class="rank-dot" style="background:#199e70;">3</span></td>
+            <td class="ph">[ Cloud ]</td>
+            <td class="ph">[ Topic ]</td>
+            <td class="ph">[ Reason ]</td>
+            <td class="ph">[ Brief example ]</td>
+          </tr>
+          <tr>
+            <td><span class="rank-dot" style="background:#c98500;">4</span></td>
+            <td class="ph">[ Cloud ]</td>
+            <td class="ph">[ Topic ]</td>
+            <td class="ph">[ Reason ]</td>
+            <td class="ph">[ Brief example ]</td>
+          </tr>
+          <tr>
+            <td><span class="rank-dot" style="background:#d55181;">5</span></td>
+            <td class="ph">[ Cloud ]</td>
+            <td class="ph">[ Topic ]</td>
+            <td class="ph">[ Reason ]</td>
+            <td class="ph">[ Brief example ]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- KPI health by cloud -->
+      <div class="sec-label" style="margin-top:24px;">KPI Health by Cloud</div>
+      <table class="dot-matrix">
+        <thead>
+          <tr>
+            <th class="row-head">Cloud</th>
+            <th>CSAT</th>
+            <th>Inflow</th>
+            <th>TTR</th>
+            <th>SLO</th>
+            <th>Escal.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ● good   ● warn   ● serious   ● critical  — replace dots below -->
+          <tr>
+            <td class="row-head ph">[ Cloud 1 ]</td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-warn"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-warn"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+          </tr>
+          <tr>
+            <td class="row-head ph">[ Cloud 2 ]</td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-serious"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+          </tr>
+          <tr>
+            <td class="row-head ph">[ Cloud 3 ]</td>
+            <td><span class="status-dot dot-warn"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-serious"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+          </tr>
+          <tr>
+            <td class="row-head ph">[ Cloud 4 ]</td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+          </tr>
+          <tr>
+            <td class="row-head ph">[ Cloud 5 ]</td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-warn"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-good"></span></td>
+            <td><span class="status-dot dot-warn"></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="display:flex;gap:16px;margin-top:8px;">
+        <span style="font-size:10px;color:#6b7280;display:flex;align-items:center;gap:4px;"><span class="status-dot dot-good" style="display:inline-block;"></span> On Target</span>
+        <span style="font-size:10px;color:#6b7280;display:flex;align-items:center;gap:4px;"><span class="status-dot dot-warn" style="display:inline-block;"></span> Warning</span>
+        <span style="font-size:10px;color:#6b7280;display:flex;align-items:center;gap:4px;"><span class="status-dot dot-serious" style="display:inline-block;"></span> Serious</span>
+        <span style="font-size:10px;color:#6b7280;display:flex;align-items:center;gap:4px;"><span class="status-dot dot-critical" style="display:inline-block;"></span> Critical</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════ SLIDE 3 — COVERAGE ═══════════════ -->
+<section id="s3" class="slide">
+  <div class="slide-head">
+    <h2>Slide 3 — Coverage by Primary Skill &amp; Ring Fencing</h2>
+    <p>Engineer head-count by primary skill · Ring fencing = Full / Partial / Gap per cloud</p>
+  </div>
+
+  <div class="two-col two-col-half">
+
+    <!-- LEFT: Coverage by Primary Skill -->
+    <div>
+      <div class="sec-label">Coverage by Primary Skill — Engineer Count</div>
+      <div class="skill-hbars">
+        <!-- Adjust width% proportionally to head-count. Max bar = 100% for the largest skill. -->
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:100%;background:#3987e5;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:88%;background:#d95926;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:63%;background:#199e70;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:50%;background:#c98500;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:50%;background:#d55181;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:38%;background:#008300;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:25%;background:#9085e9;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+        <div class="skill-hbar-row">
+          <span class="skill-hbar-label ph">[ Skill / Cloud ]</span>
+          <div class="hbar-track"><div class="hbar-fill" style="width:13%;background:#e66767;"></div></div>
+          <span class="hbar-val ph">—</span>
+        </div>
+      </div>
+
+      <!-- Coverage gap callout -->
+      <div class="callout" style="margin-top:20px;">
+        <div class="callout-head" style="color:#d03b3b;">⚠ Clouds With No Coverage</div>
+        <table class="callout-table">
+          <thead><tr><th>Cloud</th><th>Engineers Available</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="ph">[ Cloud ]</td>
+              <td class="ph">0</td>
+              <td><span class="pill pill-critical">● Critical</span></td>
+            </tr>
+            <tr>
+              <td class="ph">[ Cloud ]</td>
+              <td class="ph">1 (partial)</td>
+              <td><span class="pill pill-serious">● Serious</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT: Ring Fencing -->
+    <div>
+      <div class="sec-label">Coverage by Ring Fencing</div>
+      <div class="rfence-rows">
+        <!-- Adjust seg widths (%) per cloud: full + partial + gap = 100% -->
+        <div class="rfence-row">
+          <div class="rfence-cloud-label ph">[ Cloud 1 ]</div>
+          <div class="rfence-bar">
+            <div class="rfence-seg seg-full" style="width:80%">80%</div>
+            <div class="rfence-seg seg-partial" style="width:15%">15%</div>
+            <div class="rfence-seg seg-gap" style="width:5%"></div>
+          </div>
+        </div>
+        <div class="rfence-row">
+          <div class="rfence-cloud-label ph">[ Cloud 2 ]</div>
+          <div class="rfence-bar">
+            <div class="rfence-seg seg-full" style="width:70%">70%</div>
+            <div class="rfence-seg seg-partial" style="width:20%">20%</div>
+            <div class="rfence-seg seg-gap" style="width:10%">10%</div>
+          </div>
+        </div>
+        <div class="rfence-row">
+          <div class="rfence-cloud-label ph">[ Cloud 3 ]</div>
+          <div class="rfence-bar">
+            <div class="rfence-seg seg-full" style="width:60%">60%</div>
+            <div class="rfence-seg seg-partial" style="width:25%">25%</div>
+            <div class="rfence-seg seg-gap" style="width:15%">15%</div>
+          </div>
+        </div>
+        <div class="rfence-row">
+          <div class="rfence-cloud-label ph">[ Cloud 4 ]</div>
+          <div class="rfence-bar">
+            <div class="rfence-seg seg-full" style="width:55%">55%</div>
+            <div class="rfence-seg seg-partial" style="width:30%">30%</div>
+            <div class="rfence-seg seg-gap" style="width:15%">15%</div>
+          </div>
+        </div>
+        <div class="rfence-row">
+          <div class="rfence-cloud-label ph">[ Cloud 5 ]</div>
+          <div class="rfence-bar">
+            <div class="rfence-seg seg-full" style="width:50%">50%</div>
+            <div class="rfence-seg seg-partial" style="width:30%">30%</div>
+            <div class="rfence-seg seg-gap" style="width:20%">20%</div>
+          </div>
+        </div>
+        <div class="rfence-row">
+          <div class="rfence-cloud-label ph">[ Cloud 6 ]</div>
+          <div class="rfence-bar">
+            <div class="rfence-seg seg-full" style="width:40%">40%</div>
+            <div class="rfence-seg seg-partial" style="width:30%">30%</div>
+            <div class="rfence-seg seg-gap" style="width:30%">30%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rfence-legend">
+        <div class="rfence-leg-item"><div class="rfence-swatch" style="background:#3987e5;"></div> Full (dedicated engineers)</div>
+        <div class="rfence-leg-item"><div class="rfence-swatch" style="background:#c98500;"></div> Partial (cross-trained)</div>
+        <div class="rfence-leg-item"><div class="rfence-swatch" style="background:#d03b3b;"></div> Gap (no coverage)</div>
+      </div>
+
+      <!-- Ring fencing summary callout -->
+      <div class="callout" style="margin-top:20px;border-color:rgba(57,135,229,.25);background:#0d1525;">
+        <div class="callout-head" style="color:#3987e5;">Key Coverage Observations</div>
+        <ul style="font-size:12px;color:#9ca3af;padding-left:16px;display:flex;flex-direction:column;gap:5px;">
+          <li class="ph">[ Cloud X ] has no full ring-fence — single point of failure</li>
+          <li class="ph">[ Cloud Y ] partial coverage creates SLO risk during leave / PTO</li>
+          <li class="ph">[ Add observation ]</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════ SLIDE 4 — TEAM COVERAGE ═══════════════ -->
+<section id="s4" class="slide">
+  <div class="slide-head">
+    <h2>Slide 4 — Team Coverage by Region</h2>
+    <p>Primary skill distribution · Inflow &amp; Closure by engineer count — AMER vs India</p>
+  </div>
+
+  <div class="two-col two-col-half">
+
+    <!-- LEFT: Skill matrix -->
+    <div>
+      <div class="sec-label">Current State — Primary Skills by Team</div>
+      <table class="skill-matrix">
+        <thead>
+          <tr>
+            <th class="row-head">Team</th>
+            <!-- Add one <th> per primary skill/cloud tracked -->
+            <th class="ph">Skill 1</th>
+            <th class="ph">Skill 2</th>
+            <th class="ph">Skill 3</th>
+            <th class="ph">Skill 4</th>
+            <th class="ph">Skill 5</th>
+            <th style="color:#fab219;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-head" style="color:#3987e5;font-weight:600;">AMER</td>
+            <!-- Use chip-hi (≥3), chip-mid (1–2), chip-lo (0 but needed), chip-zero (not applicable) -->
+            <td><span class="count-chip chip-hi ph">—</span></td>
+            <td><span class="count-chip chip-hi ph">—</span></td>
+            <td><span class="count-chip chip-mid ph">—</span></td>
+            <td><span class="count-chip chip-mid ph">—</span></td>
+            <td><span class="count-chip chip-lo ph">—</span></td>
+            <td style="font-weight:700;color:#fab219;" class="ph">—</td>
+          </tr>
+          <tr>
+            <td class="row-head" style="color:#199e70;font-weight:600;">India</td>
+            <td><span class="count-chip chip-hi ph">—</span></td>
+            <td><span class="count-chip chip-hi ph">—</span></td>
+            <td><span class="count-chip chip-hi ph">—</span></td>
+            <td><span class="count-chip chip-mid ph">—</span></td>
+            <td><span class="count-chip chip-mid ph">—</span></td>
+            <td style="font-weight:700;color:#fab219;" class="ph">—</td>
+          </tr>
+          <tr class="total-row">
+            <td class="row-head">Total</td>
+            <td class="ph">—</td>
+            <td class="ph">—</td>
+            <td class="ph">—</td>
+            <td class="ph">—</td>
+            <td class="ph">—</td>
+            <td class="ph">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Chip legend -->
+      <div style="display:flex;gap:16px;margin-top:10px;">
+        <span style="font-size:10px;color:#6b7280;display:flex;align-items:center;gap:5px;"><span class="count-chip chip-hi" style="width:16px;height:16px;font-size:9px;">3+</span> Strong</span>
+        <span style="font-size:10px;color:#6b7280;display:flex;align-items:center;gap:5px;"><span class="count-chip chip-mid" style="width:16px;height:16px;font-size:9px;">1–2</span> Lean</span>
+        <span style="font-size:10px;color:#6b7280;display:flex;align-items:center;gap:5px;"><span class="count-chip chip-lo" style="width:16px;height:16px;font-size:9px;">0</span> Gap</span>
+      </div>
+
+      <!-- Summary stats -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:24px;">
+        <div style="background:#1e2235;border:1px solid #2c2c3a;border-radius:8px;padding:12px 14px;text-align:center;">
+          <div style="font-size:10px;color:#3987e5;font-weight:600;text-transform:uppercase;margin-bottom:4px;">AMER</div>
+          <div style="font-size:22px;font-weight:700;color:#e2e8f0;" class="ph">—</div>
+          <div style="font-size:10px;color:#6b7280;">engineers</div>
+        </div>
+        <div style="background:#1e2235;border:1px solid #2c2c3a;border-radius:8px;padding:12px 14px;text-align:center;">
+          <div style="font-size:10px;color:#199e70;font-weight:600;text-transform:uppercase;margin-bottom:4px;">India</div>
+          <div style="font-size:22px;font-weight:700;color:#e2e8f0;" class="ph">—</div>
+          <div style="font-size:10px;color:#6b7280;">engineers</div>
+        </div>
+        <div style="background:#1e2235;border:1px solid #2c2c3a;border-radius:8px;padding:12px 14px;text-align:center;">
+          <div style="font-size:10px;color:#fab219;font-weight:600;text-transform:uppercase;margin-bottom:4px;">Total</div>
+          <div style="font-size:22px;font-weight:700;color:#e2e8f0;" class="ph">—</div>
+          <div style="font-size:10px;color:#6b7280;">engineers</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Inflow & Closure by engineer count per region -->
+    <div>
+      <div class="sec-label">Inflow &amp; Closure by Engineer Count — AMER vs India</div>
+
+      <div style="display:flex;gap:16px;margin-bottom:12px;">
+        <span style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:12px;height:3px;background:#3987e5;border-radius:2px;"></span> AMER
+        </span>
+        <span style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:12px;height:3px;background:#199e70;border-radius:2px;"></span> India
+        </span>
+        <span style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#3987e5;opacity:.6;"></span> Inflow
+          &nbsp;
+          <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#3987e5;"></span> Closure
+        </span>
+      </div>
+
+      <div class="team-section">
+
+        <!-- One .team-group per cloud/skill area. Adjust bar widths proportionally. -->
+        <div class="team-group">
+          <div class="team-group-label ph">[ Cloud 1 ]</div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">AMER Inflow</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:80%;background:rgba(57,135,229,.5);"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">AMER Closure</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:70%;background:#3987e5;"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">India Inflow</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:60%;background:rgba(25,158,112,.5);"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">India Closure</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:65%;background:#199e70;"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+        </div>
+
+        <div class="team-group">
+          <div class="team-group-label ph">[ Cloud 2 ]</div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">AMER Inflow</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:60%;background:rgba(57,135,229,.5);"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">AMER Closure</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:55%;background:#3987e5;"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">India Inflow</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:45%;background:rgba(25,158,112,.5);"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">India Closure</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:48%;background:#199e70;"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+        </div>
+
+        <div class="team-group">
+          <div class="team-group-label ph">[ Cloud 3 ]</div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">AMER Inflow</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:40%;background:rgba(57,135,229,.5);"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">AMER Closure</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:35%;background:#3987e5;"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">India Inflow</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:38%;background:rgba(25,158,112,.5);"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+          <div class="team-bar-row">
+            <span class="team-bar-label">India Closure</span>
+            <div class="team-bar-track"><div class="team-bar-fill" style="width:36%;background:#199e70;"></div></div>
+            <span class="team-bar-val ph">—</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<footer>
+  Signature Weekly Business Review &nbsp;·&nbsp; Template — replace all <span class="ph">[placeholders]</span> and <span class="ph">—</span> values with live data before presenting &nbsp;·&nbsp; Week of [ DATE ]
+</footer>
+
+</body>
+</html>
