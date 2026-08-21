@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Industries Support — Weekly Dashboard</title>
+<style>
+/* ── Design tokens ───────────────────────────────────────── */
+:root {
+  --s1:#1a1a19;--s2:#0d0d0d;--sc:#1a1d27;--sc2:#222230;
+  --tp:#ffffff;--ts:#c3c2b7;--tm:#898781;
+  --g:#2c2c2a;--bl:#383835;--brd:rgba(255,255,255,.10);
+  --c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500;
+  --c5:#d55181;--c6:#008300;--c7:#9085e9;--c8:#e66767;
+  --good:#0ca30c;--warn:#fab219;--crit:#d03b3b;--ser:#ec835a;
+  --shd:0 1px 6px rgba(0,0,0,.45);
+}
+[data-theme="light"] {
+  --s1:#fcfcfb;--s2:#f9f9f7;--sc:#ffffff;--sc2:#f4f4f2;
+  --tp:#0b0b0b;--ts:#52514e;--tm:#898781;
+  --g:#e1e0d9;--bl:#c3c2b7;--brd:rgba(11,11,11,.10);
+  --c1:#2a78d6;--c2:#eb6834;--c3:#1baf7a;--c4:#eda100;
+  --c5:#e87ba4;--c6:#008300;--c7:#4a3aa7;--c8:#e34948;
+  --good:#0ca30c;--warn:#fab219;--crit:#d03b3b;--ser:#ec835a;
+  --shd:0 1px 4px rgba(11,11,11,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.5;background:var(--s2);color:var(--tp);min-height:100vh;}
+svg text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;}
+
+/* ── Header ──────────────────────────────────────────────── */
+.hdr{background:var(--sc);border-bottom:1px solid var(--g);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200;}
+.hdr-l{display:flex;align-items:center;gap:12px;}
+.hdr h1{font-size:14px;font-weight:700;letter-spacing:.01em;}
+.hdr-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:9px;background:var(--c1);color:#fff;letter-spacing:.04em;}
+.hdr-r{display:flex;align-items:center;gap:10px;}
+.hdr-date{font-size:11px;color:var(--tm);}
+.tbtn{width:30px;height:30px;border:1px solid var(--g);border-radius:6px;background:var(--s1);color:var(--ts);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .15s;}
+.tbtn:hover{background:var(--g);}
+
+/* ── Section nav ─────────────────────────────────────────── */
+.snav{background:var(--sc);border-bottom:1px solid var(--g);padding:0 28px;display:flex;gap:4px;position:sticky;top:54px;z-index:190;overflow-x:auto;}
+.snav-btn{display:flex;align-items:center;gap:7px;padding:0 14px;height:40px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--tm);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;}
+.snav-btn:hover{color:var(--tp);}
+.snav-btn.active{color:var(--c1);border-bottom-color:var(--c1);}
+.snav-dot{width:7px;height:7px;border-radius:50%;}
+
+/* ── Layout ──────────────────────────────────────────────── */
+.main{max-width:1280px;margin:0 auto;padding:28px 24px 72px;display:flex;flex-direction:column;gap:40px;}
+
+/* ── Section frame ───────────────────────────────────────── */
+.sec-frame{display:flex;flex-direction:column;gap:16px;}
+.sec-hdr-row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-left:14px;border-left:3px solid var(--accent,var(--c1));}
+.sec-hdr-row h2{font-size:17px;font-weight:700;}
+.sec-hdr-row p{font-size:12px;color:var(--ts);margin-top:2px;}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tm);margin-bottom:3px;}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.card{background:var(--sc);border:1px solid var(--g);border-radius:10px;padding:20px 22px;box-shadow:var(--shd);}
+.card-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.card-sub{font-size:11px;color:var(--tm);margin-bottom:14px;}
+
+/* ── KPI tiles ───────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;}
+.kpi-tile{background:var(--sc);border:1px solid var(--g);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;box-shadow:var(--shd);}
+.kpi-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--tc,var(--c1));border-radius:10px 10px 0 0;}
+.kpi-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);margin-bottom:5px;}
+.kpi-val{font-size:26px;font-weight:700;line-height:1;margin-bottom:4px;}
+.kpi-meta{font-size:11px;color:var(--ts);margin-bottom:6px;}
+.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;}
+.kpi-delta.up{background:rgba(12,163,12,.15);color:var(--good);}
+.kpi-delta.dn{background:rgba(208,59,59,.15);color:var(--crit);}
+.kpi-delta.nu{background:var(--g);color:var(--ts);}
+.kpi-delta.warn{background:rgba(250,178,25,.15);color:var(--warn);}
+.spark{height:44px;display:flex;align-items:flex-end;gap:2px;margin-top:8px;}
+.sb{flex:1;border-radius:2px 2px 0 0;opacity:.7;transition:opacity .15s,filter .15s;}
+.sb:hover{opacity:1;filter:brightness(1.15);}
+
+/* ── Grid helpers ────────────────────────────────────────── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.grid-6535{display:grid;grid-template-columns:3fr 2fr;gap:16px;}
+.grid-4060{display:grid;grid-template-columns:2fr 3fr;gap:16px;}
+
+/* ── Chart placeholder ───────────────────────────────────── */
+.chart-ph{background:var(--s1);border:1px dashed var(--bl);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--tm);font-size:11px;font-style:italic;text-align:center;padding:14px;}
+
+/* ── Legend ──────────────────────────────────────────────── */
+.leg{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px;}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ts);}
+.ll{width:14px;height:2px;border-radius:2px;}
+.ld{width:9px;height:9px;border-radius:2px;}
+
+/* ── Pills ───────────────────────────────────────────────── */
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap;}
+.pill-blue  {background:rgba(57,135,229,.18);color:var(--c1);}
+.pill-orange{background:rgba(217,89,38,.18);color:var(--c2);}
+.pill-teal  {background:rgba(25,158,112,.18);color:var(--c3);}
+.pill-gold  {background:rgba(201,133,0,.18);color:var(--c4);}
+.pill-pink  {background:rgba(213,81,129,.18);color:var(--c5);}
+.pill-green {background:rgba(12,163,12,.18);color:var(--good);}
+.pill-yellow{background:rgba(250,178,25,.18);color:var(--warn);}
+.pill-red   {background:rgba(208,59,59,.18);color:var(--crit);}
+.pill-grey  {background:var(--g);color:var(--ts);}
+
+/* ── Tables ──────────────────────────────────────────────── */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums;}
+thead th{padding:7px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tm);border-bottom:1px solid var(--g);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--g);transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,.03);}
+[data-theme="light"] tbody tr:hover{background:rgba(0,0,0,.03);}
+tbody td{padding:8px 10px;vertical-align:top;}
+.td-reason{font-size:11px;color:var(--ts);max-width:200px;line-height:1.4;}
+.td-example{font-size:11px;color:var(--tm);max-width:180px;font-style:italic;line-height:1.4;}
+
+/* ── Top-5 P&T rank badge ────────────────────────────────── */
+.rank-badge{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--bl);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ts);}
+.rank-badge.r1{border-color:var(--c2);color:var(--c2);}
+.rank-badge.r2{border-color:var(--c4);color:var(--c4);}
+.rank-badge.r3{border-color:var(--c1);color:var(--c1);}
+
+/* ── Horizontal bar (coverage) ───────────────────────────── */
+.hbar-row{display:flex;flex-direction:column;gap:10px;}
+.hbar-item{display:grid;grid-template-columns:140px 1fr 44px;align-items:center;gap:10px;}
+.hbar-lbl{font-size:11px;color:var(--ts);text-align:right;line-height:1.3;}
+.hbar-track{height:14px;background:var(--s1);border-radius:7px;overflow:hidden;border:1px solid var(--g);}
+.hbar-fill{height:100%;border-radius:7px;transition:width .4s ease;}
+.hbar-pct{font-size:11px;font-weight:700;color:var(--ts);text-align:right;}
+
+/* ── Ring-fence matrix ───────────────────────────────────── */
+.rf-grid{display:flex;flex-direction:column;gap:10px;}
+.rf-row{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--g);border-radius:8px;padding:10px 14px;}
+.rf-cloud{font-size:12px;font-weight:600;min-width:130px;}
+.rf-tses{display:flex;flex-wrap:wrap;gap:6px;flex:1;}
+.tse-chip{display:inline-flex;align-items:center;gap:5px;background:var(--sc2);border:1px solid var(--g);border-radius:14px;padding:3px 10px;font-size:11px;color:var(--ts);}
+.tse-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.rf-count{font-size:11px;color:var(--tm);white-space:nowrap;}
+
+/* ── Team coverage ───────────────────────────────────────── */
+.team-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.team-card{background:var(--sc);border:1px solid var(--g);border-radius:10px;overflow:hidden;box-shadow:var(--shd);}
+.team-hdr{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--g);}
+.team-name{font-size:14px;font-weight:700;}
+.team-sub{font-size:11px;color:var(--ts);margin-top:2px;}
+.team-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px;}
+.team-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.team-stat{background:var(--s1);border:1px solid var(--g);border-radius:8px;padding:10px 12px;}
+.tstat-lbl{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tm);margin-bottom:3px;}
+.tstat-val{font-size:20px;font-weight:700;line-height:1;}
+.tstat-sub{font-size:10px;color:var(--ts);margin-top:2px;}
+.team-skill-list{display:flex;flex-direction:column;gap:6px;}
+.tsk{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.tsk-name{font-size:11px;color:var(--ts);min-width:110px;}
+.tsk-bar-wrap{flex:1;height:10px;background:var(--s1);border-radius:5px;overflow:hidden;border:1px solid var(--g);}
+.tsk-bar-fill{height:100%;border-radius:5px;}
+.tsk-n{font-size:10px;font-weight:600;color:var(--tm);min-width:20px;text-align:right;}
+.coverage-band{height:28px;border-radius:6px;background:var(--s1);border:1px solid var(--g);overflow:hidden;position:relative;display:flex;margin-top:4px;}
+.cov-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;letter-spacing:.04em;transition:opacity .15s;}
+.cov-seg:hover{opacity:.85;}
+
+/* ── KPI-by-cloud mini table ─────────────────────────────── */
+.kbc-table thead th:first-child{min-width:110px;}
+.kbc-val{font-weight:600;}
+.kbc-good{color:var(--good);}
+.kbc-warn{color:var(--warn);}
+.kbc-crit{color:var(--crit);}
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--g);}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:860px){
+  .kpi-grid{grid-template-columns:1fr 1fr 1fr;}
+  .grid2,.grid3,.team-split{grid-template-columns:1fr;}
+  .grid-6535,.grid-4060{grid-template-columns:1fr;}
+}
+@media(max-width:560px){.kpi-grid{grid-template-columns:1fr 1fr;}.team-stat-row{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ── Header ───────────────────────────────────────────── -->
+<header class="hdr">
+  <div class="hdr-l">
+    <h1>Industries Support Dashboard</h1>
+    <span class="hdr-badge">TEMPLATE</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hdr-date" id="hdr-date">Week of —</span>
+    <button class="tbtn" onclick="toggleTheme()" title="Toggle theme">☀</button>
+  </div>
+</header>
+
+<!-- ── Section nav ──────────────────────────────────────── -->
+<nav class="snav" id="snav">
+  <button class="snav-btn active" onclick="scrollTo('s1')" data-s="s1">
+    <span class="snav-dot" style="background:var(--c1)"></span>KPI Overview
+  </button>
+  <button class="snav-btn" onclick="scrollTo('s2')" data-s="s2">
+    <span class="snav-dot" style="background:var(--c2)"></span>Cloud View
+  </button>
+  <button class="snav-btn" onclick="scrollTo('s3')" data-s="s3">
+    <span class="snav-dot" style="background:var(--c3)"></span>Coverage
+  </button>
+  <button class="snav-btn" onclick="scrollTo('s4')" data-s="s4">
+    <span class="snav-dot" style="background:var(--c4)"></span>Team State
+  </button>
+</nav>
+
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 1 — KPI OVERVIEW
+  ════════════════════════════════════════════════════════ -->
+  <section class="sec-frame" id="s1">
+    <div class="sec-hdr-row" style="--accent:var(--c1)">
+      <div>
+        <div class="sec-label">Section 1</div>
+        <h2>KPI Overview</h2>
+        <p>7 primary health signals — all Signature tier, rolling 4-week baseline</p>
+      </div>
+      <div style="font-size:11px;color:var(--tm);text-align:right;">Sparklines = last 8 weeks · Arrow = WoW</div>
+    </div>
+
+    <!-- 7 KPI tiles — 4 + 3 layout via auto-fit -->
+    <div class="kpi-grid" id="kpi-tiles"></div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 2 — CLOUD VIEW
+  ════════════════════════════════════════════════════════ -->
+  <section class="sec-frame" id="s2">
+    <div class="sec-hdr-row" style="--accent:var(--c2)">
+      <div>
+        <div class="sec-label">Section 2</div>
+        <h2>Cloud View</h2>
+        <p>Inflow breakdown, top drivers, KPI comparison, and Sev 1 pressure by cloud</p>
+      </div>
+    </div>
+
+    <!-- Inflow chart + Top 5 P&T side by side -->
+    <div class="grid-4060">
+
+      <!-- Inflow by Cloud trend -->
+      <div class="card">
+        <div class="card-title">Inflow by Cloud — Weekly</div>
+        <div class="card-sub">New cases per week, last 8 weeks · Signature tier</div>
+        <div class="leg">
+          <span class="li"><span class="ll" style="background:var(--c1)"></span>Sales Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c2)"></span>Service Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c3)"></span>Health Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c4)"></span>Financial Svcs</span>
+          <span class="li"><span class="ll" style="background:var(--c5)"></span>Other</span>
+        </div>
+        <div class="chart-ph" style="height:180px;">
+          Multi-line chart — Inflow by cloud, 8 weeks<br>
+          <em>Data: SFDC case.CreatedDate + CloudProduct__c</em>
+        </div>
+      </div>
+
+      <!-- Top 5 P&T -->
+      <div class="card">
+        <div class="card-title">Top 5 Product &amp; Topic (P&amp;T) — This Week</div>
+        <div class="card-sub">Highest-volume case drivers · with root reason and example</div>
+        <div class="tw">
+          <table id="pt-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product / Topic</th>
+                <th>Cloud</th>
+                <th>Cases</th>
+                <th>Root Reason</th>
+                <th>Example</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody id="pt-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI by Cloud -->
+    <div class="card">
+      <div class="card-title">KPI by Cloud — This Week vs Baseline</div>
+      <div class="card-sub">Key metrics per cloud · green = at/above target · amber = watch · red = below threshold</div>
+      <div class="tw">
+        <table class="kbc-table" id="kbc-table">
+          <thead>
+            <tr>
+              <th>Cloud</th>
+              <th>Inflow</th>
+              <th>Closure</th>
+              <th>CSAT</th>
+              <th>TTR (hrs)</th>
+              <th>Escalations</th>
+              <th>SLO Miss %</th>
+              <th>Productivity</th>
+              <th>Sev 1</th>
+            </tr>
+          </thead>
+          <tbody id="kbc-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sev 1 by Cloud -->
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Sev 1 Volume by Cloud — Weekly Trend</div>
+        <div class="card-sub">New Sev 1 cases per week · last 8 weeks</div>
+        <div class="leg">
+          <span class="li"><span class="ld" style="background:var(--c1)"></span>Sales Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c2)"></span>Service Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c3)"></span>Health Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c4)"></span>Financial Svcs</span>
+        </div>
+        <div class="chart-ph" style="height:160px;">
+          Stacked bar — Sev 1 by cloud, 8 weeks<br>
+          <em>Filter: Severity = 1 · Signature tier</em>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sev 1 Share of Total — by Cloud</div>
+        <div class="card-sub">% of all cases that are Sev 1 · rising share = escalation pressure</div>
+        <div class="chart-ph" style="height:160px;">
+          Small multiples (4 panels) — Sev 1 % per cloud, 8-week trend<br>
+          <em>Reference line = rolling 8-week average</em>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 3 — COVERAGE
+  ════════════════════════════════════════════════════════ -->
+  <section class="sec-frame" id="s3">
+    <div class="sec-hdr-row" style="--accent:var(--c3)">
+      <div>
+        <div class="sec-label">Section 3</div>
+        <h2>Coverage</h2>
+        <p>Skill coverage depth vs inflow demand · ring-fenced account assignments</p>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <!-- Coverage by Primary Skill -->
+      <div class="card">
+        <div class="card-title">Coverage by Primary Skill</div>
+        <div class="card-sub">TSEs per skill area vs % of weekly inflow that skill covers · gap = uncovered demand</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;font-size:11px;color:var(--ts);">
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--c1);display:inline-block;"></span>TSE count</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:var(--c3);opacity:.5;display:inline-block;"></span>% of inflow covered</span>
+        </div>
+        <div class="hbar-row" id="skill-bars"></div>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--g);font-size:11px;color:var(--tm);">
+          Gap rows (% of inflow &gt; TSE capacity) should drive hiring or cross-train plan
+        </div>
+      </div>
+
+      <!-- Coverage by Ring Fencing -->
+      <div class="card">
+        <div class="card-title">Coverage by Ring Fencing</div>
+        <div class="card-sub">Dedicated TSE assignment per cloud / account tier · non-listed = shared pool</div>
+        <div class="rf-grid" id="rf-grid"></div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--g);">
+          <div style="display:flex;gap:16px;font-size:11px;">
+            <span class="li"><span class="tse-dot" style="background:var(--c1)"></span><span style="color:var(--ts)">Primary (full dedication)</span></span>
+            <span class="li"><span class="tse-dot" style="background:var(--c3)"></span><span style="color:var(--ts)">Shared (≥50% time)</span></span>
+            <span class="li"><span class="tse-dot" style="background:var(--bl)"></span><span style="color:var(--ts)">Pool / overflow</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION 4 — TEAM STATE
+  ════════════════════════════════════════════════════════ -->
+  <section class="sec-frame" id="s4">
+    <div class="sec-hdr-row" style="--accent:var(--c4)">
+      <div>
+        <div class="sec-label">Section 4</div>
+        <h2>Current State of Coverage by Team</h2>
+        <p>Americas &amp; India — headcount, skill depth, time-zone coverage, and ring-fence load</p>
+      </div>
+    </div>
+
+    <div class="team-split">
+
+      <!-- Americas -->
+      <div class="team-card">
+        <div class="team-hdr" style="border-left:3px solid var(--c1);margin-left:-1px;">
+          <div>
+            <div class="team-name">Americas</div>
+            <div class="team-sub">EST / CST / PST · coverage window ~9 AM–9 PM ET</div>
+          </div>
+          <span class="pill pill-blue">—  TSEs</span>
+        </div>
+        <div class="team-body">
+
+          <!-- Headcount stats -->
+          <div class="team-stat-row" id="amer-stats"></div>
+
+          <!-- Skill breakdown -->
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);margin-bottom:8px;">Primary Skill Breakdown</div>
+            <div class="team-skill-list" id="amer-skills"></div>
+          </div>
+
+          <!-- Time-zone coverage band -->
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);margin-bottom:6px;">Active Coverage Band (UTC)</div>
+            <div class="coverage-band" id="amer-band" title="UTC hours with active Americas coverage"></div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--tm);margin-top:3px;padding:0 2px;">
+              <span>0:00</span><span>6:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
+            </div>
+          </div>
+
+          <!-- Ring-fenced accounts -->
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);margin-bottom:8px;">Ring-Fenced Accounts / Clouds</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;" id="amer-rf"></div>
+          </div>
+
+          <!-- Open gaps -->
+          <div style="background:rgba(208,59,59,.08);border:1px solid rgba(208,59,59,.25);border-radius:8px;padding:10px 12px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--crit);margin-bottom:6px;">Coverage Gaps</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;" id="amer-gaps"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- India -->
+      <div class="team-card">
+        <div class="team-hdr" style="border-left:3px solid var(--c3);margin-left:-1px;">
+          <div>
+            <div class="team-name">India</div>
+            <div class="team-sub">IST · coverage window ~9 AM–9 PM IST (3:30–15:30 UTC)</div>
+          </div>
+          <span class="pill pill-teal">—  TSEs</span>
+        </div>
+        <div class="team-body">
+
+          <div class="team-stat-row" id="india-stats"></div>
+
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);margin-bottom:8px;">Primary Skill Breakdown</div>
+            <div class="team-skill-list" id="india-skills"></div>
+          </div>
+
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);margin-bottom:6px;">Active Coverage Band (UTC)</div>
+            <div class="coverage-band" id="india-band" title="UTC hours with active India coverage"></div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--tm);margin-top:3px;padding:0 2px;">
+              <span>0:00</span><span>6:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm);margin-bottom:8px;">Ring-Fenced Accounts / Clouds</div>
+            <div style="display:flex;flex-wrap:gap:6px;" id="india-rf"></div>
+          </div>
+
+          <div style="background:rgba(208,59,59,.08);border:1px solid rgba(208,59,59,.25);border-radius:8px;padding:10px 12px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--crit);margin-bottom:6px;">Coverage Gaps</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;" id="india-gaps"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combined overlap view -->
+    <div class="card">
+      <div class="card-title">Combined 24h Coverage Band</div>
+      <div class="card-sub">Where Americas and India windows overlap · gap hours = risk window</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+        <div>
+          <div style="font-size:10px;color:var(--tm);margin-bottom:4px;">Americas</div>
+          <div class="coverage-band" id="combined-amer"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--tm);margin-bottom:4px;">India</div>
+          <div class="coverage-band" id="combined-india"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--tm);margin-bottom:4px;">Combined (overlap = follow-the-sun)</div>
+          <div class="coverage-band" id="combined-both"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--tm);padding:0 2px;">
+          <span>0:00 UTC</span><span>3:00</span><span>6:00</span><span>9:00</span><span>12:00</span><span>15:00</span><span>18:00</span><span>21:00</span><span>24:00</span>
+        </div>
+        <div style="display:flex;gap:16px;font-size:11px;flex-wrap:wrap;margin-top:4px;">
+          <span class="li"><span class="tse-dot" style="background:var(--c1)"></span><span style="color:var(--ts)">Americas active</span></span>
+          <span class="li"><span class="tse-dot" style="background:var(--c3)"></span><span style="color:var(--ts)">India active</span></span>
+          <span class="li"><span class="tse-dot" style="background:var(--c4)"></span><span style="color:var(--ts)">Overlap</span></span>
+          <span class="li"><span class="tse-dot" style="background:var(--g)"></span><span style="color:var(--ts)">Gap (no coverage)</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─────────────────────────────────────────────────────────
+     DATA — swap these objects to populate the template
+──────────────────────────────────────────────────────────── -->
+<script>
+/* ── 1. KPI definitions ─────────────────────────────────── */
+const KPIS = [
+  { lbl:'CSAT',        tc:'var(--c1)', val:'—', meta:'Avg score', delta:'nu', arrow:'→',
+    desc:'Target ≥ 4.5', sparks:[72,74,70,76,75,73,77,78] },
+  { lbl:'Inflow',      tc:'var(--c2)', val:'—', meta:'Cases this week', delta:'nu', arrow:'→',
+    desc:'WoW change', sparks:[40,50,45,60,55,65,70,62] },
+  { lbl:'Closure',     tc:'var(--c3)', val:'—', meta:'Cases closed WTD', delta:'nu', arrow:'→',
+    desc:'Target ≥ inflow', sparks:[80,75,82,78,85,80,88,84] },
+  { lbl:'TTR (hrs)',   tc:'var(--c4)', val:'—', meta:'Median · closed cases', delta:'nu', arrow:'→',
+    desc:'Lower is better', sparks:[55,60,58,65,62,70,64,60] },
+  { lbl:'Escalations', tc:'var(--c8)', val:'—', meta:'Cases escalated WTD', delta:'nu', arrow:'→',
+    desc:'Target < baseline', sparks:[8,10,7,12,9,11,8,9] },
+  { lbl:'SLO Miss',    tc:'var(--warn)', val:'—', meta:'% breaching SLO', delta:'nu', arrow:'→',
+    desc:'Target < 5%', sparks:[5,6,4,7,5,8,6,5] },
+  { lbl:'Productivity',tc:'var(--c7)',  val:'—', meta:'Cases resolved / TSE', delta:'nu', arrow:'→',
+    desc:'WoW change', sparks:[60,62,65,60,68,64,70,72] },
+];
+
+/* ── 2. Top 5 P&T data ──────────────────────────────────── */
+const PT_DATA = [
+  { r:1, pt:'OmniChannel Routing', cloud:'Service Cloud', count:'—',
+    reason:'Placeholder — describe root cause, e.g. config regression after release',
+    example:'CS-XXXXXX — brief one-line description', trend:'up' },
+  { r:2, pt:'Communities / Experience', cloud:'Sales Cloud', count:'—',
+    reason:'Placeholder — recurring pattern or known bug driving volume',
+    example:'CS-XXXXXX — brief one-line description', trend:'stable' },
+  { r:3, pt:'Care Plans', cloud:'Health Cloud', count:'—',
+    reason:'Placeholder — post-upgrade behavior change or doc gap',
+    example:'CS-XXXXXX — brief one-line description', trend:'up' },
+  { r:4, pt:'Loan Origination', cloud:'Financial Svcs', count:'—',
+    reason:'Placeholder — integration issue or permission set gap',
+    example:'CS-XXXXXX — brief one-line description', trend:'dn' },
+  { r:5, pt:'Flow Builder', cloud:'Sales Cloud', count:'—',
+    reason:'Placeholder — platform release side-effect',
+    example:'CS-XXXXXX — brief one-line description', trend:'stable' },
+];
+
+/* ── 3. KPI by Cloud data ───────────────────────────────── */
+const KBC_DATA = [
+  { cloud:'Sales Cloud',    color:'--c1', inflow:'—', closure:'—', csat:'—', ttr:'—', esc:'—', slo:'—', prod:'—', sev1:'—', csatState:'nu', sloState:'nu' },
+  { cloud:'Service Cloud',  color:'--c2', inflow:'—', closure:'—', csat:'—', ttr:'—', esc:'—', slo:'—', prod:'—', sev1:'—', csatState:'nu', sloState:'nu' },
+  { cloud:'Health Cloud',   color:'--c3', inflow:'—', closure:'—', csat:'—', ttr:'—', esc:'—', slo:'—', prod:'—', sev1:'—', csatState:'nu', sloState:'nu' },
+  { cloud:'Financial Svcs', color:'--c4', inflow:'—', closure:'—', csat:'—', ttr:'—', esc:'—', slo:'—', prod:'—', sev1:'—', csatState:'nu', sloState:'nu' },
+  { cloud:'Other',          color:'--c5', inflow:'—', closure:'—', csat:'—', ttr:'—', esc:'—', slo:'—', prod:'—', sev1:'—', csatState:'nu', sloState:'nu' },
+];
+
+/* ── 4. Coverage by Primary Skill ───────────────────────── */
+const SKILLS = [
+  { name:'Service Cloud — Core',     tses:0, pct:0,  color:'var(--c2)' },
+  { name:'Health Cloud',             tses:0, pct:0,  color:'var(--c3)' },
+  { name:'Financial Svcs Cloud',     tses:0, pct:0,  color:'var(--c4)' },
+  { name:'Sales Cloud — Core',       tses:0, pct:0,  color:'var(--c1)' },
+  { name:'OmniChannel / Einstein',   tses:0, pct:0,  color:'var(--c5)' },
+  { name:'Integration / MuleSoft',   tses:0, pct:0,  color:'var(--c7)' },
+  { name:'Platform / Flow',          tses:0, pct:0,  color:'var(--c8)' },
+];
+
+/* ── 5. Ring fence data ─────────────────────────────────── */
+const RF_DATA = [
+  { cloud:'Service Cloud — Tier 1', tses:['TSE Name A·primary','TSE Name B·shared'], count:2 },
+  { cloud:'Health Cloud',           tses:['TSE Name C·primary','TSE Name D·primary'], count:2 },
+  { cloud:'Financial Svcs',         tses:['TSE Name E·shared'], count:1 },
+  { cloud:'Sales Cloud — Key Accts',tses:['TSE Name F·primary','TSE Name G·shared'], count:2 },
+  { cloud:'Shared Pool',            tses:['TSE Name H·pool','TSE Name I·pool','TSE Name J·pool'], count:3 },
+];
+
+/* ── 6. Team data ───────────────────────────────────────── */
+const TEAMS = {
+  americas: {
+    stats: [
+      { lbl:'Total TSEs',  val:'—', sub:'Headcount' },
+      { lbl:'Ring-Fenced', val:'—', sub:'Dedicated' },
+      { lbl:'Shared Pool', val:'—', sub:'Available' },
+    ],
+    skills: [
+      { name:'Service Cloud',   n:0, max:8, color:'var(--c2)' },
+      { name:'Health Cloud',    n:0, max:8, color:'var(--c3)' },
+      { name:'Financial Svcs',  n:0, max:8, color:'var(--c4)' },
+      { name:'Sales Cloud',     n:0, max:8, color:'var(--c1)' },
+      { name:'Platform / Flow', n:0, max:8, color:'var(--c8)' },
+    ],
+    /* UTC start/end for coverage band: Americas ~12:00–02:00 UTC */
+    band: { start:12, end:26, color:'var(--c1)' },
+    rf: ['Service Cloud Tier 1','Health Cloud','Key Accounts A'],
+    gaps: ['No IST-hour coverage for Sev 1 handoff','Financial Svcs under-resourced (1 TSE)'],
+  },
+  india: {
+    stats: [
+      { lbl:'Total TSEs',  val:'—', sub:'Headcount' },
+      { lbl:'Ring-Fenced', val:'—', sub:'Dedicated' },
+      { lbl:'Shared Pool', val:'—', sub:'Available' },
+    ],
+    skills: [
+      { name:'Service Cloud',   n:0, max:8, color:'var(--c2)' },
+      { name:'Sales Cloud',     n:0, max:8, color:'var(--c1)' },
+      { name:'Health Cloud',    n:0, max:8, color:'var(--c3)' },
+      { name:'Financial Svcs',  n:0, max:8, color:'var(--c4)' },
+      { name:'Integration',     n:0, max:8, color:'var(--c7)' },
+    ],
+    /* India: ~03:30–15:30 UTC */
+    band: { start:3.5, end:15.5, color:'var(--c3)' },
+    rf: ['Sales Cloud Core','Financial Svcs'],
+    gaps: ['Limited Service Cloud depth for complex Sev 1','No overlap with LATAM hours'],
+  },
+};
+
+/* ══════════════════════════════════════════════════════════
+   RENDER FUNCTIONS — do not edit below unless wiring data
+══════════════════════════════════════════════════════════ */
+
+/* Date */
+const now = new Date();
+document.getElementById('hdr-date').textContent =
+  'Week of ' + now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+/* Theme */
+function toggleTheme() {
+  const h = document.documentElement;
+  h.dataset.theme = h.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+/* KPI tiles */
+(function renderKPIs() {
+  const grid = document.getElementById('kpi-tiles');
+  grid.innerHTML = KPIS.map(k => `
+    <div class="kpi-tile" style="--tc:${k.tc}">
+      <div class="kpi-lbl">${k.lbl}</div>
+      <div class="kpi-val">${k.val}</div>
+      <div class="kpi-meta">${k.meta}</div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <span class="kpi-delta ${k.delta}">${k.arrow} WoW</span>
+        <span style="font-size:10px;color:var(--tm)">${k.desc}</span>
+      </div>
+      <div class="spark">${k.sparks.map(p =>
+        `<div class="sb" style="height:${p}%;background:${k.tc};"></div>`
+      ).join('')}</div>
+    </div>
+  `).join('');
+})();
+
+/* Top 5 P&T table */
+(function renderPT() {
+  const rankClass = r => r === 1 ? 'r1' : r === 2 ? 'r2' : r === 3 ? 'r3' : '';
+  const trendArrow = t => t === 'up'
+    ? '<span style="color:var(--crit)">↑</span>'
+    : t === 'dn'
+    ? '<span style="color:var(--good)">↓</span>'
+    : '<span style="color:var(--tm)">→</span>';
+  const cloudPill = c => {
+    const map = {
+      'Sales Cloud':'pill-blue','Service Cloud':'pill-orange',
+      'Health Cloud':'pill-teal','Financial Svcs':'pill-gold',
+    };
+    return `<span class="pill ${map[c]||'pill-grey'}">${c}</span>`;
+  };
+  document.getElementById('pt-body').innerHTML = PT_DATA.map(d => `
+    <tr>
+      <td><div class="rank-badge ${rankClass(d.r)}">${d.r}</div></td>
+      <td><strong style="font-size:12px">${d.pt}</strong></td>
+      <td>${cloudPill(d.cloud)}</td>
+      <td style="font-weight:700;font-size:13px">${d.count}</td>
+      <td class="td-reason">${d.reason}</td>
+      <td class="td-example">${d.example}</td>
+      <td style="text-align:center">${trendArrow(d.trend)}</td>
+    </tr>
+  `).join('');
+})();
+
+/* KPI by Cloud table */
+(function renderKBC() {
+  const stateClass = s => s === 'good' ? 'kbc-good' : s === 'warn' ? 'kbc-warn' : s === 'crit' ? 'kbc-crit' : '';
+  document.getElementById('kbc-body').innerHTML = KBC_DATA.map(d => `
+    <tr>
+      <td>
+        <span style="display:inline-flex;align-items:center;gap:6px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(${d.color});display:inline-block;flex-shrink:0;"></span>
+          <strong>${d.cloud}</strong>
+        </span>
+      </td>
+      <td class="kbc-val">${d.inflow}</td>
+      <td class="kbc-val">${d.closure}</td>
+      <td class="kbc-val ${stateClass(d.csatState)}">${d.csat}</td>
+      <td class="kbc-val">${d.ttr}</td>
+      <td class="kbc-val">${d.esc}</td>
+      <td class="kbc-val ${stateClass(d.sloState)}">${d.slo}</td>
+      <td class="kbc-val">${d.prod}</td>
+      <td class="kbc-val">${d.sev1}</td>
+    </tr>
+  `).join('');
+})();
+
+/* Coverage by Primary Skill — horizontal bars */
+(function renderSkillBars() {
+  const maxTSEs = 10;
+  document.getElementById('skill-bars').innerHTML = SKILLS.map(s => {
+    const tseW = Math.round((s.tses / maxTSEs) * 100);
+    return `
+      <div class="hbar-item">
+        <div class="hbar-lbl">${s.name}</div>
+        <div style="display:flex;flex-direction:column;gap:3px;flex:1;">
+          <div class="hbar-track">
+            <div class="hbar-fill" style="width:${tseW}%;background:${s.color};"></div>
+          </div>
+          <div class="hbar-track" style="opacity:.5;">
+            <div class="hbar-fill" style="width:${s.pct}%;background:${s.color};opacity:.6;"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end;">
+          <span class="hbar-pct">${s.tses || '—'} TSE</span>
+          <span class="hbar-pct" style="opacity:.6;">${s.pct || '—'}%</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+})();
+
+/* Ring-fence grid */
+(function renderRF() {
+  const typeMap = { 'primary':'var(--c1)', 'shared':'var(--c3)', 'pool':'var(--bl)' };
+  document.getElementById('rf-grid').innerHTML = RF_DATA.map(row => `
+    <div class="rf-row">
+      <div class="rf-cloud">${row.cloud}</div>
+      <div class="rf-tses">
+        ${row.tses.map(t => {
+          const [name, type] = t.split('·');
+          return `<span class="tse-chip"><span class="tse-dot" style="background:${typeMap[type]||'var(--bl)'}"></span>${name}</span>`;
+        }).join('')}
+      </div>
+      <div class="rf-count">${row.count} TSE${row.count !== 1 ? 's' : ''}</div>
+    </div>
+  `).join('');
+})();
+
+/* Team cards */
+function renderTeam(key, prefix) {
+  const t = TEAMS[key];
+
+  /* stats */
+  document.getElementById(`${prefix}-stats`).innerHTML = t.stats.map(s => `
+    <div class="team-stat">
+      <div class="tstat-lbl">${s.lbl}</div>
+      <div class="tstat-val">${s.val}</div>
+      <div class="tstat-sub">${s.sub}</div>
+    </div>
+  `).join('');
+
+  /* skills */
+  document.getElementById(`${prefix}-skills`).innerHTML = t.skills.map(s => `
+    <div class="tsk">
+      <span class="tsk-name">${s.name}</span>
+      <div class="tsk-bar-wrap">
+        <div class="tsk-bar-fill" style="width:${s.n ? Math.round(s.n/s.max*100) : 0}%;background:${s.color};height:100%;border-radius:5px;"></div>
+      </div>
+      <span class="tsk-n">${s.n || '—'}</span>
+    </div>
+  `).join('');
+
+  /* band */
+  const bandEl = document.getElementById(`${prefix}-band`);
+  const totalH = 24;
+  const s = t.band.start, e = Math.min(t.band.end, 24);
+  const preW  = Math.round(s / totalH * 100);
+  const covW  = Math.round((e - s) / totalH * 100);
+  const postW = 100 - preW - covW;
+  bandEl.innerHTML = `
+    <div class="cov-seg" style="width:${preW}%;background:var(--g);"></div>
+    <div class="cov-seg" style="width:${covW}%;background:${t.band.color};" title="Active coverage"></div>
+    <div class="cov-seg" style="width:${postW}%;background:var(--g);"></div>
+  `;
+
+  /* ring-fenced pills */
+  const rfEl = document.getElementById(`${prefix}-rf`);
+  rfEl.style.display = 'flex';
+  rfEl.style.flexWrap = 'wrap';
+  rfEl.style.gap = '6px';
+  rfEl.innerHTML = t.rf.map(r => `<span class="pill pill-grey">${r}</span>`).join('');
+
+  /* gaps */
+  document.getElementById(`${prefix}-gaps`).innerHTML = t.gaps.map(g => `
+    <li style="font-size:11px;color:var(--ts);padding-left:12px;position:relative;">
+      <span style="position:absolute;left:0;color:var(--crit);">!</span>${g}
+    </li>
+  `).join('');
+}
+renderTeam('americas', 'amer');
+renderTeam('india',    'india');
+
+/* Combined 24h coverage bands */
+(function renderCombined() {
+  /* Americas: 12–24 UTC (wraps; simplified to 12–24 here) */
+  /* India:    3.5–15.5 UTC */
+  const W = 100;
+  function bandHtml(segments) {
+    return segments.map(seg =>
+      `<div class="cov-seg" style="width:${seg.w}%;background:${seg.c};" title="${seg.t||''}"></div>`
+    ).join('');
+  }
+  /* Americas simplified (12:00–02:00 = 14h, shown as 12:00–24:00 for the band) */
+  document.getElementById('combined-amer').innerHTML = bandHtml([
+    {w:50, c:'var(--g)',  t:'No coverage'},
+    {w:50, c:'var(--c1)', t:'Americas active'},
+  ]);
+  /* India 3.5–15.5 → ~14.6% to 64.6% of 24h */
+  document.getElementById('combined-india').innerHTML = bandHtml([
+    {w:14.6, c:'var(--g)',  t:'No coverage'},
+    {w:50,   c:'var(--c3)', t:'India active'},
+    {w:35.4, c:'var(--g)',  t:'No coverage'},
+  ]);
+  /* Combined: gap 0–3.5h, India 3.5–12h, overlap 12–15.5h, Americas 15.5–24h */
+  document.getElementById('combined-both').innerHTML = bandHtml([
+    {w:14.6, c:'var(--g)',  t:'Gap — no coverage'},
+    {w:35.4, c:'var(--c3)', t:'India only'},
+    {w:14.6, c:'var(--c4)', t:'Overlap (follow-the-sun)'},
+    {w:35.4, c:'var(--c1)', t:'Americas only'},
+  ]);
+})();
+
+/* Section nav active state on scroll */
+(function initNav() {
+  const secs = ['s1','s2','s3','s4'];
+  const btns = document.querySelectorAll('.snav-btn');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        btns.forEach(b => b.classList.toggle('active', b.dataset.s === e.target.id));
+      }
+    });
+  }, { threshold: 0.25, rootMargin:'-100px 0px -60% 0px' });
+  secs.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+})();
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+</script>
+</body>
+</html>
