@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Industries Support — Ops Plan Draft</title>
+<style>
+:root {
+  --s1:#1a1a19; --s2:#0d0d0d; --sc:#1a1d27; --sc2:#222230;
+  --tp:#ffffff; --ts:#c3c2b7; --tm:#898781;
+  --g:#2c2c2a; --bl:#383835; --brd:rgba(255,255,255,.10);
+  --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500;
+  --c5:#d55181; --c8:#e66767;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --ser:#ec835a;
+  --shd:0 1px 6px rgba(0,0,0,.45);
+}
+[data-theme="light"] {
+  --s1:#fcfcfb; --s2:#f9f9f7; --sc:#ffffff; --sc2:#f4f4f2;
+  --tp:#0b0b0b; --ts:#52514e; --tm:#898781;
+  --g:#e1e0d9; --bl:#c3c2b7; --brd:rgba(11,11,11,.10);
+  --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100;
+  --c5:#e87ba4; --c8:#e34948;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --ser:#ec835a;
+  --shd:0 1px 4px rgba(11,11,11,.08);
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family: system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px; line-height:1.5;
+  background:var(--s2); color:var(--tp); min-height:100vh;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.hdr {
+  background:var(--sc); border-bottom:1px solid var(--g);
+  padding:0 32px; display:flex; align-items:center;
+  justify-content:space-between; height:56px;
+  position:sticky; top:0; z-index:100;
+}
+.hdr-l { display:flex; align-items:center; gap:12px; }
+.hdr h1 { font-size:15px; font-weight:600; }
+.badge {
+  font-size:11px; font-weight:600; padding:2px 9px;
+  border-radius:10px; background:var(--c1); color:#fff;
+  letter-spacing:.04em;
+}
+.badge-draft { background:var(--g); color:var(--ts); }
+.hdr-r { display:flex; align-items:center; gap:10px; }
+.hdr-date { font-size:12px; color:var(--tm); }
+.tbtn {
+  width:32px; height:32px; border:1px solid var(--g);
+  border-radius:6px; background:var(--s1); color:var(--ts);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:15px; transition:background .15s;
+}
+.tbtn:hover { background:var(--g); }
+
+/* ── Layout ──────────────────────────────────────────────── */
+.main {
+  max-width:1160px; margin:0 auto;
+  padding:32px 24px 64px;
+  display:flex; flex-direction:column; gap:36px;
+}
+
+/* ── Section header ──────────────────────────────────────── */
+.sec-hdr {
+  display:flex; align-items:flex-start; gap:16px;
+  border-left:3px solid var(--c1); padding-left:14px; margin-bottom:20px;
+}
+.sec-hdr.orange { border-color:var(--c2); }
+.sec-hdr.teal   { border-color:var(--c3); }
+.sec-hdr.yellow { border-color:var(--c4); }
+.sec-num {
+  font-size:11px; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--tm); margin-top:2px; white-space:nowrap;
+}
+.sec-title { font-size:18px; font-weight:700; margin-bottom:4px; }
+.sec-sub { font-size:13px; color:var(--ts); }
+
+/* ── Card ────────────────────────────────────────────────── */
+.card {
+  background:var(--sc); border:1px solid var(--g);
+  border-radius:10px; padding:22px 24px; box-shadow:var(--shd);
+}
+.card-title { font-size:13px; font-weight:600; margin-bottom:3px; }
+.card-sub { font-size:12px; color:var(--tm); margin-bottom:16px; }
+
+/* ── KPI tiles ───────────────────────────────────────────── */
+.kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+.kpi-tile {
+  background:var(--sc); border:1px solid var(--g); border-radius:10px;
+  padding:18px 20px; position:relative; overflow:hidden;
+}
+.kpi-tile::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:var(--tc); border-radius:10px 10px 0 0;
+}
+.kpi-lbl { font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--tm); margin-bottom:6px; }
+.kpi-val { font-size:28px; font-weight:700; line-height:1; margin-bottom:5px; }
+.kpi-desc { font-size:12px; color:var(--ts); }
+.kpi-tag {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:11px; font-weight:600; padding:1px 7px;
+  border-radius:9px; margin-top:4px;
+}
+.kpi-tag.neu { background:var(--g); color:var(--ts); }
+
+/* ── Spark placeholder ───────────────────────────────────── */
+.spark-area { height:52px; display:flex; align-items:flex-end; gap:3px; margin-top:10px; }
+.spark-bar { flex:1; border-radius:2px 2px 0 0; opacity:.75; transition:opacity .15s; }
+.spark-bar:hover { opacity:1; }
+
+/* ── Chart placeholder ───────────────────────────────────── */
+.chart-ph {
+  width:100%; background:var(--s1); border:1px dashed var(--bl);
+  border-radius:8px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px;
+  color:var(--tm); font-size:12px; font-style:italic; text-align:center;
+  padding:16px;
+}
+
+/* ── Legend ──────────────────────────────────────────────── */
+.leg { display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:10px; }
+.li { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ts); }
+.ll { width:16px; height:3px; border-radius:2px; }
+.ld { width:10px; height:10px; border-radius:2px; }
+
+/* ── Grid ────────────────────────────────────────────────── */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+
+/* ── Table ───────────────────────────────────────────────── */
+.tw { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; }
+thead th {
+  padding:8px 12px; text-align:left;
+  font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--tm); border-bottom:1px solid var(--g);
+}
+tbody tr { border-bottom:1px solid var(--g); transition:background .1s; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:rgba(255,255,255,.03); }
+[data-theme="light"] tbody tr:hover { background:rgba(0,0,0,.03); }
+tbody td { padding:9px 12px; vertical-align:middle; }
+.pill {
+  display:inline-block; font-size:11px; font-weight:600;
+  padding:2px 8px; border-radius:9px; white-space:nowrap;
+}
+.pill-green  { background:rgba(12,163,12,.18); color:var(--good); }
+.pill-yellow { background:rgba(250,178,25,.18); color:var(--warn); }
+.pill-red    { background:rgba(208,59,59,.18); color:var(--crit); }
+.pill-blue   { background:rgba(57,135,229,.18); color:var(--c1); }
+.pill-grey   { background:var(--g); color:var(--ts); }
+
+/* ── Opportunity box ─────────────────────────────────────── */
+.opp-box {
+  background:rgba(57,135,229,.09); border:1px solid rgba(57,135,229,.3);
+  border-radius:10px; padding:18px 20px; margin-top:14px;
+}
+.opp-box.teal {
+  background:rgba(25,158,112,.09); border-color:rgba(25,158,112,.3);
+}
+.opp-title {
+  font-size:13px; font-weight:700; margin-bottom:8px;
+  display:flex; align-items:center; gap:8px;
+}
+.opp-icon {
+  width:20px; height:20px; border-radius:50%;
+  background:var(--c1); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; flex-shrink:0;
+}
+.opp-icon.teal { background:var(--c3); }
+.opp-items { list-style:none; margin-top:8px; display:flex; flex-direction:column; gap:5px; }
+.opp-items li { font-size:12px; color:var(--ts); padding-left:14px; position:relative; }
+.opp-items li::before { content:'→'; position:absolute; left:0; color:var(--c1); font-size:11px; }
+.opp-items li.teal::before { color:var(--c3); }
+
+/* ── Action list ─────────────────────────────────────────── */
+.action-list { display:flex; flex-direction:column; gap:10px; }
+.action-item {
+  display:flex; align-items:flex-start; gap:14px;
+  background:var(--sc); border:1px solid var(--g);
+  border-radius:10px; padding:14px 18px;
+}
+.a-num {
+  width:26px; height:26px; border-radius:50%; border:1.5px solid var(--c1);
+  color:var(--c1); font-size:12px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+}
+.a-title { font-size:13px; font-weight:600; margin-bottom:3px; }
+.a-body { font-size:12px; color:var(--ts); }
+.a-owner {
+  margin-top:6px; font-size:11px; font-weight:600; color:var(--c1);
+}
+
+/* ── Sev badge ───────────────────────────────────────────── */
+.sev1 {
+  display:inline-block; background:var(--crit); color:#fff;
+  font-size:10px; font-weight:700; padding:1px 7px;
+  border-radius:4px; letter-spacing:.04em; vertical-align:middle; margin-right:4px;
+}
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider { border:none; border-top:1px solid var(--g); }
+
+/* ── Summary banner ──────────────────────────────────────── */
+.banner { border:1px solid var(--g); border-radius:10px; overflow:hidden; }
+.banner-top {
+  padding:24px 28px 18px;
+  background:linear-gradient(135deg, rgba(57,135,229,.12) 0%, transparent 60%);
+}
+.banner-kicker {
+  font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--c1); margin-bottom:6px;
+}
+.banner-headline { font-size:22px; font-weight:700; margin-bottom:8px; }
+.banner-body { font-size:13px; color:var(--ts); max-width:780px; }
+.banner-tracks { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--g); }
+.bt {
+  padding:16px 24px; display:flex; flex-direction:column; gap:4px;
+  border-right:1px solid var(--g);
+}
+.bt:last-child { border-right:none; }
+.bt-num { font-size:11px; font-weight:700; color:var(--tm); letter-spacing:.08em; }
+.bt-title { font-size:13px; font-weight:600; }
+.bt-sub { font-size:12px; color:var(--ts); }
+.bt-accent { width:24px; height:3px; border-radius:2px; margin-bottom:6px; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media(max-width:900px) {
+  .kpi-row { grid-template-columns:1fr 1fr; }
+  .grid-2  { grid-template-columns:1fr; }
+  .banner-tracks { grid-template-columns:1fr; }
+  .bt { border-right:none; border-bottom:1px solid var(--g); }
+}
+@media(max-width:560px) {
+  .kpi-row { grid-template-columns:1fr; }
+  .grid-3  { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ───────────────────────────────────────────── -->
+<header class="hdr">
+  <div class="hdr-l">
+    <h1>Industries Support — Ops Plan</h1>
+    <span class="badge badge-draft">DRAFT</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hdr-date">Aug 21, 2026</span>
+    <button class="tbtn" onclick="toggleTheme()" title="Toggle light/dark">☀</button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ── Overview banner ────────────────────────────────── -->
+  <div class="banner">
+    <div class="banner-top">
+      <div class="banner-kicker">Org CS · Industries Support</div>
+      <div class="banner-headline">Support Operations — 3-Track Plan</div>
+      <div class="banner-body">
+        Proactive visibility into support health across clouds, escalation-risk
+        monitoring via Sev 1 trends, and structured CSM alignment on the highest-volume
+        accounts. Three independently actionable tracks forming a single operating rhythm.
+      </div>
+    </div>
+    <div class="banner-tracks">
+      <div class="bt">
+        <div class="bt-accent" style="background:var(--c1)"></div>
+        <span class="bt-num">TRACK 1</span>
+        <span class="bt-title">KPI &amp; Inflow by Cloud</span>
+        <span class="bt-sub">CSAT · TTR · Inflow · Closure</span>
+      </div>
+      <div class="bt">
+        <div class="bt-accent" style="background:var(--c2)"></div>
+        <span class="bt-num">TRACK 2</span>
+        <span class="bt-title">Sev 1 Trend + Guide / Architect</span>
+        <span class="bt-sub">Escalation risk &amp; enablement signal</span>
+      </div>
+      <div class="bt">
+        <div class="bt-accent" style="background:var(--c3)"></div>
+        <span class="bt-num">TRACK 3</span>
+        <span class="bt-title">CSM Alignment — Top 10 Accounts</span>
+        <span class="bt-sub">Case-volume owners &amp; joint actions</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       TRACK 1 — Primary KPI & Inflow Trends by Cloud
+  ══════════════════════════════════════════════════════════ -->
+  <section>
+    <div class="sec-hdr">
+      <span class="sec-num">Track 1</span>
+      <div>
+        <div class="sec-title">Primary KPI &amp; Inflow Trends by Cloud</div>
+        <div class="sec-sub">
+          Weekly pulse on the four core health signals — CSAT, TTR, Inflow, and Closure Rate —
+          segmented by cloud to spot divergence early and act cloud-specifically.
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 KPI tiles -->
+    <div class="kpi-row">
+      <div class="kpi-tile" style="--tc:var(--c1)">
+        <div class="kpi-lbl">CSAT</div>
+        <div class="kpi-val">—</div>
+        <div class="kpi-desc">Customer satisfaction score across all Signature cases</div>
+        <span class="kpi-tag neu">Connect to SFDC</span>
+        <div class="spark-area" id="sp-csat"></div>
+      </div>
+      <div class="kpi-tile" style="--tc:var(--c2)">
+        <div class="kpi-lbl">TTR (hrs)</div>
+        <div class="kpi-val">—</div>
+        <div class="kpi-desc">Median time-to-resolution, rolling 30-day</div>
+        <span class="kpi-tag neu">Connect to SFDC</span>
+        <div class="spark-area" id="sp-ttr"></div>
+      </div>
+      <div class="kpi-tile" style="--tc:var(--c3)">
+        <div class="kpi-lbl">Inflow</div>
+        <div class="kpi-val">—</div>
+        <div class="kpi-desc">New cases opened this week</div>
+        <span class="kpi-tag neu">Connect to SFDC</span>
+        <div class="spark-area" id="sp-inflow"></div>
+      </div>
+      <div class="kpi-tile" style="--tc:var(--c4)">
+        <div class="kpi-lbl">Closure Rate</div>
+        <div class="kpi-val">—</div>
+        <div class="kpi-desc">Cases closed ÷ cases opened this week</div>
+        <span class="kpi-tag neu">Connect to SFDC</span>
+        <div class="spark-area" id="sp-close"></div>
+      </div>
+    </div>
+
+    <!-- 4 trend charts (2×2) -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Inflow by Cloud — Weekly Trend</div>
+        <div class="card-sub">New cases per week, last 8 weeks</div>
+        <div class="leg">
+          <span class="li"><span class="ll" style="background:var(--c1)"></span>Sales Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c2)"></span>Service Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c3)"></span>Health Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c4)"></span>Financial Svcs</span>
+        </div>
+        <div class="chart-ph" style="height:150px;">
+          Line chart — Inflow by cloud, 8-week rolling<br>
+          <em>(filter: Signature tier; group by cloud product)</em>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">CSAT by Cloud — Weekly Trend</div>
+        <div class="card-sub">Average CSAT score per week, last 8 weeks</div>
+        <div class="leg">
+          <span class="li"><span class="ll" style="background:var(--c1)"></span>Sales Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c2)"></span>Service Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c3)"></span>Health Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c4)"></span>Financial Svcs</span>
+        </div>
+        <div class="chart-ph" style="height:150px;">
+          Line chart — CSAT by cloud, 8-week rolling<br>
+          <em>(filter: Signature tier; where CSAT response received)</em>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">TTR by Cloud — Weekly Trend</div>
+        <div class="card-sub">Median hours to resolution per week</div>
+        <div class="leg">
+          <span class="li"><span class="ll" style="background:var(--c1)"></span>Sales Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c2)"></span>Service Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c3)"></span>Health Cloud</span>
+          <span class="li"><span class="ll" style="background:var(--c4)"></span>Financial Svcs</span>
+        </div>
+        <div class="chart-ph" style="height:150px;">
+          Line chart — median TTR by cloud, 8-week rolling<br>
+          <em>(closed cases only; exclude Sev 1 from median or show separately)</em>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Closure Rate by Cloud — Weekly</div>
+        <div class="card-sub">% of cases closed in the same week they opened</div>
+        <div class="leg">
+          <span class="li"><span class="ld" style="background:var(--c1)"></span>Sales Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c2)"></span>Service Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c3)"></span>Health Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c4)"></span>Financial Svcs</span>
+        </div>
+        <div class="chart-ph" style="height:150px;">
+          Grouped bar chart — closure rate % by cloud, weekly<br>
+          <em>(closed this week ÷ opened this week per cloud)</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="opp-box" style="margin-top:4px;">
+      <div class="opp-title"><span class="opp-icon">!</span> What to watch for</div>
+      <ul class="opp-items">
+        <li>Cloud where inflow is rising while CSAT is declining — early support-stress signal</li>
+        <li>Cloud where closure rate falls below 1.0× inflow — backlog accumulating</li>
+        <li>TTR spike &gt;2× cloud baseline — candidate for Architect or proactive TSE engagement</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ══════════════════════════════════════════════════════
+       TRACK 2 — Sev 1 Trend + Guide / Architect Enablement
+  ══════════════════════════════════════════════════════════ -->
+  <section>
+    <div class="sec-hdr orange">
+      <span class="sec-num">Track 2</span>
+      <div>
+        <div class="sec-title"><span class="sev1">SEV 1</span> Trend by Cloud &amp; Guide / Architect Enablement</div>
+        <div class="sec-sub">
+          Track critical-severity volume by cloud to surface escalation pressure, and flag
+          accounts where Guide or Architect engagement could reduce future Sev 1 risk.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">Sev 1 Volume by Cloud — Weekly</div>
+        <div class="card-sub">New Sev 1 cases opened per week, last 8 weeks</div>
+        <div class="leg">
+          <span class="li"><span class="ld" style="background:var(--c1)"></span>Sales Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c2)"></span>Service Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c3)"></span>Health Cloud</span>
+          <span class="li"><span class="ld" style="background:var(--c4)"></span>Financial Svcs</span>
+        </div>
+        <div class="chart-ph" style="height:150px;">
+          Stacked / grouped bar — Sev 1 count by cloud, 8 weeks<br>
+          <em>(filter: Severity = 1, Signature tier)</em>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sev 1 as % of Total — by Cloud</div>
+        <div class="card-sub">Rising share flags escalation pressure before it peaks</div>
+        <div class="leg">
+          <span class="li"><span class="ll" style="background:var(--c2)"></span>% Sev 1</span>
+          <span class="li"><span class="ll" style="background:var(--bl)"></span>8-wk rolling avg</span>
+        </div>
+        <div class="chart-ph" style="height:150px;">
+          Small multiples (4 panels) — Sev 1 % trend per cloud, 8 weeks<br>
+          <em>(one panel per cloud; reference line = rolling average)</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enablement signal table -->
+    <div class="card">
+      <div class="card-title">Guide &amp; Architect Enablement Signal</div>
+      <div class="card-sub">
+        Accounts with recurring Sev 1s or spiking TTR — proactive engagement before the next critical.
+      </div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Cloud</th>
+              <th>Sev 1s (8 wks)</th>
+              <th>Avg TTR (hrs)</th>
+              <th>Pattern</th>
+              <th>Suggested</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Account A</strong></td>
+              <td><span class="pill pill-blue">Service Cloud</span></td>
+              <td>—</td><td>—</td>
+              <td style="color:var(--ts);font-size:12px">Recurring Sev 1 ≥ 3 wks</td>
+              <td><span class="pill pill-blue">Architect</span></td>
+              <td><span class="pill pill-yellow">To Confirm</span></td>
+            </tr>
+            <tr>
+              <td><strong>Account B</strong></td>
+              <td><span class="pill pill-blue">Health Cloud</span></td>
+              <td>—</td><td>—</td>
+              <td style="color:var(--ts);font-size:12px">TTR ↑ + CSAT ↓</td>
+              <td><span class="pill pill-green">Guide</span></td>
+              <td><span class="pill pill-yellow">To Confirm</span></td>
+            </tr>
+            <tr>
+              <td><strong>Account C</strong></td>
+              <td><span class="pill pill-blue">Financial Svcs</span></td>
+              <td>—</td><td>—</td>
+              <td style="color:var(--ts);font-size:12px">Single acute Sev 1</td>
+              <td><span class="pill pill-grey">Monitor</span></td>
+              <td><span class="pill pill-grey">Watch</span></td>
+            </tr>
+            <tr>
+              <td colspan="7" style="color:var(--tm);font-style:italic;font-size:12px;padding-top:10px;">
+                Populate from SFDC — flag accounts with ≥ 2 Sev 1s in 8 weeks OR TTR &gt; 2× cloud median
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="opp-box teal" style="margin-top:16px;">
+        <div class="opp-title"><span class="opp-icon teal">G</span> Proposed Enablement Criteria</div>
+        <ul class="opp-items">
+          <li class="teal"><strong>Guide candidate:</strong> ≥ 2 Sev 1s in 8 weeks OR CSAT below cloud average for 3+ consecutive weeks</li>
+          <li class="teal"><strong>Architect candidate:</strong> ≥ 3 Sev 1s in 8 weeks OR TTR &gt; 2× cloud median on a consistent basis</li>
+          <li class="teal"><strong>Next step:</strong> Bring criteria to weekly Signature review for sign-off; wire flag into existing G&amp;A tracker workflow</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ══════════════════════════════════════════════════════
+       TRACK 3 — CSM Alignment: Top 10 Accounts
+  ══════════════════════════════════════════════════════════ -->
+  <section>
+    <div class="sec-hdr teal">
+      <span class="sec-num">Track 3</span>
+      <div>
+        <div class="sec-title">CSM Alignment — Top 10 Case-Volume Accounts</div>
+        <div class="sec-sub">
+          Identify the 10 accounts generating the most case volume, own the outreach to
+          their CSMs, and jointly confirm how Industries Support can add specific value.
+        </div>
+      </div>
+    </div>
+
+    <!-- Top 10 table -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Top 10 Accounts by Case Volume — Rolling 8 Weeks</div>
+      <div class="card-sub">Ranked by total cases; flag Sev 1 count, open backlog, and CSM alignment status</div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Account</th>
+              <th>Cloud</th>
+              <th>Total Cases</th>
+              <th>Sev 1</th>
+              <th>Open</th>
+              <th>CSAT</th>
+              <th>CSM</th>
+              <th>Aligned?</th>
+              <th>Industries Support Action</th>
+            </tr>
+          </thead>
+          <tbody id="top10-rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CSM outreach steps -->
+    <div class="card">
+      <div class="card-title">CSM Outreach Plan — Structured 20-min Sync per Account</div>
+      <div class="card-sub">One conversation per CSM; confirm role, gaps, and ask before the next case spike</div>
+      <div class="action-list">
+        <div class="action-item">
+          <div class="a-num">1</div>
+          <div>
+            <div class="a-title">Identify the top 10 accounts</div>
+            <div class="a-body">
+              Pull from SFDC: case count by account, last 8 weeks, Signature tier only.
+              Sort descending. Capture cloud breakdown, open case count, and latest CSAT.
+            </div>
+            <div class="a-owner">Owner: Support Ops · Due: This week</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="a-num">2</div>
+          <div>
+            <div class="a-title">Map each account to its CSM</div>
+            <div class="a-body">
+              Cross-reference against CSM assignments in CRM. Flag any accounts with no
+              assigned CSM as a risk item — escalate to account ownership team immediately.
+            </div>
+            <div class="a-owner">Owner: Support Ops · Due: This week</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="a-num">3</div>
+          <div>
+            <div class="a-title">Reach out to each CSM — structured sync</div>
+            <div class="a-body">
+              Questions to cover in each conversation:
+              <ul style="margin-top:6px;padding-left:16px;color:var(--ts);font-size:12px;display:flex;flex-direction:column;gap:3px;">
+                <li>Are you aware of the support volume and pain points for this account?</li>
+                <li>What is the top issue the customer is trying to solve right now?</li>
+                <li>Where specifically can Industries Support add value — tactical, advisory, or escalation handling?</li>
+                <li>Is a Guide or Architect engagement on the radar, or already proposed?</li>
+              </ul>
+            </div>
+            <div class="a-owner">Owner: TSE Lead / Support Manager · Due: 2 weeks</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="a-num">4</div>
+          <div>
+            <div class="a-title">Capture outcomes and set a cadence</div>
+            <div class="a-body">
+              Record feedback in the tracker. For accounts with an agreed action, add a
+              bi-weekly check-in. Surface blockers to leadership in weekly review.
+            </div>
+            <div class="a-owner">Owner: Support Manager · Due: 3 weeks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="opp-box" style="margin-top:0">
+      <div class="opp-title"><span class="opp-icon">↗</span> What "help" looks like per account pattern</div>
+      <ul class="opp-items">
+        <li>High inflow + low CSAT → dedicated TSE time, proactive health checks</li>
+        <li>Recurring Sev 1s → propose Guide / Architect via CSM (see Track 2 criteria)</li>
+        <li>High open backlog → joint triage call: TSE + CSM + account team</li>
+        <li>No CSM assigned → flag to account ownership team immediately</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ── Immediate Next Steps ────────────────────────────── -->
+  <section>
+    <div class="sec-hdr yellow">
+      <span class="sec-num">Next Steps</span>
+      <div>
+        <div class="sec-title">What Needs to Happen to Make This Operational</div>
+        <div class="sec-sub">Target: all three tracks running within 2–3 weeks</div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title" style="color:var(--c1)">Data &amp; Definitions</div>
+        <ul class="opp-items" style="margin-top:8px;">
+          <li>Confirm SFDC report or dataset for KPIs broken by cloud</li>
+          <li>Agree on "cloud" field — product tag or cloud hierarchy?</li>
+          <li>Lock rolling window — 4, 8, or 13 weeks?</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--c2)">Process &amp; Criteria</div>
+        <ul class="opp-items" style="margin-top:8px;">
+          <li>Ratify Guide / Architect trigger criteria with Signature team</li>
+          <li>Assign CSM outreach owner and finalize sync template</li>
+          <li>Set review cadence — weekly dashboard + monthly CSM alignment check</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--c3)">Visibility &amp; Tooling</div>
+        <ul class="opp-items" style="margin-top:8px;">
+          <li>Add Sev 1 trend view to existing G&amp;A weekly review deck</li>
+          <li>Post top-10 account list in team Slack channel weekly</li>
+          <li>Wire live SFDC data into this dashboard template</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* theme toggle */
+function toggleTheme() {
+  const h = document.documentElement;
+  h.dataset.theme = h.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+/* spark bars — decorative placeholder for the 4 KPI tiles */
+function spark(id, color, pcts) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = pcts.map(p =>
+    `<div class="spark-bar" style="height:${p}%;background:${color};"></div>`
+  ).join('');
+}
+spark('sp-csat',   'var(--c1)', [70,72,68,74,75,73,76,78]);
+spark('sp-ttr',    'var(--c2)', [55,60,58,65,62,70,64,60]);
+spark('sp-inflow', 'var(--c3)', [40,50,45,60,55,65,70,62]);
+spark('sp-close',  'var(--c4)', [80,75,82,78,85,80,88,84]);
+
+/* top-10 placeholder rows */
+const rows = document.getElementById('top10-rows');
+const data = [
+  [1,'Account 1','Service Cloud',false,'Sev 1 pattern → Architect?'],
+  [2,'Account 2','Sales Cloud',false,'High inflow → TSE time'],
+  [3,'Account 3','Health Cloud',false,'CSAT risk → sync needed'],
+  [4,'Account 4','Financial Svcs',false,'Backlog → triage call'],
+  [5,'Account 5','Service Cloud',false,'Monitor'],
+  [6,'Account 6','Sales Cloud',false,'Monitor'],
+  [7,'Account 7','Health Cloud',false,'CSM to confirm'],
+  [8,'Account 8','Financial Svcs',false,'CSM to confirm'],
+  [9,'Account 9','Service Cloud',false,'Monitor'],
+  [10,'Account 10','Sales Cloud',false,'Monitor'],
+];
+rows.innerHTML = data.map(([n,acc,cloud,aligned,action]) => `
+  <tr>
+    <td style="color:var(--tm);font-weight:600">${n}</td>
+    <td><strong>${acc}</strong></td>
+    <td><span class="pill pill-blue">${cloud}</span></td>
+    <td style="color:var(--tm)">—</td>
+    <td style="color:var(--tm)">—</td>
+    <td style="color:var(--tm)">—</td>
+    <td style="color:var(--tm)">—</td>
+    <td style="color:var(--ts);font-size:12px">—</td>
+    <td><span class="pill ${aligned ? 'pill-green' : 'pill-yellow'}">${aligned ? 'Yes' : 'Pending'}</span></td>
+    <td style="color:var(--ts);font-size:12px">${action}</td>
+  </tr>
+`).join('');
+</script>
+</body>
+</html>
