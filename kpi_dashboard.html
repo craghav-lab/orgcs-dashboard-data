@@ -421,16 +421,16 @@ function buildKPITiles(){
     const pv = t.derive ? t.derive(prev[t.key], prev) : prev[t.key];
     let cls = 'neutral', changeText;
     if(t.derive){
-      // Show percentage-point WoW change (avoids divide-by-zero when base is 0%)
-      const pp = cv - pv;
-      if(Math.abs(pp)>0.001){
-        cls = t.higherBad ? (pp>0?'up-bad':'down-good') : (pp>0?'up-good':'down-bad');
+      const delta = pv > 0.001 ? ((cv-pv)/pv*100) : (cv > 0.001 ? 100 : 0);
+      const up = delta > 0;
+      if(Math.abs(delta)>0.1){
+        cls = t.higherBad ? (up?'up-bad':'down-good') : (up?'up-good':'down-bad');
       }
-      const arrow = pp>0.001?'▲':pp<-0.001?'▼':'—';
-      const sign = pp>0.001?'+':'';
-      changeText = Math.abs(pp)>0.001
-        ? `${arrow} ${sign}${Math.abs(pp).toFixed(2)} pp WoW`
-        : `— No change WoW`;
+      const arrow = delta>0.1?'▲':delta<-0.1?'▼':'—';
+      const sign = delta>0.1?'+':'';
+      changeText = (cv===0 && pv===0)
+        ? `— No change WoW`
+        : `${arrow} ${sign}${Math.abs(delta).toFixed(1)}% WoW`;
     } else {
       const delta = pv ? ((cv-pv)/pv*100) : 0;
       const up = delta > 0;
