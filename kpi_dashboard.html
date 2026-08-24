@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Revenue & Industry Cloud — Support KPI Dashboard</title>
+<title>Industry Signature WBR - Revenue & Industry Cloud</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -153,7 +153,7 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 <div class="header">
   <div class="header-logo">RI</div>
   <div>
-    <div class="header-title">Revenue &amp; Industry Cloud — Support KPI Dashboard</div>
+    <div class="header-title">Industry Signature WBR - Revenue &amp; Industry Cloud</div>
     <div class="header-sub">Engineer Geo: AMER · Signature Tier · Week-on-Week Performance · Data as of Aug 22, 2026</div>
   </div>
   <div class="header-badge">FISCAL Q3 FY27</div>
@@ -407,26 +407,38 @@ function buildKPITiles(){
     {key:'closures', label:'Closures',      unit:'cases', color:'green',  higherBad:false, fmt:v=>v.toLocaleString()},
     {key:'ttr',      label:'Avg TTR',       unit:'hrs',   color:'cyan',   higherBad:true,  fmt:v=>v.toFixed(2)},
     {key:'csat',     label:'CSAT',          unit:'/5.0',  color:'violet', higherBad:false, fmt:v=>v.toFixed(2)},
-    {key:'escalations',label:'Escalations', unit:'cases', color:'orange', higherBad:true,  fmt:v=>v},
-    {key:'slo_miss', label:'SLO Miss',      unit:'cases', color:'red',    higherBad:true,  fmt:v=>v},
+    {key:'escalations',label:'Escalations', unit:'cases', color:'orange', higherBad:true,  fmt:v=>v, absChange:true},
+    {key:'slo_miss', label:'SLO Miss',      unit:'cases', color:'red',    higherBad:true,  fmt:v=>v, absChange:true},
   ];
 
   const grid = document.getElementById('kpi-tiles');
   grid.innerHTML = tiles.map(t=>{
     const cv = cur[t.key], pv = prev[t.key];
-    const delta = pv ? ((cv-pv)/pv*100) : 0;
-    const up = delta > 0;
-    let cls = 'neutral';
-    if(Math.abs(delta)>0.1){
-      if(t.higherBad) cls = up ? 'up-bad' : 'down-good';
-      else cls = up ? 'up-good' : 'down-bad';
+    let cls = 'neutral', changeText;
+    if(t.absChange){
+      const diff = cv - pv;
+      if(diff !== 0){
+        cls = t.higherBad ? (diff>0 ? 'up-bad' : 'down-good') : (diff>0 ? 'up-good' : 'down-bad');
+      }
+      const arrow = diff>0?'▲':diff<0?'▼':'—';
+      const sign = diff>0?'+':'';
+      changeText = diff!==0
+        ? `${arrow} ${sign}${Math.abs(diff)} case${Math.abs(diff)!==1?'s':''} WoW`
+        : `— No change WoW`;
+    } else {
+      const delta = pv ? ((cv-pv)/pv*100) : 0;
+      const up = delta > 0;
+      if(Math.abs(delta)>0.1){
+        cls = t.higherBad ? (up?'up-bad':'down-good') : (up?'up-good':'down-bad');
+      }
+      const arrow = delta>0.1?'▲':delta<-0.1?'▼':'—';
+      const sign = delta>0.1?'+':'';
+      changeText = `${arrow} ${sign}${Math.abs(delta).toFixed(1)}% WoW`;
     }
-    const arrow = delta>0.1?'▲':delta<-0.1?'▼':'—';
-    const sign = delta>0.1?'+':'';
     return `<div class="kpi-card ${t.color}">
       <div class="kpi-label">${t.label}</div>
       <div class="kpi-value">${t.fmt(cv)}<span class="kpi-unit">${t.unit}</span></div>
-      <div class="kpi-change ${cls}">${arrow} ${sign}${Math.abs(delta).toFixed(1)}% WoW</div>
+      <div class="kpi-change ${cls}">${changeText}</div>
     </div>`;
   }).join('');
 }
