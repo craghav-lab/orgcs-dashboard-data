@@ -409,7 +409,6 @@ function buildKPITiles(){
     {key:'csat',     label:'CSAT',          unit:'/5.0',  color:'violet', higherBad:false, fmt:v=>v.toFixed(2)},
     {key:'escalations',label:'Escalations', unit:'cases', color:'orange', higherBad:true,  fmt:v=>v},
     {key:'slo_miss', label:'SLO Miss',      unit:'cases', color:'red',    higherBad:true,  fmt:v=>v},
-    {key:'productivity',label:'Productivity',unit:'%',    color:'pink',   higherBad:false, fmt:v=>v.toFixed(1)},
   ];
 
   const grid = document.getElementById('kpi-tiles');
