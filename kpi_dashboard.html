@@ -880,24 +880,39 @@ function buildSev1TrendChart(){
   let datasets = [];
   let subNote = '';
 
-  if(ptFilter !== 'ALL'){
-    // ── PT mode: one line per selected topic ──────────────────────────────────
-    const L1 = 'Level 1 - Critical';
+  const L1 = 'Level 1 - Critical';
+  const _ptShort = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
+
+  if(ptFilter !== 'ALL' && acctFilter !== 'ALL'){
+    // ── AND mode: PT line (solid) + Account line (dashed) overlaid ───────────
+    const ptData   = selectedWks.map(w => (DATA.pt_weekly[w]&&DATA.pt_weekly[w][ptFilter]||{})[L1]||0);
+    const acctData = selectedWks.map(w => (DATA_ACCT_L1[acctFilter]&&DATA_ACCT_L1[acctFilter][w])||0);
+    const ptColor   = SUBTLE_PALETTE[0];
+    const acctColor = SUBTLE_PALETTE[1];
+    datasets = [
+      { label: _ptShort(ptFilter),
+        data: ptData, borderColor: ptColor, backgroundColor: ptColor+'22',
+        borderWidth:2, pointRadius:5, pointHoverRadius:8, pointBackgroundColor:ptColor,
+        tension:0.3, fill:false },
+      { label: acctFilter,
+        data: acctData, borderColor: acctColor, backgroundColor: acctColor+'22',
+        borderWidth:2, pointRadius:5, pointHoverRadius:8, pointBackgroundColor:acctColor,
+        tension:0.3, fill:false, borderDash:[5,4] }
+    ];
+    subNote = `${_ptShort(ptFilter)} vs ${acctFilter}`;
+
+  } else if(ptFilter !== 'ALL'){
+    // ── PT-only mode ──────────────────────────────────────────────────────────
     const color = SUBTLE_PALETTE[0];
-    const ptData = selectedWks.map(w => (DATA.pt_weekly[w]&&DATA.pt_weekly[w][ptFilter]||{})[L1]||0);
     datasets = [{
       label: ptFilter,
-      data: ptData,
-      borderColor: color,
-      backgroundColor: color + '22',
-      borderWidth: 2,
-      pointRadius: 5,
-      pointHoverRadius: 8,
-      pointBackgroundColor: color,
-      tension: 0.3,
-      fill: false
+      data: selectedWks.map(w => (DATA.pt_weekly[w]&&DATA.pt_weekly[w][ptFilter]||{})[L1]||0),
+      borderColor: color, backgroundColor: color+'22',
+      borderWidth:2, pointRadius:5, pointHoverRadius:8, pointBackgroundColor:color,
+      tension:0.3, fill:false
     }];
     subNote = ptFilter;
+
   } else {
     // ── Account mode ──────────────────────────────────────────────────────────
     const allAccounts = Object.keys(DATA_ACCT_L1)
@@ -916,14 +931,9 @@ function buildSev1TrendChart(){
       return {
         label: a.name,
         data: selectedWks.map(w => DATA_ACCT_L1[a.name][w]||0),
-        borderColor: color,
-        backgroundColor: color + '22',
-        borderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 8,
-        pointBackgroundColor: color,
-        tension: 0.3,
-        fill: false
+        borderColor: color, backgroundColor: color+'22',
+        borderWidth:2, pointRadius:5, pointHoverRadius:8, pointBackgroundColor:color,
+        tension:0.3, fill:false
       };
     });
     subNote = acctFilter==='ALL'
