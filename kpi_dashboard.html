@@ -253,10 +253,14 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
       <button class="sev1-tab active" onclick="setSev1CloudTab('Industry',this)">Industry</button>
       <button class="sev1-tab" onclick="setSev1CloudTab('Revenue',this)">Revenue</button>
     </div>
-    <!-- Week multi-select + Account dropdown -->
+    <!-- Week multi-select + filters -->
     <div class="controls" style="margin-top:12px;margin-bottom:10px;flex-wrap:wrap;row-gap:8px;align-items:center">
       <span class="ctrl-label">Weeks</span>
       <div id="sev1WkBtns" style="display:contents"></div>
+      <span class="ctrl-label" style="margin-left:14px">Product Topic</span>
+      <select class="ctrl-select" id="sev1PTFilter" onchange="setSev1PT(this.value)" style="min-width:260px">
+        <option value="ALL">All Topics</option>
+      </select>
       <span class="ctrl-label" style="margin-left:14px">Account</span>
       <select class="ctrl-select" id="sev1AcctFilter" onchange="setSev1Acct(this.value)" style="min-width:220px">
         <option value="ALL">All Accounts</option>
@@ -380,16 +384,16 @@ const COLORS = {
   indigo:'#6366f1', teal:'#14b8a6', rose:'#f43f5e', amber:'#f97316'
 };
 const SEV_COLORS = {
-  'Level 1 - Critical':'#ef4444',
-  'Level 2 - Urgent':'#f97316',
-  'Level 3 - High':'#eab308',
-  'Level 4 - Medium':'#22c55e'
+  'Level 1 - Critical':'#f87171',
+  'Level 2 - Urgent':'#fb923c',
+  'Level 3 - High':'#fbbf24',
+  'Level 4 - Medium':'#4ade80'
 };
 const SEV_ALPHA = {
-  'Level 1 - Critical':'rgba(239,68,68,0.85)',
-  'Level 2 - Urgent':'rgba(249,115,22,0.85)',
-  'Level 3 - High':'rgba(234,179,8,0.85)',
-  'Level 4 - Medium':'rgba(34,197,94,0.85)'
+  'Level 1 - Critical':'rgba(252,165,165,0.7)',
+  'Level 2 - Urgent':'rgba(253,186,116,0.7)',
+  'Level 3 - High':'rgba(253,230,138,0.7)',
+  'Level 4 - Medium':'rgba(134,239,172,0.7)'
 };
 
 function hex2rgba(hex, a){
@@ -416,7 +420,7 @@ function buildKPITiles(){
   const tiles = [
     {key:'inflow',   label:'Inflow',       unit:'cases', color:'blue',   higherBad:false, fmt:v=>v.toLocaleString()},
     {key:'closures', label:'Closures',      unit:'cases', color:'green',  higherBad:false, fmt:v=>v.toLocaleString()},
-    {key:'ttr',      label:'Avg TTR',       unit:'hrs',   color:'cyan',   higherBad:true,  fmt:v=>v.toFixed(2)},
+    {key:'ttr',      label:'TTR',           unit:'days',  color:'cyan',   higherBad:true,  fmt:v=>v.toFixed(2)},
     {key:'csat',     label:'CSAT',          unit:'/5.0',  color:'violet', higherBad:false, fmt:v=>v.toFixed(2)},
     {key:'escalations',label:'Escalation Rate',unit:'%', color:'orange', higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
     {key:'slo_miss',   label:'SLO Miss Rate', unit:'%', color:'red',    higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
@@ -504,7 +508,7 @@ function buildTrendCharts(){
         {label:'Escalations', data:wks.map(w=>DATA.week_data[w].escalations),
          borderColor:COLORS.orange, backgroundColor:hex2rgba(COLORS.orange,0.12),
          fill:false, tension:0.4, pointRadius:5, borderWidth:2.5, yAxisID:'y1'},
-        {label:'TTR (hrs)', data:wks.map(w=>DATA.week_data[w].ttr),
+        {label:'TTR (days)', data:wks.map(w=>DATA.week_data[w].ttr),
          borderColor:COLORS.cyan, backgroundColor:hex2rgba(COLORS.cyan,0.1),
          fill:false, tension:0.4, pointRadius:5, borderWidth:2.5, yAxisID:'y2'}
       ]
@@ -520,7 +524,7 @@ function buildTrendCharts(){
         y1:{position:'right', min:0, max:5, grid:{drawOnChartArea:false}, ticks:{color:'#fdba74'},
             title:{display:true, text:'Escalations', color:'#fdba74'}},
         y2:{position:'right', min:8, max:11, grid:{drawOnChartArea:false}, ticks:{color:'#67e8f9'},
-            title:{display:true, text:'TTR hrs', color:'#67e8f9'}}
+            title:{display:true, text:'TTR days', color:'#67e8f9'}}
       }
     }
   });
@@ -762,6 +766,7 @@ const SUBTLE_PALETTE = [
 let currentSev1Cloud = 'Industry';
 let currentSev1Weeks = new Set(DATA.weeks);
 let currentSev1Acct = {Industry:'ALL', Revenue:'ALL'};
+let currentSev1PT   = {Industry:'ALL', Revenue:'ALL'};
 let _sev1Chart = null;
 let _sev1Inited = false;
 
@@ -792,7 +797,14 @@ function setSev1CloudTab(cloud, btn){
   currentSev1Cloud = cloud;
   document.querySelectorAll('.sev1-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  _populateSev1PTDropdown();
   _populateSev1Dropdown();
+  if(_sev1Chart){ _sev1Chart.destroy(); _sev1Chart = null; }
+  buildSev1TrendChart();
+}
+
+function setSev1PT(val){
+  currentSev1PT[currentSev1Cloud] = val;
   if(_sev1Chart){ _sev1Chart.destroy(); _sev1Chart = null; }
   buildSev1TrendChart();
 }
@@ -811,6 +823,24 @@ function setSev1Acct(val){
   currentSev1Acct[currentSev1Cloud] = val;
   if(_sev1Chart){ _sev1Chart.destroy(); _sev1Chart = null; }
   buildSev1TrendChart();
+}
+
+function _populateSev1PTDropdown(){
+  const sel = document.getElementById('sev1PTFilter');
+  if(!sel) return;
+  sel.innerHTML = '<option value="ALL">All Topics</option>';
+  // P&Ts for this cloud that have ≥1 L1 case, sorted by L1 count desc
+  Object.entries(DATA.pt_sev)
+    .filter(([pt]) => DATA.PT_CLOUD_MAP[pt] === currentSev1Cloud)
+    .filter(([, sev]) => (sev['Level 1 - Critical']||0) > 0)
+    .sort((a,b) => (b[1]['Level 1 - Critical']||0) - (a[1]['Level 1 - Critical']||0))
+    .forEach(([pt, sev])=>{
+      const o = document.createElement('option');
+      o.value = pt;
+      o.textContent = `${pt}  (${sev['Level 1 - Critical']} L1)`;
+      sel.appendChild(o);
+    });
+  sel.value = currentSev1PT[currentSev1Cloud];
 }
 
 function _populateSev1Dropdown(){
@@ -838,31 +868,26 @@ function buildSev1TrendChart(){
         wkBtnsEl.appendChild(btn);
       });
     }
+    _populateSev1PTDropdown();
     _populateSev1Dropdown();
   }
 
   const selectedWks = DATA.weeks.filter(w => currentSev1Weeks.has(w));
   const wkLabels = selectedWks.map(w => DATA.week_data[w].label);
+  const ptFilter   = currentSev1PT[currentSev1Cloud];
   const acctFilter = currentSev1Acct[currentSev1Cloud];
 
-  const allAccounts = Object.keys(DATA_ACCT_L1)
-    .filter(a => DATA_ACCT_CLOUD[a] === currentSev1Cloud)
-    .filter(a => acctFilter === 'ALL' || a === acctFilter)
-    .map(a => ({
-      name: a,
-      total: selectedWks.reduce((s,w) => s+(DATA_ACCT_L1[a][w]||0), 0)
-    }))
-    .filter(a => a.total > 0)
-    .sort((a,b) => b.total - a.total);
+  let datasets = [];
+  let subNote = '';
 
-  // Cap at top 10 when showing all to keep chart readable
-  const accounts = (acctFilter === 'ALL') ? allAccounts.slice(0,10) : allAccounts;
-
-  const datasets = accounts.map((a,i)=>{
-    const color = SUBTLE_PALETTE[i % SUBTLE_PALETTE.length];
-    return {
-      label: a.name,
-      data: selectedWks.map(w => DATA_ACCT_L1[a.name][w]||0),
+  if(ptFilter !== 'ALL'){
+    // ── PT mode: one line per selected topic ──────────────────────────────────
+    const L1 = 'Level 1 - Critical';
+    const color = SUBTLE_PALETTE[0];
+    const ptData = selectedWks.map(w => (DATA.pt_weekly[w]&&DATA.pt_weekly[w][ptFilter]||{})[L1]||0);
+    datasets = [{
+      label: ptFilter,
+      data: ptData,
       borderColor: color,
       backgroundColor: color + '22',
       borderWidth: 2,
@@ -871,15 +896,44 @@ function buildSev1TrendChart(){
       pointBackgroundColor: color,
       tension: 0.3,
       fill: false
-    };
-  });
+    }];
+    subNote = ptFilter;
+  } else {
+    // ── Account mode ──────────────────────────────────────────────────────────
+    const allAccounts = Object.keys(DATA_ACCT_L1)
+      .filter(a => DATA_ACCT_CLOUD[a] === currentSev1Cloud)
+      .filter(a => acctFilter === 'ALL' || a === acctFilter)
+      .map(a => ({
+        name: a,
+        total: selectedWks.reduce((s,w) => s+(DATA_ACCT_L1[a][w]||0), 0)
+      }))
+      .filter(a => a.total > 0)
+      .sort((a,b) => b.total - a.total);
+
+    const accounts = (acctFilter === 'ALL') ? allAccounts.slice(0,10) : allAccounts;
+    datasets = accounts.map((a,i)=>{
+      const color = SUBTLE_PALETTE[i % SUBTLE_PALETTE.length];
+      return {
+        label: a.name,
+        data: selectedWks.map(w => DATA_ACCT_L1[a.name][w]||0),
+        borderColor: color,
+        backgroundColor: color + '22',
+        borderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: color,
+        tension: 0.3,
+        fill: false
+      };
+    });
+    subNote = acctFilter==='ALL'
+      ? `top ${accounts.length} of ${allAccounts.length} accounts`
+      : acctFilter;
+  }
 
   const subEl = document.getElementById('sev1ChartSub');
   if(subEl){
-    const note = acctFilter==='ALL'
-      ? `top ${accounts.length} of ${allAccounts.length} accounts`
-      : acctFilter;
-    subEl.textContent = `Sev 1 cases · ${currentSev1Cloud} · ${note} · ${selectedWks.length} week${selectedWks.length!==1?'s':''}`;
+    subEl.textContent = `Sev 1 cases · ${currentSev1Cloud} · ${subNote} · ${selectedWks.length} week${selectedWks.length!==1?'s':''}`;
   }
 
   _sev1Chart = new Chart(document.getElementById('chartSev1Trend'),{
