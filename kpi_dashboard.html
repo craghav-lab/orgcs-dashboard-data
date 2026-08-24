@@ -422,8 +422,8 @@ function buildKPITiles(){
     {key:'closures', label:'Closures',      unit:'cases', color:'green',  higherBad:false, fmt:v=>v.toLocaleString()},
     {key:'ttr',      label:'TTR',           unit:'days',  color:'cyan',   higherBad:true,  fmt:v=>v.toFixed(2)},
     {key:'csat',     label:'CSAT',          unit:'/5.0',  color:'violet', higherBad:false, fmt:v=>v.toFixed(2)},
-    {key:'escalations',label:'Escalation Rate',unit:'%', color:'orange', higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
-    {key:'slo_miss',   label:'SLO Miss Rate', unit:'%', color:'red',    higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
+    {key:'escalations',label:'Escalation %',   unit:'%', color:'orange', higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
+    {key:'slo_miss',   label:'SLO %',          unit:'%', color:'red',    higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
   ];
 
   const grid = document.getElementById('kpi-tiles');
@@ -432,16 +432,16 @@ function buildKPITiles(){
     const pv = t.derive ? t.derive(prev[t.key], prev) : prev[t.key];
     let cls = 'neutral', changeText;
     if(t.derive){
-      const delta = pv > 0.001 ? ((cv-pv)/pv*100) : (cv > 0.001 ? 100 : 0);
+      const delta = cv - pv;
       const up = delta > 0;
-      if(Math.abs(delta)>0.1){
+      if(Math.abs(delta)>0.01){
         cls = t.higherBad ? (up?'up-bad':'down-good') : (up?'up-good':'down-bad');
       }
-      const arrow = delta>0.1?'▲':delta<-0.1?'▼':'—';
-      const sign = delta>0.1?'+':'';
+      const arrow = delta>0.01?'▲':delta<-0.01?'▼':'—';
+      const sign = delta>0.01?'+':'';
       changeText = (cv===0 && pv===0)
         ? `— No change WoW`
-        : `${arrow} ${sign}${Math.abs(delta).toFixed(1)}% WoW`;
+        : `${arrow} ${sign}${Math.abs(delta).toFixed(2)}% WoW`;
     } else {
       const delta = pv ? ((cv-pv)/pv*100) : 0;
       const up = delta > 0;
