@@ -75,6 +75,9 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 .filter-btn{padding:5px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
 .filter-btn.active{background:#1e40af;border-color:#3b82f6;color:#93c5fd}
 .filter-btn:hover:not(.active){border-color:#475569;color:#e2e8f0}
+.sev1-tab{background:transparent;border:none;border-bottom:3px solid transparent;padding:8px 20px;color:#64748b;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:-1px}
+.sev1-tab.active{color:#f1f5f9;border-bottom-color:#3b82f6}
+.sev1-tab:hover:not(.active){color:#94a3b8}
 
 /* Stats row */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
@@ -241,21 +244,25 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
     <div class="chart-wrap" id="ptChartWrap" style="height:380px"><canvas id="chartPTInflow"></canvas></div>
   </div>
 
-  <!-- Overall Sev-1 Inflow — Bar chart by account -->
+  <!-- Overall Sev-1 Inflow — Line chart by account -->
   <div class="chart-card" style="margin-bottom:20px">
     <div class="chart-title">L1-Critical Inflow Trend — Overall</div>
-    <div class="chart-sub" id="sev1ChartSub">Sev 1 case contribution by account · week by week · AMER · filter by cloud</div>
-    <div class="controls" style="margin-top:6px;margin-bottom:10px;flex-wrap:wrap;row-gap:8px">
-      <span class="ctrl-label">Cloud</span>
-      <button class="filter-btn sev1cloud-btn active" onclick="setSev1Cloud('ALL',this)">All Clouds</button>
-      <button class="filter-btn sev1cloud-btn" onclick="setSev1Cloud('Industry',this)" style="border-color:#3b82f6;color:#93c5fd">Industry</button>
-      <button class="filter-btn sev1cloud-btn" onclick="setSev1Cloud('Revenue',this)" style="border-color:#8b5cf6;color:#c4b5fd">Revenue</button>
+    <div class="chart-sub" id="sev1ChartSub">Sev 1 cases by account · week-on-week · AMER</div>
+    <!-- Industry / Revenue tabs -->
+    <div style="display:flex;gap:0;margin:12px 0 0;border-bottom:1px solid #334155">
+      <button class="sev1-tab active" onclick="setSev1CloudTab('Industry',this)">Industry</button>
+      <button class="sev1-tab" onclick="setSev1CloudTab('Revenue',this)">Revenue</button>
+    </div>
+    <!-- Week multi-select + Account dropdown -->
+    <div class="controls" style="margin-top:12px;margin-bottom:10px;flex-wrap:wrap;row-gap:8px;align-items:center">
+      <span class="ctrl-label">Weeks</span>
+      <div id="sev1WkBtns" style="display:contents"></div>
       <span class="ctrl-label" style="margin-left:14px">Account</span>
       <select class="ctrl-select" id="sev1AcctFilter" onchange="setSev1Acct(this.value)" style="min-width:220px">
         <option value="ALL">All Accounts</option>
       </select>
     </div>
-    <div class="chart-wrap" style="height:350px"><canvas id="chartSev1Trend"></canvas></div>
+    <div class="chart-wrap" style="height:400px"><canvas id="chartSev1Trend"></canvas></div>
   </div>
 
   <!-- Top 5 L1-Critical Trend by Cloud -->
@@ -745,99 +752,164 @@ function buildTop5PTTrendChart(){
 }
 
 // ─────────────────────── SEV-1 ACCOUNT TREND ─────────────────────────────────
-const ACCT_PALETTE = [
-  '#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#06b6d4','#3b82f6',
-  '#8b5cf6','#ec4899','#f43f5e','#a78bfa','#34d399','#fb923c','#fbbf24',
-  '#84cc16','#2dd4bf','#38bdf8','#818cf8','#f472b6','#fb7185'
+const SUBTLE_PALETTE = [
+  '#7dd3fc','#86efac','#fca5a5','#fdba74','#fde68a','#c4b5fd',
+  '#f9a8d4','#a5f3fc','#bbf7d0','#fed7aa','#ddd6fe','#fbcfe8',
+  '#bae6fd','#d9f99d','#99f6e4','#e9d5ff','#fecaca','#fef08a',
+  '#cffafe','#dcfce7'
 ];
 
-let currentSev1Cloud = 'ALL';
-let currentSev1Acct = 'ALL';
+let currentSev1Cloud = 'Industry';
+let currentSev1Weeks = new Set(DATA.weeks);
+let currentSev1Acct = {Industry:'ALL', Revenue:'ALL'};
 let _sev1Chart = null;
+let _sev1Inited = false;
 
-function setSev1Cloud(c, btn){
-  currentSev1Cloud = c;
-  document.querySelectorAll('.sev1cloud-btn').forEach(b=>b.classList.remove('active'));
+// Inline data-labels plugin — draws value above each non-zero point
+const _sev1DL = {
+  id:'sev1dl',
+  afterDatasetsDraw(chart){
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((ds,di)=>{
+      const meta = chart.getDatasetMeta(di);
+      if(meta.hidden) return;
+      meta.data.forEach((pt,i)=>{
+        const v = ds.data[i];
+        if(!v) return;
+        ctx.save();
+        ctx.font = 'bold 10px sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(v, pt.x, pt.y - 6);
+        ctx.restore();
+      });
+    });
+  }
+};
+
+function setSev1CloudTab(cloud, btn){
+  currentSev1Cloud = cloud;
+  document.querySelectorAll('.sev1-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  _populateSev1Dropdown();
+  if(_sev1Chart){ _sev1Chart.destroy(); _sev1Chart = null; }
+  buildSev1TrendChart();
+}
+
+function toggleSev1Week(wk, btn){
+  if(currentSev1Weeks.has(wk)){
+    if(currentSev1Weeks.size > 1){ currentSev1Weeks.delete(wk); btn.classList.remove('active'); }
+  } else {
+    currentSev1Weeks.add(wk); btn.classList.add('active');
+  }
   if(_sev1Chart){ _sev1Chart.destroy(); _sev1Chart = null; }
   buildSev1TrendChart();
 }
 
 function setSev1Acct(val){
-  currentSev1Acct = val;
+  currentSev1Acct[currentSev1Cloud] = val;
   if(_sev1Chart){ _sev1Chart.destroy(); _sev1Chart = null; }
   buildSev1TrendChart();
 }
 
-function buildSev1TrendChart(){
-  const wks = DATA.weeks;
-  const wkLabels = wks.map(w=>DATA.week_data[w].label);
-
-  // Populate account dropdown once
+function _populateSev1Dropdown(){
   const sel = document.getElementById('sev1AcctFilter');
-  if(sel && sel.options.length <= 1){
-    Object.keys(DATA_ACCT_L1).sort().forEach(a=>{
-      const opt = document.createElement('option');
-      opt.value = a; opt.textContent = a;
-      sel.appendChild(opt);
-    });
-  }
-  if(sel) sel.value = currentSev1Acct;
+  if(!sel) return;
+  sel.innerHTML = '<option value="ALL">All Accounts</option>';
+  Object.keys(DATA_ACCT_L1)
+    .filter(a => DATA_ACCT_CLOUD[a] === currentSev1Cloud)
+    .sort()
+    .forEach(a=>{ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o); });
+  sel.value = currentSev1Acct[currentSev1Cloud];
+}
 
-  // Filter and sort accounts by total L1 cases descending
-  const accounts = Object.keys(DATA_ACCT_L1)
-    .filter(a => currentSev1Acct !== 'ALL' ? a === currentSev1Acct
-                : (currentSev1Cloud === 'ALL' || DATA_ACCT_CLOUD[a] === currentSev1Cloud))
+function buildSev1TrendChart(){
+  if(!_sev1Inited){
+    _sev1Inited = true;
+    const wkBtnsEl = document.getElementById('sev1WkBtns');
+    if(wkBtnsEl){
+      DATA.weeks.forEach(w=>{
+        const lbl = DATA.week_data[w].label;
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn sev1wk-btn active';
+        btn.textContent = lbl;
+        btn.onclick = ()=>toggleSev1Week(w, btn);
+        wkBtnsEl.appendChild(btn);
+      });
+    }
+    _populateSev1Dropdown();
+  }
+
+  const selectedWks = DATA.weeks.filter(w => currentSev1Weeks.has(w));
+  const wkLabels = selectedWks.map(w => DATA.week_data[w].label);
+  const acctFilter = currentSev1Acct[currentSev1Cloud];
+
+  const allAccounts = Object.keys(DATA_ACCT_L1)
+    .filter(a => DATA_ACCT_CLOUD[a] === currentSev1Cloud)
+    .filter(a => acctFilter === 'ALL' || a === acctFilter)
     .map(a => ({
       name: a,
-      total: wks.reduce((s,w)=>s+(DATA_ACCT_L1[a][w]||0),0),
-      cloud: DATA_ACCT_CLOUD[a]
+      total: selectedWks.reduce((s,w) => s+(DATA_ACCT_L1[a][w]||0), 0)
     }))
     .filter(a => a.total > 0)
-    .sort((a,b)=>b.total-a.total);
+    .sort((a,b) => b.total - a.total);
+
+  // Cap at top 10 when showing all to keep chart readable
+  const accounts = (acctFilter === 'ALL') ? allAccounts.slice(0,10) : allAccounts;
 
   const datasets = accounts.map((a,i)=>{
-    const color = ACCT_PALETTE[i % ACCT_PALETTE.length];
+    const color = SUBTLE_PALETTE[i % SUBTLE_PALETTE.length];
     return {
       label: a.name,
-      data: wks.map(w=>DATA_ACCT_L1[a.name][w]||0),
-      backgroundColor: hex2rgba(color,0.85),
+      data: selectedWks.map(w => DATA_ACCT_L1[a.name][w]||0),
       borderColor: color,
-      borderWidth: 1,
-      _cloud: a.cloud
+      backgroundColor: color + '22',
+      borderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 8,
+      pointBackgroundColor: color,
+      tension: 0.3,
+      fill: false
     };
   });
 
   const subEl = document.getElementById('sev1ChartSub');
   if(subEl){
-    const cloudLabel = currentSev1Cloud==='ALL' ? 'All Clouds' : currentSev1Cloud;
-    subEl.textContent = `Sev 1 case contribution by account · week by week · ${cloudLabel} · ${accounts.length} accounts`;
+    const note = acctFilter==='ALL'
+      ? `top ${accounts.length} of ${allAccounts.length} accounts`
+      : acctFilter;
+    subEl.textContent = `Sev 1 cases · ${currentSev1Cloud} · ${note} · ${selectedWks.length} week${selectedWks.length!==1?'s':''}`;
   }
 
   _sev1Chart = new Chart(document.getElementById('chartSev1Trend'),{
-    type:'bar',
+    type:'line',
     data:{labels:wkLabels, datasets},
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{
-        legend:{ display:false },
+        legend:{
+          display:true, position:'bottom',
+          labels:{color:'#94a3b8', font:{size:11}, boxWidth:12, padding:10}
+        },
         tooltip:{
           mode:'index',
           callbacks:{
-            title(items){ return items[0]?.label || ''; },
-            label(item){
-              if(item.parsed.y===0) return null;
-              return `  ${item.dataset.label}  [${item.dataset._cloud||''}]: ${item.parsed.y}`;
-            }
+            label: item => item.parsed.y > 0 ? `  ${item.dataset.label}: ${item.parsed.y}` : null
           }
         }
       },
       scales:{
-        x:{ stacked:true, grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'} },
-        y:{ stacked:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'}, beginAtZero:true,
-            title:{display:true, text:'L1-Critical cases', color:'#64748b', font:{size:11}} }
+        x:{ grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'} },
+        y:{
+          grid:{color:'#1e293b'},
+          ticks:{color:'#64748b', stepSize:1},
+          beginAtZero:true,
+          title:{display:true, text:'L1-Critical cases', color:'#64748b', font:{size:11}}
+        }
       }
-    }
+    },
+    plugins:[_sev1DL]
   });
 }
 
