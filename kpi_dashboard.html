@@ -411,23 +411,25 @@ function buildKPITiles(){
     {key:'closures', label:'Closures',      unit:'cases', color:'green',  higherBad:false, fmt:v=>v.toLocaleString()},
     {key:'ttr',      label:'Avg TTR',       unit:'hrs',   color:'cyan',   higherBad:true,  fmt:v=>v.toFixed(2)},
     {key:'csat',     label:'CSAT',          unit:'/5.0',  color:'violet', higherBad:false, fmt:v=>v.toFixed(2)},
-    {key:'escalations',label:'Escalations', unit:'cases', color:'orange', higherBad:true,  fmt:v=>v, absChange:true},
-    {key:'slo_miss', label:'SLO Miss',      unit:'cases', color:'red',    higherBad:true,  fmt:v=>v, absChange:true},
+    {key:'escalations',label:'Escalation Rate',unit:'%', color:'orange', higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
+    {key:'slo_miss',   label:'SLO Miss Rate', unit:'%', color:'red',    higherBad:true,  fmt:v=>v.toFixed(2), derive:(v,wk)=>wk.inflow>0?v/wk.inflow*100:0},
   ];
 
   const grid = document.getElementById('kpi-tiles');
   grid.innerHTML = tiles.map(t=>{
-    const cv = cur[t.key], pv = prev[t.key];
+    const cv = t.derive ? t.derive(cur[t.key], cur) : cur[t.key];
+    const pv = t.derive ? t.derive(prev[t.key], prev) : prev[t.key];
     let cls = 'neutral', changeText;
-    if(t.absChange){
-      const diff = cv - pv;
-      if(diff !== 0){
-        cls = t.higherBad ? (diff>0 ? 'up-bad' : 'down-good') : (diff>0 ? 'up-good' : 'down-bad');
+    if(t.derive){
+      // Show percentage-point WoW change (avoids divide-by-zero when base is 0%)
+      const pp = cv - pv;
+      if(Math.abs(pp)>0.001){
+        cls = t.higherBad ? (pp>0?'up-bad':'down-good') : (pp>0?'up-good':'down-bad');
       }
-      const arrow = diff>0?'▲':diff<0?'▼':'—';
-      const sign = diff>0?'+':'';
-      changeText = diff!==0
-        ? `${arrow} ${sign}${Math.abs(diff)} case${Math.abs(diff)!==1?'s':''} WoW`
+      const arrow = pp>0.001?'▲':pp<-0.001?'▼':'—';
+      const sign = pp>0.001?'+':'';
+      changeText = Math.abs(pp)>0.001
+        ? `${arrow} ${sign}${Math.abs(pp).toFixed(2)} pp WoW`
         : `— No change WoW`;
     } else {
       const delta = pv ? ((cv-pv)/pv*100) : 0;
