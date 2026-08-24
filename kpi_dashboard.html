@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Industry Signature WBR - Revenue & Industry Cloud</title>
+<title>Signature WBR - Revenue & Industry Cloud</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -153,7 +153,7 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 <div class="header">
   <div class="header-logo">RI</div>
   <div>
-    <div class="header-title">Industry Signature WBR - Revenue &amp; Industry Cloud</div>
+    <div class="header-title">Signature WBR - Revenue &amp; Industry Cloud</div>
     <div class="header-sub">Engineer Geo: AMER · Signature Tier · Week-on-Week Performance · Data as of Aug 22, 2026</div>
   </div>
   <div class="header-badge">FISCAL Q3 FY27</div>
@@ -245,11 +245,15 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
   <div class="chart-card" style="margin-bottom:20px">
     <div class="chart-title">L1-Critical Inflow Trend — Overall</div>
     <div class="chart-sub" id="sev1ChartSub">Sev 1 case contribution by account · week by week · AMER · filter by cloud</div>
-    <div class="controls" style="margin-top:6px;margin-bottom:10px">
+    <div class="controls" style="margin-top:6px;margin-bottom:10px;flex-wrap:wrap;row-gap:8px">
       <span class="ctrl-label">Cloud</span>
       <button class="filter-btn sev1cloud-btn active" onclick="setSev1Cloud('ALL',this)">All Clouds</button>
       <button class="filter-btn sev1cloud-btn" onclick="setSev1Cloud('Industry',this)" style="border-color:#3b82f6;color:#93c5fd">Industry</button>
       <button class="filter-btn sev1cloud-btn" onclick="setSev1Cloud('Revenue',this)" style="border-color:#8b5cf6;color:#c4b5fd">Revenue</button>
+      <span class="ctrl-label" style="margin-left:14px">Account</span>
+      <select class="ctrl-select" id="sev1AcctFilter" onchange="setSev1Acct(this.value)" style="min-width:220px">
+        <option value="ALL">All Accounts</option>
+      </select>
     </div>
     <div class="chart-wrap" style="height:350px"><canvas id="chartSev1Trend"></canvas></div>
   </div>
@@ -746,6 +750,7 @@ const ACCT_PALETTE = [
 ];
 
 let currentSev1Cloud = 'ALL';
+let currentSev1Acct = 'ALL';
 let _sev1Chart = null;
 
 function setSev1Cloud(c, btn){
@@ -756,13 +761,31 @@ function setSev1Cloud(c, btn){
   buildSev1TrendChart();
 }
 
+function setSev1Acct(val){
+  currentSev1Acct = val;
+  if(_sev1Chart){ _sev1Chart.destroy(); _sev1Chart = null; }
+  buildSev1TrendChart();
+}
+
 function buildSev1TrendChart(){
   const wks = DATA.weeks;
   const wkLabels = wks.map(w=>DATA.week_data[w].label);
 
+  // Populate account dropdown once
+  const sel = document.getElementById('sev1AcctFilter');
+  if(sel && sel.options.length <= 1){
+    Object.keys(DATA_ACCT_L1).sort().forEach(a=>{
+      const opt = document.createElement('option');
+      opt.value = a; opt.textContent = a;
+      sel.appendChild(opt);
+    });
+  }
+  if(sel) sel.value = currentSev1Acct;
+
   // Filter and sort accounts by total L1 cases descending
   const accounts = Object.keys(DATA_ACCT_L1)
-    .filter(a => currentSev1Cloud === 'ALL' || DATA_ACCT_CLOUD[a] === currentSev1Cloud)
+    .filter(a => currentSev1Acct !== 'ALL' ? a === currentSev1Acct
+                : (currentSev1Cloud === 'ALL' || DATA_ACCT_CLOUD[a] === currentSev1Cloud))
     .map(a => ({
       name: a,
       total: wks.reduce((s,w)=>s+(DATA_ACCT_L1[a][w]||0),0),
