@@ -301,11 +301,6 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
       </div>
     </div>
     <div class="card" style="margin-top:20px">
-      <h2>Cases by Shift — EST · PST · AMER LATM</h2>
-      <div style="font-size:11px;color:#64748b;margin-bottom:12px">Total backlog cases per shift · success plan breakdown · engineers with known shift metadata</div>
-      <div class="chart-wrap"><canvas id="shiftChart"></canvas></div>
-    </div>
-    <div class="card" style="margin-top:20px">
       <h2 id="detailHeading">Detailed Breakdown</h2>
       <div id="detailFilters" style="margin-bottom:10px"></div>
       <input class="search-box" id="searchBox" placeholder="Search engineer...">
@@ -1100,59 +1095,6 @@ function buildBacklogSection(){
   document.getElementById('searchBox').oninput = filterTable;
   filterTable();
 
-  // ── EST / PST Shift Chart ────────────────────────────────────────────────
-  var shifts = ['EST','PST','AMER LATM'];
-  var shiftPlanData = {};
-  shifts.forEach(function(s){ shiftPlanData[s]={}; ENG_PLANS.forEach(function(p){ shiftPlanData[s][p]=0; }); });
-  var shiftEngCount = {EST:0,PST:0,'AMER LATM':0};
-
-  ENG_TABLE.forEach(function(r){
-    var meta = ENG_META[r.name];
-    if(!meta || !shiftPlanData[meta.shift]) return;
-    shiftEngCount[meta.shift]++;
-    ENG_PLANS.forEach(function(p){ shiftPlanData[meta.shift][p]+=(r[p]||0); });
-  });
-
-  var shiftDatasets = ENG_PLANS.map(function(p){
-    return {
-      label:p,
-      data:shifts.map(function(s){ return shiftPlanData[s][p]||0; }),
-      backgroundColor:ENG_COLORS[p],
-      borderColor:ENG_COLORS[p],
-      borderWidth:1
-    };
-  });
-
-  var shiftTotals = shifts.map(function(s){
-    return ENG_PLANS.reduce(function(sum,p){ return sum+shiftPlanData[s][p]; },0);
-  });
-
-  new Chart(document.getElementById('shiftChart'),{
-    type:'bar',
-    data:{
-      labels:shifts.map(function(s){ return s+' ('+shiftEngCount[s]+' engs)'; }),
-      datasets:shiftDatasets
-    },
-    options:{
-      responsive:true,
-      plugins:{
-        legend:{labels:{color:'#94a3b8',font:{size:11}}},
-        tooltip:{callbacks:{
-          footer:function(items){
-            var idx=items[0].dataIndex;
-            var tot=shiftTotals[idx];
-            var eng=shiftEngCount[shifts[idx]];
-            return 'Total: '+tot+' cases  |  Avg: '+(eng?+(tot/eng).toFixed(1):0)+' per eng';
-          }
-        }}
-      },
-      scales:{
-        x:{stacked:true,ticks:{color:'#94a3b8',font:{size:12}},grid:{color:'#1e293b'}},
-        y:{stacked:true,ticks:{color:'#94a3b8'},grid:{color:'#334155'},
-           title:{display:true,text:'Cases',color:'#94a3b8'}}
-      }
-    }
-  });
 }
 
 // ─────────────────────── INIT ────────────────────────────────────────────────
