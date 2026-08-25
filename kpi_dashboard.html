@@ -884,22 +884,17 @@ function buildSev1TrendChart(){
   const _ptShort = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
 
   if(ptFilter !== 'ALL' && acctFilter !== 'ALL'){
-    // ── AND mode: PT line (solid) + Account line (dashed) overlaid ───────────
-    const ptData   = selectedWks.map(w => (DATA.pt_weekly[w]&&DATA.pt_weekly[w][ptFilter]||{})[L1]||0);
-    const acctData = selectedWks.map(w => (DATA_ACCT_L1[acctFilter]&&DATA_ACCT_L1[acctFilter][w])||0);
-    const ptColor   = SUBTLE_PALETTE[0];
-    const acctColor = SUBTLE_PALETTE[1];
-    datasets = [
-      { label: _ptShort(ptFilter),
-        data: ptData, borderColor: ptColor, backgroundColor: ptColor+'22',
-        borderWidth:2, pointRadius:5, pointHoverRadius:8, pointBackgroundColor:ptColor,
-        tension:0.3, fill:false },
-      { label: acctFilter,
-        data: acctData, borderColor: acctColor, backgroundColor: acctColor+'22',
-        borderWidth:2, pointRadius:5, pointHoverRadius:8, pointBackgroundColor:acctColor,
-        tension:0.3, fill:false, borderDash:[5,4] }
-    ];
-    subNote = `${_ptShort(ptFilter)} vs ${acctFilter}`;
+    // ── AND mode: true intersection — account's L1 in this PT only ───────────
+    const ptWks = (DATA_ACCT_PT_L1[acctFilter]&&DATA_ACCT_PT_L1[acctFilter][ptFilter]) || {};
+    const color = SUBTLE_PALETTE[0];
+    datasets = [{
+      label: `${acctFilter} · ${_ptShort(ptFilter)}`,
+      data: selectedWks.map(w => ptWks[w]||0),
+      borderColor: color, backgroundColor: color+'22',
+      borderWidth:2, pointRadius:5, pointHoverRadius:8, pointBackgroundColor:color,
+      tension:0.3, fill:false
+    }];
+    subNote = `${acctFilter} in ${_ptShort(ptFilter)}`;
 
   } else if(ptFilter !== 'ALL'){
     // ── PT-only mode ──────────────────────────────────────────────────────────
@@ -985,6 +980,7 @@ const ENG_TABLE = [{"name": "Sumair Sufiyan Mohammed", "total": 24, "Gov Premier
 const ENG_PLAN_TOTALS = {"Gov Premier": 20, "Gov Signature Success": 9, "Partner Premier": 63, "Premier": 68, "Premier+": 196, "Signature": 2, "Signature Success": 286, "Standard": 150, "US Premier": 3, "US Signature Success": 8};
 const ENG_COLORS = {"Gov Premier": "#ef4444", "Gov Signature Success": "#f97316", "Partner Premier": "#06b6d4", "Premier": "#3b82f6", "Premier+": "#8b5cf6", "Signature": "#f59e0b", "Signature Success": "#10b981", "Standard": "#64748b", "US Premier": "#0ea5e9", "US Signature Success": "#22d3ee"};
 const DATA_ACCT_L1 = {"Harrow Health":{"2026-07-26":1,"2026-08-02":1,"2026-08-09":2,"2026-08-16":4},"Apsen Farmaceutica":{"2026-07-26":0,"2026-08-02":4,"2026-08-09":0,"2026-08-16":0},"S&P Global":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Liberty Iberoamerica":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":1,"2026-08-16":0},"Eaton Main":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":1},"Workday, Inc.":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":2},"Equinix":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Elevance Health":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"MD Dept of Education":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"First Command Financial":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"NM Reg & Licensing":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Digicert":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"UDAF Ag Info Mgmt":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Comunicación Celular":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Point32Health":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Convergint Technologies":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Claro S.A.":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Leidos Inc.":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Genesis Energy":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Consensus Cloud Solutions":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"AT&T Business":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"HHS NIH - All of Us":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Louisiana Workers Comp":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Kaseya US, LLC":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Telecom Argentina":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Meta Platforms":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Banco Bradesco":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Axis Bank":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Capital One":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"ISACA":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Asian Paints":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Takeda Pharmaceuticals":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Colmena Seguros":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Goodyear Tire & Rubber":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"PepsiCo, Inc.":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Hypera Farma":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Leaf Home":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"CVS/Aetna":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"AAA Northern CA NV UT":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Verizon Sourcing":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Nissan North America":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"AGL Energy":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Mars Information Services":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Lilly Life Sciences":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Centrica Plc":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Johnson & Johnson":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"DoubleVerify":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"NMDP Platform Org":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Bridgestone Mobility":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Pacific Gas & Electric":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Laerdal Medical":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Dialpad, Inc.":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1}};
+const DATA_ACCT_PT_L1 = {};
 const DATA_ACCT_CLOUD = {"Harrow Health":"Industry","Apsen Farmaceutica":"Industry","S&P Global":"Industry","Liberty Iberoamerica":"Industry","Eaton Main":"Industry","Workday, Inc.":"Revenue","Equinix":"Revenue","Elevance Health":"Industry","MD Dept of Education":"Industry","First Command Financial":"Industry","NM Reg & Licensing":"Industry","Digicert":"Revenue","UDAF Ag Info Mgmt":"Industry","Comunicación Celular":"Industry","Point32Health":"Industry","Convergint Technologies":"Industry","Claro S.A.":"Industry","Leidos Inc.":"Industry","Genesis Energy":"Industry","Consensus Cloud Solutions":"Revenue","AT&T Business":"Industry","HHS NIH - All of Us":"Industry","Louisiana Workers Comp":"Industry","Kaseya US, LLC":"Revenue","Telecom Argentina":"Industry","Meta Platforms":"Revenue","Banco Bradesco":"Industry","Axis Bank":"Industry","Capital One":"Industry","ISACA":"Revenue","Asian Paints":"Industry","Takeda Pharmaceuticals":"Industry","Colmena Seguros":"Industry","Goodyear Tire & Rubber":"Industry","PepsiCo, Inc.":"Industry","Hypera Farma":"Industry","Leaf Home":"Revenue","CVS/Aetna":"Industry","AAA Northern CA NV UT":"Industry","Verizon Sourcing":"Industry","Nissan North America":"Industry","AGL Energy":"Industry","Mars Information Services":"Industry","Lilly Life Sciences":"Industry","Centrica Plc":"Industry","Johnson & Johnson":"Industry","DoubleVerify":"Revenue","NMDP Platform Org":"Industry","Bridgestone Mobility":"Revenue","Pacific Gas & Electric":"Industry","Laerdal Medical":"Revenue","Dialpad, Inc.":"Revenue"};
 const ENG_TOTAL_CASES = 805;
 const ENG_TOTAL_ENG = 97;
