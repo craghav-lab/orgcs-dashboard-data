@@ -200,13 +200,45 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 
   <div class="chart-row" style="margin-top:20px">
     <div class="chart-card">
-      <div class="chart-title">Signature Inflow — Industry P&amp;T</div>
-      <div class="chart-sub">Week-on-week Signature-tier cases by Industry Product &amp; Topic</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div>
+          <div class="chart-title">Signature Inflow — Industry P&amp;T</div>
+          <div class="chart-sub">Week-on-week Signature-tier cases by Industry Product &amp; Topic</div>
+        </div>
+        <div style="margin-left:auto">
+          <label style="color:#94a3b8;font-size:11px;margin-right:4px">Top</label>
+          <select id="sigIndustryTopN" onchange="rebuildSigChart('Industry')"
+            style="background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:6px;padding:3px 6px;font-size:12px;cursor:pointer">
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7" selected>7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+      </div>
       <div class="chart-wrap" style="height:320px"><canvas id="chartSigIndustry"></canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Signature Inflow — Revenue P&amp;T</div>
-      <div class="chart-sub">Week-on-week Signature-tier cases by Revenue Product &amp; Topic</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div>
+          <div class="chart-title">Signature Inflow — Revenue P&amp;T</div>
+          <div class="chart-sub">Week-on-week Signature-tier cases by Revenue Product &amp; Topic</div>
+        </div>
+        <div style="margin-left:auto">
+          <label style="color:#94a3b8;font-size:11px;margin-right:4px">Top</label>
+          <select id="sigRevenueTopN" onchange="rebuildSigChart('Revenue')"
+            style="background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:6px;padding:3px 6px;font-size:12px;cursor:pointer">
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7" selected>7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+      </div>
       <div class="chart-wrap" style="height:320px"><canvas id="chartSigRevenue"></canvas></div>
     </div>
   </div>
@@ -1262,70 +1294,85 @@ function buildBacklogSection(){
 }
 
 // ─────────────────────── INIT ────────────────────────────────────────────────
-function buildSigPTCharts(){
+const _sigCharts = {};
+
+function buildSigChart(cloud, topN){
+  const canvasId = cloud === 'Industry' ? 'chartSigIndustry' : 'chartSigRevenue';
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+
+  if(_sigCharts[cloud]){ _sigCharts[cloud].destroy(); delete _sigCharts[cloud]; }
+
   const wks = DATA.weeks;
   const wkLabels = wks.map(w => DATA.week_data[w].label);
   const hasSigData = DATA.pt_sig_inflow && Object.keys(DATA.pt_sig_inflow).length > 0;
 
-  ['Industry','Revenue'].forEach(cloud => {
-    const canvasId = cloud === 'Industry' ? 'chartSigIndustry' : 'chartSigRevenue';
-    const canvas = document.getElementById(canvasId);
-    if(!canvas) return;
+  if(!hasSigData){
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth || 400; canvas.height = canvas.offsetHeight || 320;
+    ctx.fillStyle = '#334155'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#64748b'; ctx.font = '13px "Segoe UI", sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('No Signature data — run /kpi-page1-update with KPI CSV to populate', canvas.width/2, canvas.height/2);
+    return;
+  }
 
-    if(!hasSigData){
-      const ctx = canvas.getContext('2d');
-      canvas.width = canvas.offsetWidth || 400;
-      canvas.height = canvas.offsetHeight || 320;
-      ctx.fillStyle = '#334155';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#64748b';
-      ctx.font = '13px "Segoe UI", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('No Signature data yet — run /kpi-page1-update with KPI CSV to populate', canvas.width/2, canvas.height/2);
-      return;
-    }
+  const allPTs = Object.keys(DATA.pt_sig_inflow)
+    .filter(pt => (DATA.PT_CLOUD_MAP[pt] || 'Industry') === cloud)
+    .sort((a,b) => (DATA.pt_sig_inflow[b]||0) - (DATA.pt_sig_inflow[a]||0));
+  const pts = allPTs.slice(0, topN);
+  if(!pts.length) return;
 
-    const pts = Object.keys(DATA.pt_sig_inflow)
-      .filter(pt => DATA.PT_CLOUD_MAP[pt] === cloud)
-      .sort((a,b) => (DATA.pt_sig_inflow[b]||0) - (DATA.pt_sig_inflow[a]||0));
+  const _short = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
 
-    if(!pts.length) return;
-
-    const _short = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
-
-    const datasets = pts.map((pt,i) => {
-      const color = SUBTLE_PALETTE[i % SUBTLE_PALETTE.length];
-      return {
-        label: _short(pt),
-        data: wks.map(w => (DATA.pt_sig_weekly[w]&&DATA.pt_sig_weekly[w][pt])||0),
-        backgroundColor: color + 'cc',
-        borderColor: color,
-        borderWidth: 1
-      };
-    });
-
-    new Chart(canvas, {
-      type: 'bar',
-      data: { labels: wkLabels, datasets },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { position:'bottom', labels:{color:'#94a3b8', font:{size:10}, boxWidth:10, padding:8} },
-          tooltip: {
-            mode:'index', intersect:false,
-            callbacks: {
-              footer: items => `Total: ${items.reduce((s,i)=>s+(i.raw||0),0)}`
-            }
-          }
-        },
-        scales: {
-          x: { stacked:true, grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'} },
-          y: { stacked:true, beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
-               title:{display:true, text:'Signature cases', color:'#64748b', font:{size:11}} }
-        }
-      }
-    });
+  const datasets = pts.map((pt,i) => {
+    const color = SUBTLE_PALETTE[i % SUBTLE_PALETTE.length];
+    return {
+      label: _short(pt),
+      data: wks.map(w => (DATA.pt_sig_weekly[w]&&DATA.pt_sig_weekly[w][pt])||0),
+      borderColor: color,
+      backgroundColor: color + '22',
+      borderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 7,
+      pointBackgroundColor: color,
+      tension: 0.3,
+      fill: false
+    };
   });
+
+  _sigCharts[cloud] = new Chart(canvas, {
+    type: 'line',
+    data: { labels: wkLabels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { position:'bottom', labels:{color:'#94a3b8', font:{size:10}, boxWidth:12, padding:10,
+          usePointStyle:true, pointStyle:'circle'} },
+        tooltip: {
+          callbacks: {
+            footer: items => `Total: ${items.reduce((s,i)=>s+(i.raw||0),0)}`
+          }
+        }
+      },
+      scales: {
+        x: { grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'} },
+        y: { beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
+             title:{display:true, text:'Signature cases', color:'#64748b', font:{size:11}} }
+      }
+    }
+  });
+}
+
+function rebuildSigChart(cloud){
+  const selId = cloud === 'Industry' ? 'sigIndustryTopN' : 'sigRevenueTopN';
+  const topN = parseInt(document.getElementById(selId).value, 10);
+  buildSigChart(cloud, topN);
+}
+
+function buildSigPTCharts(){
+  rebuildSigChart('Industry');
+  rebuildSigChart('Revenue');
 }
 
 buildKPITiles();
