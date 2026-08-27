@@ -226,7 +226,13 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
           </select>
         </div>
       </div>
-      <div class="chart-wrap" style="height:320px"><canvas id="chartSigIndustry"></canvas></div>
+      <div style="margin-top:8px">
+        <select id="sigIndustryPT" onchange="rebuildSigChart('Industry')"
+          style="width:100%;background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer">
+          <option value="all">All P&amp;Ts (Top N)</option>
+        </select>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="chartSigIndustry"></canvas></div>
     </div>
     <div class="chart-card">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -255,7 +261,13 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
           </select>
         </div>
       </div>
-      <div class="chart-wrap" style="height:320px"><canvas id="chartSigRevenue"></canvas></div>
+      <div style="margin-top:8px">
+        <select id="sigRevenuePT" onchange="rebuildSigChart('Revenue')"
+          style="width:100%;background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer">
+          <option value="all">All P&amp;Ts (Top N)</option>
+        </select>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="chartSigRevenue"></canvas></div>
     </div>
   </div>
 
@@ -1314,6 +1326,23 @@ function buildBacklogSection(){
 const _sigCharts = {};
 const _sigMetric = { Industry: 'inflow', Revenue: 'inflow' };
 
+function populateSigPTDropdown(cloud){
+  const selId = cloud === 'Industry' ? 'sigIndustryPT' : 'sigRevenuePT';
+  const sel = document.getElementById(selId);
+  if(!sel || !DATA.pt_sig_inflow) return;
+  const _short = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
+  const pts = Object.keys(DATA.pt_sig_inflow)
+    .filter(pt => (DATA.PT_CLOUD_MAP[pt] || 'Industry') === cloud)
+    .sort((a,b) => (DATA.pt_sig_inflow[b]||0) - (DATA.pt_sig_inflow[a]||0));
+  sel.innerHTML = '<option value="all">All P&Ts (Top N)</option>';
+  pts.forEach(pt => {
+    const opt = document.createElement('option');
+    opt.value = pt;
+    opt.textContent = _short(pt);
+    sel.appendChild(opt);
+  });
+}
+
 function setSigMetric(cloud, metric){
   _sigMetric[cloud] = metric;
   // Update button styles
@@ -1329,7 +1358,7 @@ function setSigMetric(cloud, metric){
   rebuildSigChart(cloud);
 }
 
-function buildSigChart(cloud, topN, metric){
+function buildSigChart(cloud, topN, metric, ptFilter){
   const canvasId = cloud === 'Industry' ? 'chartSigIndustry' : 'chartSigRevenue';
   const canvas = document.getElementById(canvasId);
   if(!canvas) return;
@@ -1349,11 +1378,11 @@ function buildSigChart(cloud, topN, metric){
     return;
   }
 
-  // Rank P&Ts by combined inflow+closure volume so Top N is consistent across metrics
+  // Determine which P&Ts to show
   const allPTs = Object.keys(DATA.pt_sig_inflow)
     .filter(pt => (DATA.PT_CLOUD_MAP[pt] || 'Industry') === cloud)
     .sort((a,b) => (DATA.pt_sig_inflow[b]||0) - (DATA.pt_sig_inflow[a]||0));
-  const pts = allPTs.slice(0, topN);
+  const pts = (ptFilter && ptFilter !== 'all') ? [ptFilter] : allPTs.slice(0, topN);
   if(!pts.length) return;
 
   const _short = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
@@ -1385,9 +1414,9 @@ function buildSigChart(cloud, topN, metric){
     }
   });
 
-  const yLabel = metric === 'inflow' ? 'Inflow cases'
-               : metric === 'closure' ? 'Closure cases'
-               : 'Cases (solid=Inflow, dashed=Closure)';
+  const yLabel = metric === 'inflow' ? 'Inflow (Signature)'
+               : metric === 'closure' ? 'Closures (Signature)'
+               : 'Cases — solid: Inflow · dashed: Closure';
 
   _sigCharts[cloud] = new Chart(canvas, {
     type: 'line',
@@ -1414,12 +1443,18 @@ function buildSigChart(cloud, topN, metric){
 }
 
 function rebuildSigChart(cloud){
-  const selId = cloud === 'Industry' ? 'sigIndustryTopN' : 'sigRevenueTopN';
-  const topN = parseInt(document.getElementById(selId).value, 10);
-  buildSigChart(cloud, topN, _sigMetric[cloud]);
+  const topN = parseInt(document.getElementById(cloud==='Industry'?'sigIndustryTopN':'sigRevenueTopN').value, 10);
+  const ptSel = document.getElementById(cloud==='Industry'?'sigIndustryPT':'sigRevenuePT');
+  const ptFilter = ptSel ? ptSel.value : 'all';
+  // Dim Top N selector when a specific P&T is selected
+  const topNSel = document.getElementById(cloud==='Industry'?'sigIndustryTopN':'sigRevenueTopN');
+  if(topNSel) topNSel.style.opacity = (ptFilter !== 'all') ? '0.35' : '1';
+  buildSigChart(cloud, topN, _sigMetric[cloud], ptFilter);
 }
 
 function buildSigPTCharts(){
+  populateSigPTDropdown('Industry');
+  populateSigPTDropdown('Revenue');
   rebuildSigChart('Industry');
   rebuildSigChart('Revenue');
 }
