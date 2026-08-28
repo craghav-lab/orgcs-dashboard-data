@@ -166,6 +166,7 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
   <div class="tab active" onclick="showTab('kpi')">📊 KPI Trends</div>
   <div class="tab" onclick="showTab('cloud')">P&amp;T insights &amp; Trends</div>
   <div class="tab" onclick="showTab('backlog')">Backlog &amp; Signature share</div>
+  <div class="tab" onclick="showTab('capacity')">Capacity &amp; Delivery</div>
 </div>
 
 <!-- ═══════════════════════════════════ SECTION 1: KPI TRENDS ══════════════════════════════════ -->
@@ -414,6 +415,65 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 </div>
 </div>
 
+<!-- ══════════════════ SECTION 4: CAPACITY & DELIVERY ══════════════════ -->
+<div id="sec-capacity" class="section" style="display:none">
+
+  <div class="section-head">
+    <div class="section-head-title">Capacity &amp; Delivery</div>
+    <div class="section-badge">MCS Engineers · Signature Tier</div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- KPI tiles -->
+  <div id="capKpiRow" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px"></div>
+
+  <!-- Charts -->
+  <div class="chart-row">
+    <!-- Industry -->
+    <div class="chart-card">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+        <div>
+          <div class="chart-title">Industry — Capacity &amp; Delivery</div>
+          <div class="chart-sub">Signature closures: MCS team vs. Others · week-on-week</div>
+        </div>
+        <div style="margin-left:auto">
+          <label style="color:#94a3b8;font-size:11px;margin-right:4px">Manager</label>
+          <select id="capIndustryMgr" onchange="rebuildCapChart('Industry')"
+            style="background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer">
+            <option value="all">All Managers</option>
+            <option>Chaten Raghav</option>
+            <option>Angad Rajpal Singh</option>
+            <option>Wahaj Ali Shaik</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:320px"><canvas id="chartCapIndustry"></canvas></div>
+      <div id="capIndustrySummary" style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap"></div>
+    </div>
+
+    <!-- Revenue -->
+    <div class="chart-card">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+        <div>
+          <div class="chart-title">Revenue — Capacity &amp; Delivery</div>
+          <div class="chart-sub">Signature closures: MCS team vs. Others · week-on-week</div>
+        </div>
+        <div style="margin-left:auto">
+          <label style="color:#94a3b8;font-size:11px;margin-right:4px">Manager</label>
+          <select id="capRevenueMgr" onchange="rebuildCapChart('Revenue')"
+            style="background:#1e293b;color:#cbd5e1;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer">
+            <option value="all">All Managers</option>
+            <option>Pushkar Dwivedi</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:320px"><canvas id="chartCapRevenue"></canvas></div>
+      <div id="capRevenueSummary" style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+
+</div>
+
 <script>
 // ─────────────────────── DATA ────────────────────────────────────────────────
 const DATA = {
@@ -443,6 +503,55 @@ const DATA = {
   pt_sig_inflow: {"Industry-Life Sciences":151,"Industry-Omnistudio":127,"Industry-Financial Services":41,"Revenue-Salesforce CPQ":40,"Industry-CPQ / Order Management / Digital Commerce":37,"Revenue Cloud (Core)-Product Configurator":32,"Revenue-CPQ Developer Support":29,"Industry-Public Sector Solutions":20,"Industry-Security & Activations":20,"Revenue Cloud (Core)-Price Management":15,"Revenue Cloud (Core)-Transaction Management":15,"Industry-Retail and Consumer Goods":15,"Industry-Loyalty Management":14,"Industry-Health Cloud":12,"Industry-Developer Support":10,"Revenue Cloud (Core)-Billing & Invoicing":10,"Revenue Cloud (Core)-Developer Support - Product to Order":9,"Industry-Document Generation":9,"Industry-Mandatory Security Controls":8,"Revenue Cloud (Core)-Contract Lifecycle Management with DocGen":6,"Revenue-Document Generation":5,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":5,"Revenue-Salesforce Billing":4,"Industry-Health & Insurance":4,"Revenue Cloud (Core)-Product Catalog Management":4,"Industry-Education Cloud":4,"Industry-Manufacturing Cloud":4,"Industry-Energy & Utilities Cloud":4,"Industry-Communication Cloud":4,"Industry-Nonprofit Cloud":3,"Industry-Business Rules Engine (BRE)":3,"Industry-Email Delivery & Desktop Integrations":3,"Industry-How-to, Setup, Configuration, Reports & Dashboards":2,"Revenue-Salesforce Contracts":2,"Revenue Cloud (Core)-Usage & Ratings":2,"Revenue Cloud (Core)-Advanced Approvals":1,"Industry-CRM Analytics":1,"Revenue Cloud (Core)-OmniStudio":1,"Revenue-Billing Developer Support":1,"Revenue-Salesforce Subscription Management":1,"Industry-Media Cloud":1,"Industry-Nonprofit Success Pack (NPSP)":1,"Industry-Automotive Cloud":1,"Industry-Rebate Management":1},
   pt_sig_closure_weekly: {"2026-08-02":{"Industry-Education Cloud":2,"Industry-Retail and Consumer Goods":3,"Industry-Omnistudio":40,"Revenue Cloud (Core)-Transaction Management":4,"Industry-Manufacturing Cloud":2,"Industry-Health & Insurance":3,"Industry-Life Sciences":51,"Industry-Public Sector Solutions":10,"Revenue Cloud (Core)-Price Management":7,"Revenue-Salesforce CPQ":12,"Industry-Developer Support":3,"Industry-Security & Activations":12,"Revenue-Salesforce Billing":2,"Industry-Health Cloud":1,"Industry-Financial Services":9,"Revenue-CPQ Developer Support":9,"Revenue Cloud (Core)-Product Configurator":5,"Industry-Rebate Management":1,"Revenue Cloud (Core)-Billing & Invoicing":2,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Industry-Communication Cloud":1,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Industry-CPQ / Order Management / Digital Commerce":8,"Industry-Loyalty Management":5,"Industry-How-to, Setup, Configuration, Reports & Dashboards":3,"Revenue Cloud (Core)-Product Catalog Management":2,"Industry-Document Generation":4,"Industry-Nonprofit Cloud":2,"Industry-Business Rules Engine (BRE)":1,"Revenue Cloud (Core)-Contract Lifecycle Management with DocGen":1,"Industry-Mandatory Security Controls":1},"2026-08-09":{"Industry-Retail and Consumer Goods":7,"Industry-Life Sciences":37,"Revenue Cloud (Core)-Billing & Invoicing":3,"Revenue-Salesforce CPQ":12,"Revenue Cloud (Core)-Transaction Management":7,"Industry-Communication Cloud":2,"Industry-Security & Activations":6,"Industry-Health Cloud":6,"Industry-Financial Services":16,"Industry-Omnistudio":30,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":2,"Industry-CPQ / Order Management / Digital Commerce":12,"Revenue Cloud (Core)-Advanced Approvals":1,"Revenue Cloud (Core)-Price Management":5,"Revenue Cloud (Core)-Product Configurator":8,"Revenue-Salesforce Contracts":1,"Industry-Mandatory Security Controls":2,"Industry-Loyalty Management":3,"Revenue-CPQ Developer Support":8,"Industry-Health & Insurance":2,"Revenue Cloud (Core)-Contract Lifecycle Management with DocGen":4,"Industry-Public Sector Solutions":3,"Revenue Cloud (Core)-Developer Support - Product to Order":6,"Industry-Developer Support":2,"Revenue-Document Generation":2,"Industry-Document Generation":1,"Industry-Business Rules Engine (BRE)":1,"Revenue-Salesforce Billing":1,"Industry-Energy & Utilities Cloud":1,"Industry-Nonprofit Cloud":1,"Revenue Cloud (Core)-Product Catalog Management":1,"Industry-Net Zero Cloud":1,"Revenue Cloud (Core)-OmniStudio":1,"Industry-Manufacturing Cloud":1},"2026-08-16":{"Revenue-Salesforce CPQ":15,"Industry-Omnistudio":24,"Revenue Cloud (Core)-Contract Lifecycle Management with DocGen":4,"Industry-Mandatory Security Controls":2,"Industry-CPQ / Order Management / Digital Commerce":11,"Revenue-CPQ Developer Support":7,"Industry-Life Sciences":27,"Industry-Media Cloud":1,"Revenue-Salesforce Billing":2,"Industry-Retail and Consumer Goods":5,"Industry-Public Sector Solutions":6,"Revenue Cloud (Core)-Product Configurator":12,"Industry-Education Cloud":1,"Industry-Financial Services":8,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Revenue Cloud (Core)-Billing & Invoicing":2,"Industry-Health Cloud":4,"Revenue-Document Generation":1,"Revenue Cloud (Core)-Transaction Management":7,"Industry-Developer Support":4,"Revenue Cloud (Core)-Usage & Ratings":1,"Industry-Document Generation":2,"Revenue Cloud (Core)-Price Management":3,"Industry-Loyalty Management":5,"Industry-Security & Activations":3,"Industry-Health & Insurance":1,"Industry-Energy & Utilities Cloud":4,"Revenue-Billing Developer Support":1,"Industry-Communication Cloud":1,"Industry-Manufacturing Cloud":2,"Revenue Cloud (Core)-Product Catalog Management":1,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":2,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Industry-CRM Analytics":1,"Revenue-Salesforce Contracts":1,"Industry-Automotive Cloud":1},"2026-08-23":{"Industry-CPQ / Order Management / Digital Commerce":8,"Industry-Omnistudio":19,"Industry-Mandatory Security Controls":2,"Industry-Financial Services":4,"Industry-Life Sciences":13,"Revenue Cloud (Core)-Price Management":1,"Revenue Cloud (Core)-Developer Support - Product to Order":1,"Industry-Loyalty Management":5,"Revenue-Salesforce CPQ":5,"Revenue Cloud (Core)-Billing & Invoicing":2,"Industry-Security & Activations":2,"Revenue-CPQ Developer Support":1,"Revenue Cloud (Core)-Product Configurator":2,"Industry-Education Cloud":1,"Industry-Energy & Utilities Cloud":1,"Industry-Document Generation":2,"Revenue Cloud (Core)-Transaction Management":1,"Industry-Health Cloud":1,"Industry-Public Sector Solutions":3}}
 };
+
+// ─────────────────────── CAPACITY TEAM ──────────────────────────────────────
+const CAP_TEAM = [
+  {name:"Anil Kumar Ganubolu",    manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Vaibhav Pandya",         manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Pratibha Rajpoot",       manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Harshal Bansod",         manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Pallavi Pandey",         manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Sandilya Kumar Tanna",   manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Anita Kumari",           manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Kshitij Mittal",         manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:1.8},
+  {name:"Saurabh Shukla",         manager:"Angad Rajpal Singh", cloud:"Industry", capacity:1.8},
+  {name:"M S Angel Niharika",     manager:"Angad Rajpal Singh", cloud:"Industry", capacity:1.8},
+  {name:"Manish Garg",            manager:"Angad Rajpal Singh", cloud:"Industry", capacity:1.8},
+  {name:"Tahoor Khan",            manager:"Angad Rajpal Singh", cloud:"Industry", capacity:1.8},
+  {name:"Shivam Gupta",           manager:"Angad Rajpal Singh", cloud:"Industry", capacity:1.8},
+  {name:"Deekshita Pusarla",      manager:"Angad Rajpal Singh", cloud:"Industry", capacity:1.8},
+  {name:"Jahanvi Gupta",          manager:"Angad Rajpal Singh", cloud:"Industry", capacity:1.8},
+  {name:"Sathyavathi K N",        manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"Kaushik Jagatap",        manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"UmaMahesh Devabhakthuni",manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"Abhi Chohan",            manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"Vipin Sharma",           manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"Gouse Mohiuddin Mohammad",manager:"Chaten Raghav",     cloud:"Industry", capacity:1.8},
+  {name:"Jayesh Naik",            manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"Minal Adkane",           manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"Lokesh Reddy Koya",      manager:"Chaten Raghav",      cloud:"Industry", capacity:1.8},
+  {name:"Sumair Sufiyan Mohammed",manager:"Wahaj Ali Shaik",    cloud:"Industry", capacity:1.8},
+];
+
+const CAP_WEEKLY = {
+  "2026-08-02":{
+    "Industry":{"by_mgr":{"Chaten Raghav":56,"Angad Rajpal Singh":23,"Wahaj Ali Shaik":7},"other":76,"inflow":141},
+    "Revenue": {"by_mgr":{"Pushkar Dwivedi":24},"other":22,"inflow":56}
+  },
+  "2026-08-09":{
+    "Industry":{"by_mgr":{"Angad Rajpal Singh":28,"Wahaj Ali Shaik":10,"Chaten Raghav":40},"other":56,"inflow":142},
+    "Revenue": {"by_mgr":{"Pushkar Dwivedi":19},"other":43,"inflow":66}
+  },
+  "2026-08-16":{
+    "Industry":{"by_mgr":{"Chaten Raghav":30,"Angad Rajpal Singh":15,"Wahaj Ali Shaik":4},"other":65,"inflow":153},
+    "Revenue": {"by_mgr":{"Pushkar Dwivedi":30},"other":31,"inflow":44}
+  },
+  "2026-08-23":{
+    "Industry":{"by_mgr":{"Angad Rajpal Singh":5,"Chaten Raghav":16,"Wahaj Ali Shaik":4},"other":36,"inflow":64},
+    "Revenue": {"by_mgr":{"Pushkar Dwivedi":5},"other":8,"inflow":16}
+  }
+};
+
 
 // ─────────────────────── CHART.JS DEFAULTS ───────────────────────────────────
 Chart.defaults.color = '#94a3b8';
@@ -478,6 +587,7 @@ function showTab(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   event.target.classList.add('active');
+  if(id==='capacity'&&!_capBuilt){buildCapCharts();_capBuilt=true;}
   if(id==='cloud' && !window._cloudBuilt){ buildCloudSection(); window._cloudBuilt=true; }
   if(id==='backlog' && !window._backlogBuilt){ buildBacklogSection(); window._backlogBuilt=true; }
 }
@@ -1458,6 +1568,181 @@ function buildSigPTCharts(){
   rebuildSigChart('Industry');
   rebuildSigChart('Revenue');
 }
+
+// ─────────────────────── CAPACITY & DELIVERY ─────────────────────────────────
+let _capBuilt = false;
+const _capCharts = {};
+
+const CAP_MGR_COLORS = {
+  "Chaten Raghav":      SUBTLE_PALETTE[2],
+  "Angad Rajpal Singh": SUBTLE_PALETTE[5],
+  "Wahaj Ali Shaik":    SUBTLE_PALETTE[9],
+  "Pushkar Dwivedi":    SUBTLE_PALETTE[1],
+};
+const CAP_OTHER_COLOR = "#475569";
+
+function _capEng(cloud, mgr){
+  return CAP_TEAM.filter(e => e.cloud===cloud && (mgr==='all'||e.manager===mgr));
+}
+function _capacity(cloud, mgr){
+  return _capEng(cloud, mgr).reduce((s,e)=>s+e.capacity, 0);
+}
+
+function buildCapKPIs(){
+  const wks  = DATA.weeks;
+  const cur  = wks[wks.length-1];
+  const prev = wks[wks.length-2];
+  const el   = document.getElementById('capKpiRow');
+  if(!el) return;
+
+  const tiles = [
+    {label:'Industry Headcount', val: CAP_TEAM.filter(e=>e.cloud==='Industry').length, unit:'engineers', color:'cyan'},
+    {label:'Industry Capacity',  val: _capacity('Industry','all').toFixed(1), unit:'cases/wk', color:'teal'},
+    {label:'Industry Closures (latest)', val: Object.values(CAP_WEEKLY[cur].Industry.by_mgr).reduce((s,v)=>s+v,0), prev: Object.values(CAP_WEEKLY[prev].Industry.by_mgr).reduce((s,v)=>s+v,0), unit:'cases', color:'green'},
+    {label:'Revenue Headcount',  val: CAP_TEAM.filter(e=>e.cloud==='Revenue').length, unit:'engineers', color:'violet'},
+    {label:'Revenue Capacity',   val: _capacity('Revenue','all').toFixed(1), unit:'cases/wk', color:'indigo'},
+    {label:'Revenue Closures (latest)', val: Object.values(CAP_WEEKLY[cur].Revenue.by_mgr).reduce((s,v)=>s+v,0), prev: Object.values(CAP_WEEKLY[prev].Revenue.by_mgr).reduce((s,v)=>s+v,0), unit:'cases', color:'blue'},
+  ];
+
+  el.innerHTML = tiles.map(t => {
+    let wow = '';
+    if(t.prev !== undefined){
+      const d = t.val - t.prev;
+      const sign = d>0?'+':'';
+      const cls  = d>0?'color:#f87171':'color:#4ade80';
+      wow = `<div style="font-size:10px;margin-top:3px;${cls}">${sign}${d} WoW</div>`;
+    }
+    return `<div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px 14px">
+      <div style="font-size:10px;color:#94a3b8;margin-bottom:4px">${t.label}</div>
+      <div style="font-size:22px;font-weight:700;color:${COLORS[t.color]||'#e2e8f0'}">${t.val}</div>
+      <div style="font-size:10px;color:#64748b">${t.unit}</div>
+      ${wow}
+    </div>`;
+  }).join('');
+}
+
+function buildCapChart(cloud){
+  const canvasId = cloud==='Industry' ? 'chartCapIndustry' : 'chartCapRevenue';
+  const canvas   = document.getElementById(canvasId);
+  if(!canvas) return;
+  if(_capCharts[cloud]){ _capCharts[cloud].destroy(); delete _capCharts[cloud]; }
+
+  const mgrSel  = document.getElementById(cloud==='Industry'?'capIndustryMgr':'capRevenueMgr');
+  const mgr     = mgrSel ? mgrSel.value : 'all';
+  const wks     = DATA.weeks;
+  const wkLabels= wks.map(w => DATA.week_data[w].label);
+
+  // managers to show as separate stacks
+  const showMgrs = mgr==='all'
+    ? [...new Set(CAP_TEAM.filter(e=>e.cloud===cloud).map(e=>e.manager))]
+    : [mgr];
+
+  const capLine = _capacity(cloud, mgr);
+
+  // Datasets: one bar per manager + one bar for "Other"
+  const datasets = [];
+  showMgrs.forEach(m => {
+    datasets.push({
+      type:'bar', label: m==='all'?'MCS Team':m,
+      data: wks.map(w => (CAP_WEEKLY[w]&&CAP_WEEKLY[w][cloud]&&CAP_WEEKLY[w][cloud].by_mgr[m]) || 0),
+      backgroundColor: (CAP_MGR_COLORS[m]||SUBTLE_PALETTE[0])+'cc',
+      borderColor:     (CAP_MGR_COLORS[m]||SUBTLE_PALETTE[0]),
+      borderWidth:1, stack:'closures'
+    });
+  });
+
+  // "Other" = total Sig closures minus selected team closures
+  datasets.push({
+    type:'bar', label:'Other Engineers',
+    data: wks.map(w => {
+      if(!CAP_WEEKLY[w]||!CAP_WEEKLY[w][cloud]) return 0;
+      const d = CAP_WEEKLY[w][cloud];
+      const teamTotal = showMgrs.reduce((s,m)=>(d.by_mgr[m]||0)+s, 0);
+      const allTeam   = Object.values(d.by_mgr).reduce((s,v)=>s+v,0);
+      return d.other + (allTeam - teamTotal);
+    }),
+    backgroundColor: CAP_OTHER_COLOR+'99',
+    borderColor:     CAP_OTHER_COLOR,
+    borderWidth:1, stack:'closures'
+  });
+
+  // Inflow line
+  datasets.push({
+    type:'line', label:'Sig Inflow',
+    data: wks.map(w => (CAP_WEEKLY[w]&&CAP_WEEKLY[w][cloud]) ? CAP_WEEKLY[w][cloud].inflow : 0),
+    borderColor:'#60a5fa', backgroundColor:'#60a5fa22',
+    borderWidth:2, pointRadius:4, pointHoverRadius:7, pointBackgroundColor:'#60a5fa',
+    tension:0.3, fill:false, yAxisID:'y'
+  });
+
+  // Capacity line
+  datasets.push({
+    type:'line', label:`Capacity (${capLine.toFixed(1)})`,
+    data: wks.map(()=>capLine),
+    borderColor:'#fbbf24', backgroundColor:'transparent',
+    borderWidth:2, borderDash:[6,3], pointRadius:0, tension:0, fill:false, yAxisID:'y'
+  });
+
+  _capCharts[cloud] = new Chart(canvas, {
+    data:{ labels:wkLabels, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ position:'bottom', labels:{color:'#94a3b8', font:{size:10}, boxWidth:12, padding:8, usePointStyle:true} },
+        tooltip:{ callbacks:{
+          footer: items => {
+            const bar = items.filter(i=>i.dataset.stack==='closures');
+            const total = bar.reduce((s,i)=>s+(i.raw||0),0);
+            const inf = items.find(i=>i.dataset.label==='Sig Inflow');
+            return `Total closures: ${total}${inf?` · Inflow: ${inf.raw}`:''}`;
+          }
+        }}
+      },
+      scales:{
+        x:{ stacked:true, grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'} },
+        y:{ stacked:true, beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
+            title:{display:true, text:'Cases', color:'#64748b', font:{size:11}} }
+      }
+    }
+  });
+
+  // Summary stats below chart
+  const summaryEl = document.getElementById(`cap${cloud}Summary`);
+  if(summaryEl){
+    const latestWk  = wks[wks.length-1];
+    const prevWk    = wks[wks.length-2];
+    const d  = CAP_WEEKLY[latestWk][cloud];
+    const dp = CAP_WEEKLY[prevWk][cloud];
+    const teamNow  = showMgrs.reduce((s,m)=>(d.by_mgr[m]||0)+s, 0);
+    const teamPrev = showMgrs.reduce((s,m)=>(dp.by_mgr[m]||0)+s, 0);
+    const otherNow = d.other + Object.values(d.by_mgr).reduce((s,v)=>s+v,0) - Object.values(d.by_mgr).reduce((s,v)=>s+v,0);
+    const util = capLine>0 ? Math.round(teamNow/capLine*100) : 0;
+    const utilColor = util>=90?'#4ade80':util>=70?'#fbbf24':'#f87171';
+    const wowD = teamNow - teamPrev;
+    const wowSign = wowD>=0?'+':'';
+    summaryEl.innerHTML = [
+      ['Team Engineers', `${_capEng(cloud,mgr).length}`, '#94a3b8'],
+      ['Team Capacity', `${capLine.toFixed(1)}/wk`, '#94a3b8'],
+      ['Team Closures', `${teamNow} <span style="font-size:10px;color:${wowD>=0?'#4ade80':'#f87171'}">(${wowSign}${wowD} WoW)</span>`, '#e2e8f0'],
+      ['Other Closures', `${d.other}`, '#94a3b8'],
+      ['Utilization', `<span style="color:${utilColor}">${util}%</span>`, '#e2e8f0'],
+    ].map(([k,v]) =>
+      `<div style="background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:6px 12px;font-size:11px">
+        <span style="color:#64748b">${k}:&nbsp;</span><span style="color:${v};font-weight:600">${v}</span>
+       </div>`
+    ).join('');
+  }
+}
+
+function rebuildCapChart(cloud){ buildCapChart(cloud); }
+
+function buildCapCharts(){
+  buildCapKPIs();
+  buildCapChart('Industry');
+  buildCapChart('Revenue');
+}
+
 
 buildKPITiles();
 buildTrendCharts();
