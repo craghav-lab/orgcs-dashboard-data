@@ -171,6 +171,7 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
   <div class="tab" onclick="showTab('cloud')">P&amp;T insights &amp; Trends</div>
   <div class="tab" onclick="showTab('backlog')">Backlog &amp; Signature share</div>
   <div class="tab" onclick="showTab('capacity')">Capacity &amp; Delivery</div>
+  <div class="tab" onclick="showTab('org')">Org Overview</div>
 </div>
 
 <!-- ═══════════════════════════════════ SECTION 1: KPI TRENDS ══════════════════════════════════ -->
@@ -631,6 +632,56 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
       </div>
     </div>
     <div id="abdView1Container" style="overflow-x:auto"></div>
+  </div>
+
+</div>
+
+<!-- ══════════ ORG OVERVIEW ══════════ -->
+<div id="sec-org" class="section">
+
+  <div class="section-head">
+    <div class="section-head-title">Org Overview</div>
+    <div class="section-badge">All Engineers · Both Spans</div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Filters -->
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+    <span style="color:#64748b;font-size:12px;font-weight:600">LEVEL 6:</span>
+    <button id="orgBtnBoth"  class="filter-btn active" onclick="setOrgL6('both')">Both</button>
+    <button id="orgBtnTaher" class="filter-btn" onclick="setOrgL6('Taher Jamboo')">Taher Jamboo</button>
+    <button id="orgBtnAbd"   class="filter-btn" onclick="setOrgL6('Abdellah Sabere')">Abdellah Sabere</button>
+    <span style="color:#64748b;font-size:12px;font-weight:600;margin-left:18px">MANAGER:</span>
+    <select id="orgMgrSelect" onchange="setOrgMgr(this.value)"
+      style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer">
+      <option value="ALL">All Managers</option>
+    </select>
+  </div>
+
+  <!-- KPI tiles (latest week) -->
+  <div id="orgKpiRow" style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px"></div>
+
+  <!-- Chart row 1: Inflow/Closure + Escalations -->
+  <div class="chart-row">
+    <div class="chart-card">
+      <div class="chart-title">Inflow &amp; Closure Trend</div>
+      <div class="chart-sub" id="orgChart1Sub">Weekly · all managers</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="orgChart1"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Escalations</div>
+      <div class="chart-sub" id="orgChart2Sub">Weekly escalation count</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="orgChart2"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Chart row 2: CSAT + TTR -->
+  <div class="chart-row" style="margin-top:20px">
+    <div class="chart-card" style="flex:1;max-width:100%">
+      <div class="chart-title">CSAT &amp; TTR Trend</div>
+      <div class="chart-sub" id="orgChart3Sub">CSAT (left axis, 0–5) · TTR days (right axis)</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="orgChart3"></canvas></div>
+    </div>
   </div>
 
 </div>
@@ -1642,6 +1693,410 @@ const DATA = {
 }
 };
 
+const ORG_L6_WEEKLY = {
+  "2026-08-02": {
+    "Taher Jamboo": {
+      "inflow": 123,
+      "closures": 129,
+      "ttr": 7.85,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Abdellah Sabere": {
+      "inflow": 70,
+      "closures": 78,
+      "ttr": 11.27,
+      "csat": 5.0,
+      "escalations": 0
+    }
+  },
+  "2026-08-09": {
+    "Taher Jamboo": {
+      "inflow": 129,
+      "closures": 122,
+      "ttr": 8.25,
+      "csat": 4.83,
+      "escalations": 0
+    },
+    "Abdellah Sabere": {
+      "inflow": 77,
+      "closures": 68,
+      "ttr": 9.34,
+      "csat": 4.67,
+      "escalations": 0
+    }
+  },
+  "2026-08-16": {
+    "Taher Jamboo": {
+      "inflow": 140,
+      "closures": 93,
+      "ttr": 8.42,
+      "csat": 5.0,
+      "escalations": 1
+    },
+    "Abdellah Sabere": {
+      "inflow": 53,
+      "closures": 76,
+      "ttr": 9.31,
+      "csat": 5.0,
+      "escalations": 0
+    }
+  },
+  "2026-08-23": {
+    "Taher Jamboo": {
+      "inflow": 133,
+      "closures": 133,
+      "ttr": 6.7,
+      "csat": 4.86,
+      "escalations": 1
+    },
+    "Abdellah Sabere": {
+      "inflow": 81,
+      "closures": 85,
+      "ttr": 9.1,
+      "csat": 5.0,
+      "escalations": 0
+    }
+  }
+};
+
+const ORG_MGR_WEEKLY = {
+  "2026-08-02": {
+    "Adam Dillman": {
+      "inflow": 12,
+      "closures": 12,
+      "ttr": 6.52,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Angad Rajpal Singh": {
+      "inflow": 23,
+      "closures": 24,
+      "ttr": 9.1,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Chaten Raghav": {
+      "inflow": 51,
+      "closures": 60,
+      "ttr": 8.47,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Eugene Pugach": {
+      "inflow": 3,
+      "closures": 4,
+      "ttr": 19.2,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Farbeena Hussain": {
+      "inflow": 4,
+      "closures": 3,
+      "ttr": 12.57,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Pushkar Dwivedi": {
+      "inflow": 18,
+      "closures": 16,
+      "ttr": 7.35,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Rashi Saraswat": {
+      "inflow": 4,
+      "closures": 6,
+      "ttr": 9.15,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Sam Faulkner": {
+      "inflow": 18,
+      "closures": 11,
+      "ttr": 6.25,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Sreenivas Voore": {
+      "inflow": 30,
+      "closures": 49,
+      "ttr": 13.3,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Victor Soto": {
+      "inflow": 7,
+      "closures": 2,
+      "ttr": 1.5,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Wahaj Ali Shaik": {
+      "inflow": 21,
+      "closures": 19,
+      "ttr": 3.42,
+      "csat": 0,
+      "escalations": 0
+    }
+  },
+  "2026-08-09": {
+    "Adam Dillman": {
+      "inflow": 14,
+      "closures": 7,
+      "ttr": 10.89,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Angad Rajpal Singh": {
+      "inflow": 27,
+      "closures": 34,
+      "ttr": 9.93,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Chaten Raghav": {
+      "inflow": 51,
+      "closures": 42,
+      "ttr": 7.73,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Eugene Pugach": {
+      "inflow": 1,
+      "closures": 1,
+      "ttr": 10.3,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Farbeena Hussain": {
+      "inflow": 7,
+      "closures": 4,
+      "ttr": 3.75,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Pushkar Dwivedi": {
+      "inflow": 8,
+      "closures": 6,
+      "ttr": 4.75,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Rashi Saraswat": {
+      "inflow": 17,
+      "closures": 13,
+      "ttr": 14.31,
+      "csat": 4.0,
+      "escalations": 0
+    },
+    "Sam Faulkner": {
+      "inflow": 25,
+      "closures": 23,
+      "ttr": 8.6,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Sreenivas Voore": {
+      "inflow": 35,
+      "closures": 33,
+      "ttr": 9.2,
+      "csat": 4.67,
+      "escalations": 0
+    },
+    "Victor Soto": {
+      "inflow": 2,
+      "closures": 4,
+      "ttr": 11.8,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Wahaj Ali Shaik": {
+      "inflow": 19,
+      "closures": 23,
+      "ttr": 4.99,
+      "csat": 0,
+      "escalations": 0
+    }
+  },
+  "2026-08-16": {
+    "Adam Dillman": {
+      "inflow": 7,
+      "closures": 15,
+      "ttr": 6.03,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Angad Rajpal Singh": {
+      "inflow": 23,
+      "closures": 20,
+      "ttr": 9.37,
+      "csat": 5.0,
+      "escalations": 1
+    },
+    "Chaten Raghav": {
+      "inflow": 39,
+      "closures": 30,
+      "ttr": 8.57,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Eugene Pugach": {
+      "inflow": 3,
+      "closures": 1,
+      "ttr": 3.4,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Farbeena Hussain": {
+      "inflow": 15,
+      "closures": 3,
+      "ttr": 5.7,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Pushkar Dwivedi": {
+      "inflow": 21,
+      "closures": 22,
+      "ttr": 8.44,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Rashi Saraswat": {
+      "inflow": 10,
+      "closures": 9,
+      "ttr": 10.59,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Sam Faulkner": {
+      "inflow": 14,
+      "closures": 22,
+      "ttr": 8.82,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Sreenivas Voore": {
+      "inflow": 28,
+      "closures": 35,
+      "ttr": 11.14,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Victor Soto": {
+      "inflow": 1,
+      "closures": 3,
+      "ttr": 9.83,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Wahaj Ali Shaik": {
+      "inflow": 32,
+      "closures": 9,
+      "ttr": 4.44,
+      "csat": 5.0,
+      "escalations": 0
+    }
+  },
+  "2026-08-23": {
+    "Adam Dillman": {
+      "inflow": 11,
+      "closures": 14,
+      "ttr": 8.84,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Angad Rajpal Singh": {
+      "inflow": 36,
+      "closures": 23,
+      "ttr": 7.23,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Chaten Raghav": {
+      "inflow": 42,
+      "closures": 43,
+      "ttr": 7.9,
+      "csat": 4.75,
+      "escalations": 0
+    },
+    "Eugene Pugach": {
+      "inflow": 5,
+      "closures": 2,
+      "ttr": 17.65,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Farbeena Hussain": {
+      "inflow": 4,
+      "closures": 5,
+      "ttr": 6.74,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Pushkar Dwivedi": {
+      "inflow": 16,
+      "closures": 22,
+      "ttr": 6.05,
+      "csat": 0,
+      "escalations": 1
+    },
+    "Rashi Saraswat": {
+      "inflow": 11,
+      "closures": 12,
+      "ttr": 4.88,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Sam Faulkner": {
+      "inflow": 17,
+      "closures": 15,
+      "ttr": 7.08,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Sreenivas Voore": {
+      "inflow": 41,
+      "closures": 52,
+      "ttr": 9.72,
+      "csat": 5.0,
+      "escalations": 0
+    },
+    "Victor Soto": {
+      "inflow": 7,
+      "closures": 2,
+      "ttr": 1.1,
+      "csat": 0,
+      "escalations": 0
+    },
+    "Wahaj Ali Shaik": {
+      "inflow": 24,
+      "closures": 28,
+      "ttr": 5.7,
+      "csat": 0,
+      "escalations": 0
+    }
+  }
+};
+
+const ORG_MGR_L6 = {
+  "Taher Jamboo": [
+    "Angad Rajpal Singh",
+    "Chaten Raghav",
+    "Farbeena Hussain",
+    "Pushkar Dwivedi",
+    "Rashi Saraswat",
+    "Wahaj Ali Shaik"
+  ],
+  "Abdellah Sabere": [
+    "Adam Dillman",
+    "Eugene Pugach",
+    "Sam Faulkner",
+    "Sreenivas Voore",
+    "Victor Soto"
+  ]
+};
+
 // ─────────────────────── CAPACITY TEAM ──────────────────────────────────────
 const CAP_TEAM = [
   {name:"Anil Kumar Ganubolu",    manager:"Pushkar Dwivedi",    cloud:"Revenue",  capacity:8},
@@ -1795,6 +2250,7 @@ function showTab(id){
   document.getElementById('sec-'+id).classList.add('active');
   event.target.classList.add('active');
   if(id==='capacity'&&!_capBuilt){buildCapCharts();_capBuilt=true;}
+  if(id==='org'&&!window._orgBuilt){buildOrgTab();window._orgBuilt=true;}
   if(id==='cloud' && !window._cloudBuilt){ buildCloudSection(); window._cloudBuilt=true; }
   if(id==='backlog' && !window._backlogBuilt){ buildBacklogSection(); window._backlogBuilt=true; }
 }
@@ -3324,6 +3780,282 @@ function buildCapCharts(){
   buildAbdView1();
 }
 
+
+// ─────────────────────── ORG OVERVIEW TAB ─────────────────────────────────────
+let _orgL6 = 'both';
+let _orgMgr = 'ALL';
+const _orgCharts = {};
+
+function _orgGetData(wk) {
+  if (_orgMgr !== 'ALL') {
+    const d = (ORG_MGR_WEEKLY[wk] || {})[_orgMgr] || {inflow:0,closures:0,ttr:0,csat:0,escalations:0};
+    return [d];
+  }
+  if (_orgL6 === 'both') {
+    return ['Taher Jamboo','Abdellah Sabere'].map(l6 => (ORG_L6_WEEKLY[wk]||{})[l6]||{inflow:0,closures:0,ttr:0,csat:0,escalations:0});
+  }
+  return [(ORG_L6_WEEKLY[wk]||{})[_orgL6]||{inflow:0,closures:0,ttr:0,csat:0,escalations:0}];
+}
+
+function _orgSum(field, wk) {
+  return _orgGetData(wk).reduce((s,d)=>s+(d[field]||0),0);
+}
+
+function _orgAvg(field, wk) {
+  const vals = _orgGetData(wk).map(d=>d[field]||0).filter(v=>v>0);
+  return vals.length ? Math.round(vals.reduce((s,v)=>s+v,0)/vals.length * 100)/100 : 0;
+}
+
+function buildOrgTab() {
+  _orgPopulateMgrFilter();
+  _orgBuildKpiTiles();
+  _orgBuildChart1();
+  _orgBuildChart2();
+  _orgBuildChart3();
+}
+
+function setOrgL6(l6) {
+  _orgL6 = l6;
+  _orgMgr = 'ALL';
+  document.querySelectorAll('#orgBtnBoth,#orgBtnTaher,#orgBtnAbd').forEach(b=>b.classList.remove('active'));
+  const btnId = l6==='both'?'orgBtnBoth':l6==='Taher Jamboo'?'orgBtnTaher':'orgBtnAbd';
+  const btn = document.getElementById(btnId);
+  if(btn) btn.classList.add('active');
+  _orgPopulateMgrFilter();
+  _orgRefreshAll();
+}
+
+function setOrgMgr(mgr) {
+  _orgMgr = mgr;
+  _orgRefreshAll();
+}
+
+function _orgRefreshAll() {
+  _orgBuildKpiTiles();
+  _orgRebuildChart1();
+  _orgRebuildChart2();
+  _orgRebuildChart3();
+}
+
+function _orgPopulateMgrFilter() {
+  const sel = document.getElementById('orgMgrSelect');
+  if(!sel) return;
+  let mgrs = [];
+  if(_orgL6 === 'both') {
+    mgrs = Object.values(ORG_MGR_L6).flat().sort();
+  } else {
+    mgrs = (ORG_MGR_L6[_orgL6]||[]).slice().sort();
+  }
+  sel.innerHTML = '<option value="ALL">All Managers</option>' +
+    mgrs.map(m=>`<option value="${m}"${_orgMgr===m?' selected':''}>${m}</option>`).join('');
+  sel.value = _orgMgr;
+}
+
+function _orgBuildKpiTiles() {
+  const el = document.getElementById('orgKpiRow');
+  if(!el) return;
+  const wks = DATA.weeks;
+  const cur  = wks[wks.length-1];
+  const prev = wks[wks.length-2];
+  const wkLabel = DATA.week_data[cur].label;
+
+  const inflow   = _orgSum('inflow',   cur);
+  const closures = _orgSum('closures', cur);
+  const esc      = _orgSum('escalations', cur);
+  const ttr      = _orgAvg('ttr',  cur);
+  const csat     = _orgAvg('csat', cur);
+  const inPrev   = _orgSum('inflow',   prev);
+  const clPrev   = _orgSum('closures', prev);
+
+  function wowHtml(d, loBetter) {
+    if(d===0) return '';
+    const pos = loBetter ? d<0 : d>0;
+    const cls = pos ? 'color:#4ade80' : 'color:#f87171';
+    return `<div style="font-size:10px;margin-top:3px;${cls}">${d>0?'+':''}${d} WoW</div>`;
+  }
+
+  const prodPct = inflow ? Math.round(closures/inflow*100) : 0;
+
+  el.innerHTML = [
+    {label:'Total Inflow',   val:inflow,          unit:'cases '+wkLabel,   color:'cyan',   wow: wowHtml(inflow-inPrev,   false)},
+    {label:'Total Closures', val:closures,         unit:'cases '+wkLabel,   color:'green',  wow: wowHtml(closures-clPrev, false)},
+    {label:'Productivity',   val:prodPct+'%',      unit:'closures / inflow',color:'teal',   wow:''},
+    {label:'Avg TTR',        val:ttr ? ttr+'d':'—',unit:'days to resolve',  color:'yellow', wow:''},
+    {label:'Avg CSAT',       val:csat || '—',      unit:'out of 5.0',       color:'violet', wow:''},
+    {label:'Escalations',    val:esc,              unit:'cases '+wkLabel,   color:'red',    wow:''},
+  ].map(t=>`
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px 16px;min-width:130px">
+      <div style="font-size:10px;color:#94a3b8;margin-bottom:4px">${t.label}</div>
+      <div style="font-size:22px;font-weight:700;color:${COLORS[t.color]||'#e2e8f0'}">${t.val}</div>
+      <div style="font-size:10px;color:#64748b">${t.unit}</div>
+      ${t.wow}
+    </div>`).join('');
+}
+
+// ── Chart 1: Inflow & Closures ─────────────────────────────────────────────────
+function _orgBuildChart1() {
+  const canvas = document.getElementById('orgChart1');
+  if(!canvas) return;
+  if(_orgCharts.c1) { _orgCharts.c1.destroy(); }
+  const wks    = DATA.weeks;
+  const labels = wks.map(w=>DATA.week_data[w].label);
+  const subEl  = document.getElementById('orgChart1Sub');
+  let datasets;
+
+  if(_orgMgr !== 'ALL') {
+    const d = wks.map(w=>(ORG_MGR_WEEKLY[w]||{})[_orgMgr]||{inflow:0,closures:0});
+    datasets = [
+      {label:'Inflow',   data:d.map(x=>x.inflow),  backgroundColor:'#38bdf8cc',borderColor:'#38bdf8',borderWidth:1},
+      {label:'Closures', data:d.map(x=>x.closures), backgroundColor:'#4ade80cc',borderColor:'#4ade80',borderWidth:1},
+    ];
+    if(subEl) subEl.textContent = _orgMgr;
+  } else if(_orgL6 === 'both') {
+    const tD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Taher Jamboo']||{inflow:0,closures:0});
+    const aD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{inflow:0,closures:0});
+    datasets = [
+      {label:'Taher — Inflow',      data:tD.map(x=>x.inflow),  backgroundColor:'#38bdf8aa',borderColor:'#38bdf8',borderWidth:1},
+      {label:'Taher — Closures',    data:tD.map(x=>x.closures), backgroundColor:'#4ade80aa',borderColor:'#4ade80',borderWidth:1},
+      {label:'Abdellah — Inflow',   data:aD.map(x=>x.inflow),  backgroundColor:'#f97316aa',borderColor:'#f97316',borderWidth:1},
+      {label:'Abdellah — Closures', data:aD.map(x=>x.closures), backgroundColor:'#a78bfaaa',borderColor:'#a78bfa',borderWidth:1},
+    ];
+    if(subEl) subEl.textContent = 'Both Level 6 managers';
+  } else {
+    const lD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})[_orgL6]||{inflow:0,closures:0});
+    datasets = [
+      {label:'Inflow',   data:lD.map(x=>x.inflow),  backgroundColor:'#38bdf8cc',borderColor:'#38bdf8',borderWidth:1},
+      {label:'Closures', data:lD.map(x=>x.closures), backgroundColor:'#4ade80cc',borderColor:'#4ade80',borderWidth:1},
+    ];
+    if(subEl) subEl.textContent = _orgL6;
+  }
+
+  _orgCharts.c1 = new Chart(canvas, {
+    type:'bar',
+    data:{labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},boxWidth:12,padding:10}},
+        tooltip:{mode:'index',intersect:false}
+      },
+      scales:{
+        x:{grid:{color:'#1e293b'},ticks:{color:'#94a3b8'}},
+        y:{beginAtZero:true,grid:{color:'#1e293b40'},ticks:{color:'#64748b'},
+           title:{display:true,text:'Cases',color:'#64748b',font:{size:11}}}
+      }
+    }
+  });
+}
+function _orgRebuildChart1(){ if(_orgCharts.c1){_orgCharts.c1.destroy();delete _orgCharts.c1;} _orgBuildChart1(); }
+
+// ── Chart 2: Escalations ──────────────────────────────────────────────────────
+function _orgBuildChart2() {
+  const canvas = document.getElementById('orgChart2');
+  if(!canvas) return;
+  if(_orgCharts.c2) { _orgCharts.c2.destroy(); }
+  const wks    = DATA.weeks;
+  const labels = wks.map(w=>DATA.week_data[w].label);
+  const subEl  = document.getElementById('orgChart2Sub');
+  let datasets;
+
+  if(_orgMgr !== 'ALL') {
+    datasets = [{
+      label:'Escalations',
+      data:wks.map(w=>((ORG_MGR_WEEKLY[w]||{})[_orgMgr]||{}).escalations||0),
+      backgroundColor:'#f87171cc',borderColor:'#f87171',borderWidth:1
+    }];
+    if(subEl) subEl.textContent = _orgMgr;
+  } else if(_orgL6 === 'both') {
+    datasets = [
+      {label:'Taher Jamboo',    data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})['Taher Jamboo']||{}).escalations||0),    backgroundColor:'#38bdf8cc',borderColor:'#38bdf8',borderWidth:1},
+      {label:'Abdellah Sabere', data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{}).escalations||0), backgroundColor:'#f97316cc',borderColor:'#f97316',borderWidth:1},
+    ];
+    if(subEl) subEl.textContent = 'Both Level 6 managers';
+  } else {
+    datasets = [{
+      label:'Escalations',
+      data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})[_orgL6]||{}).escalations||0),
+      backgroundColor:'#f87171cc',borderColor:'#f87171',borderWidth:1
+    }];
+    if(subEl) subEl.textContent = _orgL6;
+  }
+
+  _orgCharts.c2 = new Chart(canvas, {
+    type:'bar',
+    data:{labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},boxWidth:12,padding:10}},
+        tooltip:{mode:'index',intersect:false}
+      },
+      scales:{
+        x:{grid:{color:'#1e293b'},ticks:{color:'#94a3b8'}},
+        y:{beginAtZero:true,grid:{color:'#1e293b40'},ticks:{color:'#64748b',stepSize:1},
+           title:{display:true,text:'Count',color:'#64748b',font:{size:11}}}
+      }
+    }
+  });
+}
+function _orgRebuildChart2(){ if(_orgCharts.c2){_orgCharts.c2.destroy();delete _orgCharts.c2;} _orgBuildChart2(); }
+
+// ── Chart 3: CSAT & TTR ───────────────────────────────────────────────────────
+function _orgBuildChart3() {
+  const canvas = document.getElementById('orgChart3');
+  if(!canvas) return;
+  if(_orgCharts.c3) { _orgCharts.c3.destroy(); }
+  const wks    = DATA.weeks;
+  const labels = wks.map(w=>DATA.week_data[w].label);
+  const subEl  = document.getElementById('orgChart3Sub');
+  let datasets;
+
+  function nullZero(v){ return v>0 ? v : null; }
+
+  if(_orgMgr !== 'ALL') {
+    const d = wks.map(w=>(ORG_MGR_WEEKLY[w]||{})[_orgMgr]||{csat:0,ttr:0});
+    datasets = [
+      {label:'CSAT',       data:d.map(x=>nullZero(x.csat)), borderColor:'#a78bfa',backgroundColor:'#a78bfa22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#a78bfa',tension:0.3,fill:false,yAxisID:'yL'},
+      {label:'TTR (days)', data:d.map(x=>nullZero(x.ttr)),  borderColor:'#fb923c',backgroundColor:'#fb923c22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#fb923c',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
+    ];
+    if(subEl) subEl.textContent = _orgMgr + ' \xb7 CSAT (left) \xb7 TTR days (right)';
+  } else if(_orgL6 === 'both') {
+    const tD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Taher Jamboo']||{csat:0,ttr:0});
+    const aD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{csat:0,ttr:0});
+    datasets = [
+      {label:'Taher — CSAT',     data:tD.map(x=>nullZero(x.csat)), borderColor:'#38bdf8',backgroundColor:'#38bdf822',borderWidth:2,pointRadius:5,pointBackgroundColor:'#38bdf8',tension:0.3,fill:false,yAxisID:'yL'},
+      {label:'Abdellah — CSAT',  data:aD.map(x=>nullZero(x.csat)), borderColor:'#f97316',backgroundColor:'#f9731622',borderWidth:2,pointRadius:5,pointBackgroundColor:'#f97316',tension:0.3,fill:false,yAxisID:'yL'},
+      {label:'Taher — TTR',      data:tD.map(x=>nullZero(x.ttr)),  borderColor:'#4ade80',backgroundColor:'#4ade8022',borderWidth:2,pointRadius:5,pointBackgroundColor:'#4ade80',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
+      {label:'Abdellah — TTR',   data:aD.map(x=>nullZero(x.ttr)),  borderColor:'#a78bfa',backgroundColor:'#a78bfa22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#a78bfa',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
+    ];
+    if(subEl) subEl.textContent = 'Both Level 6 \xb7 CSAT (left) \xb7 TTR days (right)';
+  } else {
+    const lD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})[_orgL6]||{csat:0,ttr:0});
+    datasets = [
+      {label:'CSAT',       data:lD.map(x=>nullZero(x.csat)), borderColor:'#a78bfa',backgroundColor:'#a78bfa22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#a78bfa',tension:0.3,fill:false,yAxisID:'yL'},
+      {label:'TTR (days)', data:lD.map(x=>nullZero(x.ttr)),  borderColor:'#fb923c',backgroundColor:'#fb923c22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#fb923c',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
+    ];
+    if(subEl) subEl.textContent = _orgL6 + ' \xb7 CSAT (left) \xb7 TTR days (right)';
+  }
+
+  _orgCharts.c3 = new Chart(canvas, {
+    type:'line',
+    data:{labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},boxWidth:12,padding:10}},
+        tooltip:{mode:'index',intersect:false}
+      },
+      scales:{
+        x:{grid:{color:'#1e293b'},ticks:{color:'#94a3b8'}},
+        yL:{position:'left',  beginAtZero:false, min:3.5, max:5.2, grid:{color:'#1e293b40'},ticks:{color:'#a78bfa'},
+            title:{display:true,text:'CSAT',color:'#a78bfa',font:{size:11}}},
+        yR:{position:'right', beginAtZero:true,            grid:{display:false},ticks:{color:'#fb923c'},
+            title:{display:true,text:'TTR (days)',color:'#fb923c',font:{size:11}}}
+      }
+    }
+  });
+}
+function _orgRebuildChart3(){ if(_orgCharts.c3){_orgCharts.c3.destroy();delete _orgCharts.c3;} _orgBuildChart3(); }
 
 buildKPITiles();
 buildTrendCharts();
