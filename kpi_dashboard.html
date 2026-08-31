@@ -1852,6 +1852,7 @@ function buildCapChart(cloud){
   });
 
   _capCharts[cloud] = new Chart(canvas, {
+    type: 'bar',
     data:{ labels:wkLabels, datasets },
     options:{
       responsive:true, maintainAspectRatio:false,
