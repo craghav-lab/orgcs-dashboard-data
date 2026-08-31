@@ -1754,7 +1754,8 @@ function _capEng(cloud, mgr){
   return CAP_TEAM.filter(e => e.cloud===cloud && (mgr==='all'||e.manager===mgr));
 }
 function _capacity(cloud, mgr){
-  return _capEng(cloud, mgr).reduce((s,e)=>s+e.capacity, 0);
+  // 1.6 closures/weekday × 5 weekdays (Sun–Sat week)
+  return _capEng(cloud, mgr).length * 8;
 }
 
 function buildCapKPIs(){
@@ -1766,10 +1767,10 @@ function buildCapKPIs(){
 
   const tiles = [
     {label:'Industry Headcount', val: CAP_TEAM.filter(e=>e.cloud==='Industry').length, unit:'engineers', color:'cyan'},
-    {label:'Industry Capacity',  val: _capacity('Industry','all').toFixed(1), unit:'cases/wk', color:'teal'},
+    {label:'Industry Capacity',  val: _capacity('Industry','all'), unit:'cases/wk', color:'teal'},
     {label:'Industry Closures (latest)', val: Object.values(CAP_WEEKLY[cur].Industry.by_mgr).reduce((s,v)=>s+v,0), prev: Object.values(CAP_WEEKLY[prev].Industry.by_mgr).reduce((s,v)=>s+v,0), unit:'cases', color:'green'},
     {label:'Revenue Headcount',  val: CAP_TEAM.filter(e=>e.cloud==='Revenue').length, unit:'engineers', color:'violet'},
-    {label:'Revenue Capacity',   val: _capacity('Revenue','all').toFixed(1), unit:'cases/wk', color:'indigo'},
+    {label:'Revenue Capacity',   val: _capacity('Revenue','all'), unit:'cases/wk', color:'indigo'},
     {label:'Revenue Closures (latest)', val: Object.values(CAP_WEEKLY[cur].Revenue.by_mgr).reduce((s,v)=>s+v,0), prev: Object.values(CAP_WEEKLY[prev].Revenue.by_mgr).reduce((s,v)=>s+v,0), unit:'cases', color:'blue'},
   ];
 
@@ -1826,9 +1827,7 @@ function buildCapChart(cloud){
     data: wks.map(w => {
       if(!CAP_WEEKLY[w]||!CAP_WEEKLY[w][cloud]) return 0;
       const d = CAP_WEEKLY[w][cloud];
-      const teamTotal = showMgrs.reduce((s,m)=>(d.by_mgr[m]||0)+s, 0);
-      const allTeam   = Object.values(d.by_mgr).reduce((s,v)=>s+v,0);
-      return d.other + (allTeam - teamTotal);
+      return d.other;
     }),
     backgroundColor: CAP_OTHER_COLOR+'99',
     borderColor:     CAP_OTHER_COLOR,
@@ -1846,7 +1845,7 @@ function buildCapChart(cloud){
 
   // Capacity line
   datasets.push({
-    type:'line', label:`Capacity (${capLine.toFixed(1)})`,
+    type:'line', label:`Capacity (${capLine})`,
     data: wks.map(()=>capLine),
     borderColor:'#fbbf24', backgroundColor:'transparent',
     borderWidth:2, borderDash:[6,3], pointRadius:0, tension:0, fill:false, yAxisID:'y'
@@ -1892,7 +1891,7 @@ function buildCapChart(cloud){
     const wowSign = wowD>=0?'+':'';
     summaryEl.innerHTML = [
       ['Team Engineers', `${_capEng(cloud,mgr).length}`, '#94a3b8'],
-      ['Team Capacity', `${capLine.toFixed(1)}/wk`, '#94a3b8'],
+      ['Team Capacity', `${capLine}/wk`, '#94a3b8'],
       ['Team Closures', `${teamNow} <span style="font-size:10px;color:${wowD>=0?'#4ade80':'#f87171'}">(${wowSign}${wowD} WoW)</span>`, '#e2e8f0'],
       ['Other Closures', `${d.other}`, '#94a3b8'],
       ['Utilization', `<span style="color:${utilColor}">${util}%</span>`, '#e2e8f0'],
