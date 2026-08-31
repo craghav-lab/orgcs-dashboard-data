@@ -675,6 +675,29 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
     </div>
   </div>
 
+  <!-- Row 2: Inflow by Sub Cloud -->
+  <div class="chart-row" style="margin-top:20px">
+    <div class="chart-card" style="flex:1;max-width:100%">
+      <div class="chart-title">Inflow by Sub Cloud</div>
+      <div class="chart-sub" id="orgCloudSub">Industry vs Revenue week-on-week</div>
+      <div class="chart-wrap" style="height:260px"><canvas id="orgChartCloud"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Row 3: Signature P&T charts -->
+  <div class="chart-row" style="margin-top:20px">
+    <div class="chart-card">
+      <div class="chart-title">Signature Inflow — Industry P&amp;T</div>
+      <div class="chart-sub" id="orgSigIndSub">Week-on-week · Signature-tier cases</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="orgChartSigInd"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Signature Inflow — Revenue P&amp;T</div>
+      <div class="chart-sub" id="orgSigRevSub">Week-on-week · Signature-tier cases</div>
+      <div class="chart-wrap" style="height:300px"><canvas id="orgChartSigRev"></canvas></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -2087,6 +2110,20 @@ const ORG_MGR_L6 = {
     "Victor Soto"
   ]
 };
+
+const ORG_L6_CLOUD_WEEKLY = {"2026-08-02":{"Taher Jamboo":{"Industry":91,"Revenue":32},"Abdellah Sabere":{"Industry":50,"Revenue":20}},"2026-08-09":{"Abdellah Sabere":{"Revenue":32,"Industry":45},"Taher Jamboo":{"Industry":97,"Revenue":32}},"2026-08-16":{"Taher Jamboo":{"Industry":112,"Revenue":28},"Abdellah Sabere":{"Industry":38,"Revenue":15}},"2026-08-23":{"Abdellah Sabere":{"Industry":63,"Revenue":18},"Taher Jamboo":{"Industry":110,"Revenue":23}}};
+
+const ORG_MGR_CLOUD_WEEKLY = {"2026-08-02":{"Wahaj Ali Shaik":{"Industry":12,"Revenue":9},"Chaten Raghav":{"Industry":49,"Revenue":2},"Pushkar Dwivedi":{"Revenue":17,"Industry":1},"Angad Rajpal Singh":{"Industry":22,"Revenue":1},"Eugene Pugach":{"Industry":3},"Sreenivas Voore":{"Industry":30},"Sam Faulkner":{"Revenue":18},"Rashi Saraswat":{"Revenue":3,"Industry":1},"Adam Dillman":{"Industry":12},"Victor Soto":{"Industry":5,"Revenue":2},"Farbeena Hussain":{"Industry":4}},"2026-08-09":{"Sam Faulkner":{"Revenue":25},"Sreenivas Voore":{"Industry":30,"Revenue":5},"Chaten Raghav":{"Industry":43,"Revenue":8},"Angad Rajpal Singh":{"Industry":25,"Revenue":2},"Adam Dillman":{"Industry":14},"Wahaj Ali Shaik":{"Industry":12,"Revenue":7},"Pushkar Dwivedi":{"Industry":2,"Revenue":6},"Rashi Saraswat":{"Revenue":9,"Industry":8},"Farbeena Hussain":{"Industry":7},"Victor Soto":{"Revenue":2},"Eugene Pugach":{"Industry":1}},"2026-08-16":{"Farbeena Hussain":{"Industry":13,"Revenue":2},"Angad Rajpal Singh":{"Industry":23},"Pushkar Dwivedi":{"Industry":3,"Revenue":18},"Sreenivas Voore":{"Industry":27,"Revenue":1},"Wahaj Ali Shaik":{"Revenue":5,"Industry":27},"Chaten Raghav":{"Industry":39},"Rashi Saraswat":{"Industry":7,"Revenue":3},"Adam Dillman":{"Industry":7},"Eugene Pugach":{"Industry":3},"Sam Faulkner":{"Revenue":14},"Victor Soto":{"Industry":1}},"2026-08-23":{"Sreenivas Voore":{"Industry":41},"Chaten Raghav":{"Industry":42},"Angad Rajpal Singh":{"Industry":34,"Revenue":2},"Sam Faulkner":{"Revenue":17},"Adam Dillman":{"Industry":11},"Pushkar Dwivedi":{"Revenue":16},"Victor Soto":{"Industry":6,"Revenue":1},"Wahaj Ali Shaik":{"Industry":20,"Revenue":4},"Rashi Saraswat":{"Industry":11},"Farbeena Hussain":{"Industry":3,"Revenue":1},"Eugene Pugach":{"Industry":5}}};
+
+const ORG_L6_PT_SIG_WEEKLY = {"2026-08-02":{"Taher Jamboo":{"Industry-Life Sciences":24,"Industry-Security & Activations":7,"Revenue-CPQ Developer Support":6,"Industry-CPQ / Order Management / Digital Commerce":6,"Revenue-Salesforce Billing":3,"Industry-Health Cloud":1,"Industry-Developer Support":3,"Industry-Financial Services":12,"Industry-Omnistudio":22,"Revenue Cloud (Core)-Price Management":5,"Revenue Cloud (Core)-Developer Support - Product to Order":1,"Revenue Cloud (Core)-Product Catalog Management":2,"Revenue Cloud (Core)-Billing & Invoicing":1,"Industry-Loyalty Management":3,"Industry-Mandatory Security Controls":2,"Industry-Health & Insurance":2,"Revenue Cloud (Core)-Product Configurator":5,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Revenue-Salesforce CPQ":7,"Industry-Manufacturing Cloud":2,"Industry-CRM Analytics":1,"Industry-Public Sector Solutions":2,"Industry-Document Generation":2,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Revenue-Salesforce Contracts":1,"Industry-Retail and Consumer Goods":1},"Abdellah Sabere":{"Industry-Nonprofit Cloud":1,"Industry-Omnistudio":18,"Industry-Health & Insurance":1,"Industry-Business Rules Engine (BRE)":2,"Industry-CPQ / Order Management / Digital Commerce":5,"Revenue-CPQ Developer Support":4,"Revenue Cloud (Core)-Product Configurator":2,"Revenue Cloud (Core)-Advanced Approvals":1,"Industry-Life Sciences":10,"Revenue-Salesforce CPQ":8,"Industry-Security & Activations":4,"Industry-Health Cloud":2,"Industry-Public Sector Solutions":3,"Industry-Education Cloud":2,"Industry-Financial Services":2,"Revenue-Document Generation":1,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Revenue-Salesforce Contracts":1,"Revenue Cloud (Core)-OmniStudio":1,"Revenue Cloud (Core)-Transaction Management":1}},"2026-08-09":{"Abdellah Sabere":{"Revenue Cloud (Core)-Price Management":3,"Industry-Omnistudio":18,"Industry-Life Sciences":6,"Industry-Public Sector Solutions":4,"Revenue Cloud (Core)-Product Catalog Management":2,"Industry-Health Cloud":2,"Revenue-Salesforce CPQ":8,"Revenue Cloud (Core)-Transaction Management":3,"Industry-Retail and Consumer Goods":2,"Revenue-CPQ Developer Support":6,"Industry-CPQ / Order Management / Digital Commerce":2,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Industry-Energy & Utilities Cloud":2,"Revenue Cloud (Core)-Product Configurator":2,"Industry-Security & Activations":1,"Industry-Communication Cloud":2,"Industry-Financial Services":1,"Industry-Health & Insurance":1,"Revenue-Document Generation":1,"Industry-Loyalty Management":1,"Industry-Developer Support":1,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Industry-Education Cloud":1,"Revenue-Salesforce Subscription Management":1,"Revenue Cloud (Core)-Developer Support - Product to Order":5},"Taher Jamboo":{"Industry-Public Sector Solutions":1,"Industry-Life Sciences":30,"Industry-Financial Services":9,"Industry-Health Cloud":2,"Industry-Omnistudio":22,"Revenue Cloud (Core)-Billing & Invoicing":5,"Revenue Cloud (Core)-Transaction Management":3,"Revenue-Salesforce CPQ":3,"Revenue Cloud (Core)-Price Management":2,"Revenue Cloud (Core)-Product Configurator":3,"Industry-CPQ / Order Management / Digital Commerce":5,"Industry-Loyalty Management":5,"Industry-Mandatory Security Controls":4,"Revenue-CPQ Developer Support":7,"Industry-Energy & Utilities Cloud":2,"Revenue Cloud (Core)-Usage & Ratings":2,"Industry-Document Generation":1,"Industry-Retail and Consumer Goods":6,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Industry-Developer Support":2,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Industry-Security & Activations":5,"Industry-Email Delivery & Desktop Integrations":1,"Industry-Communication Cloud":1,"Revenue-Document Generation":2,"Revenue-Salesforce Billing":1,"Revenue-Billing Developer Support":1,"Industry-Media Cloud":1}},"2026-08-16":{"Taher Jamboo":{"Industry-Security & Activations":3,"Industry-Retail and Consumer Goods":5,"Industry-Health Cloud":3,"Revenue-CPQ Developer Support":4,"Industry-Omnistudio":21,"Industry-Life Sciences":50,"Industry-Financial Services":11,"Revenue Cloud (Core)-Price Management":2,"Industry-Manufacturing Cloud":2,"Industry-Mandatory Security Controls":1,"Revenue Cloud (Core)-Product Configurator":12,"Industry-Document Generation":4,"Revenue Cloud (Core)-Developer Support - Product to Order":1,"Revenue Cloud (Core)-Transaction Management":2,"Revenue Cloud (Core)-Billing & Invoicing":3,"Industry-Education Cloud":1,"Revenue-Salesforce CPQ":3,"Industry-Public Sector Solutions":1,"Industry-CPQ / Order Management / Digital Commerce":5,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Industry-Loyalty Management":1,"Industry-Email Delivery & Desktop Integrations":1,"Industry-Developer Support":1,"Industry-Automotive Cloud":1},"Abdellah Sabere":{"Industry-CPQ / Order Management / Digital Commerce":11,"Industry-Life Sciences":7,"Industry-Developer Support":1,"Industry-Nonprofit Cloud":2,"Revenue-Salesforce CPQ":6,"Industry-Loyalty Management":3,"Industry-Health Cloud":1,"Revenue Cloud (Core)-Price Management":2,"Industry-Omnistudio":8,"Revenue-CPQ Developer Support":1,"Industry-Nonprofit Success Pack (NPSP)":1,"Industry-Document Generation":1,"Revenue Cloud (Core)-Transaction Management":2,"Industry-Communication Cloud":2,"Industry-Public Sector Solutions":1,"Revenue Cloud (Core)-Product Configurator":3,"Revenue-Salesforce Subscription Management":1}},"2026-08-23":{"Abdellah Sabere":{"Industry-CPQ / Order Management / Digital Commerce":8,"Revenue-Document Generation":2,"Industry-Omnistudio":28,"Industry-Life Sciences":7,"Industry-Public Sector Solutions":6,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Revenue Cloud (Core)-Product Configurator":1,"Revenue-Salesforce CPQ":7,"Revenue Cloud (Core)-Transaction Management":2,"Industry-Document Generation":2,"Industry-Health Cloud":2,"Revenue Cloud (Core)-Billing & Invoicing":1,"Industry-Education Cloud":4,"Industry-Developer Support":1,"Industry-Nonprofit Cloud":1,"Revenue-Salesforce Billing":2,"Industry-Energy & Utilities Cloud":1,"Revenue-CPQ Developer Support":1,"Industry-Retail and Consumer Goods":3},"Taher Jamboo":{"Industry-Life Sciences":43,"Industry-CPQ / Order Management / Digital Commerce":8,"Industry-Financial Services":13,"Industry-Omnistudio":22,"Revenue Cloud (Core)-Product Configurator":5,"Revenue-CPQ Developer Support":3,"Industry-Rebate Management":1,"Revenue Cloud (Core)-Price Management":2,"Industry-Loyalty Management":3,"Revenue-Salesforce CPQ":3,"Industry-Mandatory Security Controls":3,"Industry-Business Rules Engine (BRE)":1,"Industry-Retail and Consumer Goods":3,"Industry-Health & Insurance":2,"Revenue Cloud (Core)-Transaction Management":4,"Revenue Cloud (Core)-Billing & Invoicing":3,"Industry-Public Sector Solutions":3,"Industry-Email Delivery & Desktop Integrations":1,"Industry-Communication Cloud":3,"Revenue Cloud (Core)-Product Catalog Management":2,"Industry-Document Generation":2,"Revenue-Document Generation":1,"Industry-Health Cloud":2}}};
+
+const ORG_MGR_PT_SIG_WEEKLY = {"2026-08-02":{"Wahaj Ali Shaik":{"Industry-Life Sciences":6,"Industry-Financial Services":1,"Revenue Cloud (Core)-Price Management":3,"Industry-Omnistudio":2,"Revenue-Salesforce CPQ":4,"Industry-Security & Activations":1,"Revenue-CPQ Developer Support":1,"Industry-Public Sector Solutions":1,"Industry-Health & Insurance":1,"Revenue-Salesforce Contracts":1},"Chaten Raghav":{"Industry-Security & Activations":2,"Industry-Life Sciences":10,"Industry-CPQ / Order Management / Digital Commerce":6,"Industry-Developer Support":2,"Industry-Omnistudio":18,"Industry-Financial Services":4,"Industry-Mandatory Security Controls":1,"Industry-Health & Insurance":1,"Industry-Manufacturing Cloud":1,"Industry-CRM Analytics":1,"Industry-Public Sector Solutions":1,"Industry-Document Generation":2,"Revenue Cloud (Core)-Price Management":1,"Revenue-Salesforce Billing":1},"Pushkar Dwivedi":{"Revenue-CPQ Developer Support":4,"Revenue-Salesforce Billing":2,"Revenue Cloud (Core)-Developer Support - Product to Order":1,"Revenue Cloud (Core)-Price Management":1,"Revenue Cloud (Core)-Product Catalog Management":2,"Revenue Cloud (Core)-Billing & Invoicing":1,"Revenue Cloud (Core)-Product Configurator":4,"Revenue-Salesforce CPQ":2,"Industry-Life Sciences":1},"Angad Rajpal Singh":{"Industry-Health Cloud":1,"Industry-Financial Services":7,"Industry-Security & Activations":4,"Industry-Life Sciences":3,"Industry-Developer Support":1,"Industry-Loyalty Management":3,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Industry-Mandatory Security Controls":1,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Industry-Retail and Consumer Goods":1},"Eugene Pugach":{"Industry-Nonprofit Cloud":1,"Industry-Education Cloud":2},"Sreenivas Voore":{"Industry-Omnistudio":11,"Industry-Health & Insurance":1,"Industry-Business Rules Engine (BRE)":2,"Industry-CPQ / Order Management / Digital Commerce":5,"Industry-Life Sciences":10,"Industry-Financial Services":1},"Sam Faulkner":{"Revenue-CPQ Developer Support":4,"Revenue Cloud (Core)-Product Configurator":2,"Revenue Cloud (Core)-Advanced Approvals":1,"Revenue-Salesforce CPQ":6,"Revenue-Document Generation":1,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Revenue-Salesforce Contracts":1,"Revenue Cloud (Core)-OmniStudio":1,"Revenue Cloud (Core)-Transaction Management":1},"Rashi Saraswat":{"Revenue-CPQ Developer Support":1,"Revenue Cloud (Core)-Product Configurator":1,"Industry-Omnistudio":1,"Revenue-Salesforce CPQ":1},"Adam Dillman":{"Industry-Omnistudio":4,"Industry-Health Cloud":2,"Industry-Public Sector Solutions":3,"Industry-Security & Activations":3},"Victor Soto":{"Industry-Security & Activations":1,"Industry-Omnistudio":3,"Industry-Financial Services":1,"Revenue-Salesforce CPQ":2},"Farbeena Hussain":{"Industry-Life Sciences":2,"Industry-Omnistudio":1,"Industry-Manufacturing Cloud":1}},"2026-08-09":{"Sam Faulkner":{"Revenue Cloud (Core)-Price Management":2,"Revenue Cloud (Core)-Product Catalog Management":2,"Revenue-Salesforce CPQ":7,"Revenue Cloud (Core)-Transaction Management":2,"Revenue-CPQ Developer Support":6,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Revenue Cloud (Core)-Product Configurator":1,"Revenue-Document Generation":1,"Revenue-Salesforce Subscription Management":1,"Revenue Cloud (Core)-Developer Support - Product to Order":2},"Sreenivas Voore":{"Industry-Omnistudio":11,"Industry-Life Sciences":6,"Industry-Retail and Consumer Goods":2,"Industry-CPQ / Order Management / Digital Commerce":2,"Industry-Energy & Utilities Cloud":2,"Revenue Cloud (Core)-Transaction Management":1,"Industry-Security & Activations":1,"Industry-Communication Cloud":2,"Industry-Financial Services":1,"Industry-Health & Insurance":1,"Industry-Loyalty Management":1,"Industry-Developer Support":1,"Revenue Cloud (Core)-Price Management":1,"Revenue Cloud (Core)-Developer Support - Product to Order":3},"Chaten Raghav":{"Industry-Public Sector Solutions":1,"Industry-Life Sciences":13,"Revenue Cloud (Core)-Billing & Invoicing":2,"Revenue Cloud (Core)-Product Configurator":2,"Industry-CPQ / Order Management / Digital Commerce":5,"Industry-Loyalty Management":4,"Industry-Omnistudio":10,"Industry-Energy & Utilities Cloud":1,"Revenue Cloud (Core)-Usage & Ratings":1,"Industry-Document Generation":1,"Industry-Retail and Consumer Goods":2,"Industry-Developer Support":2,"Industry-Communication Cloud":1,"Industry-Security & Activations":1,"Revenue Cloud (Core)-Price Management":1,"Revenue-Billing Developer Support":1,"Revenue-CPQ Developer Support":1,"Industry-Financial Services":1,"Industry-Media Cloud":1},"Angad Rajpal Singh":{"Industry-Financial Services":3,"Industry-Life Sciences":9,"Industry-Health Cloud":1,"Industry-Mandatory Security Controls":4,"Revenue-CPQ Developer Support":1,"Revenue Cloud (Core)-Billing & Invoicing":1,"Industry-Security & Activations":4,"Industry-Email Delivery & Desktop Integrations":1,"Industry-Retail and Consumer Goods":2,"Industry-Loyalty Management":1},"Adam Dillman":{"Industry-Public Sector Solutions":4,"Industry-Omnistudio":7,"Industry-Health Cloud":2,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1},"Wahaj Ali Shaik":{"Industry-Omnistudio":3,"Revenue Cloud (Core)-Transaction Management":1,"Revenue Cloud (Core)-Price Management":1,"Industry-Life Sciences":5,"Industry-Financial Services":2,"Revenue Cloud (Core)-Billing & Invoicing":1,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Industry-Retail and Consumer Goods":2,"Revenue-Document Generation":1,"Revenue-Salesforce CPQ":1},"Pushkar Dwivedi":{"Industry-Life Sciences":2,"Revenue-Salesforce CPQ":1,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Revenue Cloud (Core)-Transaction Management":1,"Revenue Cloud (Core)-Product Configurator":1,"Revenue Cloud (Core)-Usage & Ratings":1,"Revenue Cloud (Core)-Billing & Invoicing":1},"Rashi Saraswat":{"Revenue-Salesforce CPQ":1,"Revenue-CPQ Developer Support":5,"Industry-Omnistudio":8,"Revenue Cloud (Core)-Transaction Management":1,"Revenue-Salesforce Billing":1,"Revenue-Document Generation":1},"Farbeena Hussain":{"Industry-Health Cloud":1,"Industry-Financial Services":3,"Industry-Life Sciences":1,"Industry-Energy & Utilities Cloud":1,"Industry-Omnistudio":1},"Victor Soto":{"Revenue Cloud (Core)-Product Configurator":1,"Revenue-Salesforce CPQ":1},"Eugene Pugach":{"Industry-Education Cloud":1}},"2026-08-16":{"Farbeena Hussain":{"Industry-Security & Activations":1,"Industry-Omnistudio":2,"Industry-Financial Services":1,"Industry-Life Sciences":7,"Industry-Document Generation":1,"Revenue Cloud (Core)-Product Configurator":2},"Angad Rajpal Singh":{"Industry-Retail and Consumer Goods":5,"Industry-Security & Activations":2,"Industry-Financial Services":4,"Industry-Life Sciences":7,"Industry-Public Sector Solutions":1,"Industry-Health Cloud":1,"Industry-Email Delivery & Desktop Integrations":1,"Industry-Manufacturing Cloud":1,"Industry-Automotive Cloud":1},"Pushkar Dwivedi":{"Industry-Health Cloud":1,"Revenue Cloud (Core)-Price Management":2,"Industry-Life Sciences":1,"Revenue Cloud (Core)-Developer Support - Product to Order":1,"Revenue Cloud (Core)-Product Configurator":9,"Industry-Financial Services":1,"Revenue Cloud (Core)-Billing & Invoicing":3,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Revenue Cloud (Core)-Transaction Management":1,"Revenue-CPQ Developer Support":1},"Sreenivas Voore":{"Industry-CPQ / Order Management / Digital Commerce":10,"Industry-Life Sciences":6,"Industry-Loyalty Management":3,"Industry-Health Cloud":1,"Industry-Omnistudio":4,"Industry-Document Generation":1,"Industry-Communication Cloud":2,"Revenue Cloud (Core)-Product Configurator":1},"Wahaj Ali Shaik":{"Revenue-CPQ Developer Support":2,"Industry-Life Sciences":20,"Industry-Mandatory Security Controls":1,"Revenue Cloud (Core)-Product Configurator":1,"Revenue Cloud (Core)-Transaction Management":1,"Industry-Health Cloud":1,"Industry-Education Cloud":1,"Industry-Financial Services":2,"Industry-Omnistudio":2,"Revenue-Salesforce CPQ":1},"Chaten Raghav":{"Industry-Life Sciences":15,"Industry-Manufacturing Cloud":1,"Industry-Document Generation":1,"Industry-Omnistudio":12,"Industry-CPQ / Order Management / Digital Commerce":5,"Industry-Financial Services":3,"Industry-Loyalty Management":1,"Industry-Developer Support":1},"Rashi Saraswat":{"Industry-Omnistudio":5,"Revenue-Salesforce CPQ":2,"Revenue-CPQ Developer Support":1,"Industry-Document Generation":2},"Adam Dillman":{"Industry-Developer Support":1,"Industry-Life Sciences":1,"Industry-Omnistudio":3,"Industry-Public Sector Solutions":1,"Industry-CPQ / Order Management / Digital Commerce":1},"Eugene Pugach":{"Industry-Nonprofit Cloud":2,"Industry-Nonprofit Success Pack (NPSP)":1},"Sam Faulkner":{"Revenue-Salesforce CPQ":6,"Revenue Cloud (Core)-Price Management":2,"Revenue-CPQ Developer Support":1,"Revenue Cloud (Core)-Transaction Management":2,"Revenue Cloud (Core)-Product Configurator":2,"Revenue-Salesforce Subscription Management":1},"Victor Soto":{"Industry-Omnistudio":1}},"2026-08-23":{"Sreenivas Voore":{"Industry-CPQ / Order Management / Digital Commerce":8,"Industry-Omnistudio":19,"Industry-Life Sciences":7,"Industry-Document Generation":1,"Industry-Health Cloud":1,"Industry-Developer Support":1,"Industry-Energy & Utilities Cloud":1,"Industry-Retail and Consumer Goods":3},"Chaten Raghav":{"Industry-Life Sciences":14,"Industry-CPQ / Order Management / Digital Commerce":7,"Industry-Omnistudio":10,"Industry-Rebate Management":1,"Industry-Loyalty Management":2,"Industry-Communication Cloud":2,"Industry-Health & Insurance":1,"Industry-Document Generation":2,"Industry-Mandatory Security Controls":1,"Industry-Financial Services":1,"Industry-Health Cloud":1},"Angad Rajpal Singh":{"Industry-Life Sciences":12,"Industry-Financial Services":10,"Revenue Cloud (Core)-Price Management":1,"Industry-Mandatory Security Controls":2,"Industry-Business Rules Engine (BRE)":1,"Industry-Retail and Consumer Goods":3,"Industry-Public Sector Solutions":3,"Industry-Email Delivery & Desktop Integrations":1,"Revenue Cloud (Core)-Billing & Invoicing":1,"Industry-Loyalty Management":1,"Industry-Health Cloud":1},"Sam Faulkner":{"Revenue-Document Generation":2,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Revenue Cloud (Core)-Product Configurator":1,"Revenue-Salesforce CPQ":6,"Revenue Cloud (Core)-Transaction Management":2,"Revenue Cloud (Core)-Billing & Invoicing":1,"Revenue-Salesforce Billing":2,"Revenue-CPQ Developer Support":1},"Adam Dillman":{"Industry-Public Sector Solutions":6,"Industry-Omnistudio":4,"Industry-Health Cloud":1},"Pushkar Dwivedi":{"Revenue Cloud (Core)-Product Configurator":4,"Revenue-CPQ Developer Support":3,"Revenue-Salesforce CPQ":2,"Revenue Cloud (Core)-Transaction Management":3,"Revenue Cloud (Core)-Price Management":1,"Revenue Cloud (Core)-Product Catalog Management":1,"Revenue-Document Generation":1,"Revenue Cloud (Core)-Billing & Invoicing":1},"Victor Soto":{"Industry-Omnistudio":5,"Revenue-Salesforce CPQ":1,"Industry-Document Generation":1},"Wahaj Ali Shaik":{"Industry-Financial Services":2,"Industry-Life Sciences":14,"Revenue Cloud (Core)-Billing & Invoicing":1,"Revenue Cloud (Core)-Transaction Management":1,"Industry-CPQ / Order Management / Digital Commerce":1,"Revenue Cloud (Core)-Product Configurator":1,"Industry-Omnistudio":3,"Revenue-Salesforce CPQ":1},"Rashi Saraswat":{"Industry-Omnistudio":9,"Industry-Health & Insurance":1,"Industry-Communication Cloud":1},"Farbeena Hussain":{"Industry-Life Sciences":3,"Revenue Cloud (Core)-Product Catalog Management":1},"Eugene Pugach":{"Industry-Education Cloud":4,"Industry-Nonprofit Cloud":1}}};
+
+const ORG_COMBINED_PT_TOTALS = {"Industry-Life Sciences":177,"Industry-Security & Activations":20,"Revenue-CPQ Developer Support":32,"Industry-CPQ / Order Management / Digital Commerce":50,"Revenue-Salesforce Billing":6,"Industry-Health Cloud":15,"Industry-Developer Support":9,"Industry-Financial Services":48,"Industry-Omnistudio":159,"Revenue Cloud (Core)-Price Management":16,"Revenue Cloud (Core)-Developer Support - Product to Order":11,"Revenue Cloud (Core)-Product Catalog Management":6,"Revenue Cloud (Core)-Billing & Invoicing":13,"Industry-Loyalty Management":16,"Industry-Mandatory Security Controls":10,"Industry-Health & Insurance":6,"Revenue Cloud (Core)-Product Configurator":33,"Industry-How-to, Setup, Configuration, Reports & Dashboards":2,"Revenue-Salesforce CPQ":45,"Industry-Manufacturing Cloud":4,"Industry-CRM Analytics":1,"Industry-Public Sector Solutions":21,"Industry-Document Generation":12,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":5,"Revenue-Salesforce Contracts":2,"Industry-Retail and Consumer Goods":20,"Industry-Nonprofit Cloud":4,"Industry-Business Rules Engine (BRE)":3,"Revenue Cloud (Core)-Advanced Approvals":1,"Industry-Education Cloud":8,"Revenue-Document Generation":7,"Revenue Cloud (Core)-OmniStudio":1,"Revenue Cloud (Core)-Transaction Management":17,"Industry-Energy & Utilities Cloud":5,"Industry-Communication Cloud":8,"Revenue-Salesforce Subscription Management":2,"Revenue Cloud (Core)-Usage & Ratings":2,"Industry-Email Delivery & Desktop Integrations":3,"Revenue-Billing Developer Support":1,"Industry-Media Cloud":1,"Industry-Automotive Cloud":1,"Industry-Nonprofit Success Pack (NPSP)":1,"Industry-Rebate Management":1};
+
+const ORG_L6_PT_SIG_TOTALS = {"Taher Jamboo":{"Industry-Life Sciences":147,"Industry-Security & Activations":15,"Revenue-CPQ Developer Support":20,"Industry-CPQ / Order Management / Digital Commerce":24,"Revenue-Salesforce Billing":4,"Industry-Health Cloud":8,"Industry-Developer Support":6,"Industry-Financial Services":45,"Industry-Omnistudio":87,"Revenue Cloud (Core)-Price Management":11,"Revenue Cloud (Core)-Developer Support - Product to Order":4,"Revenue Cloud (Core)-Product Catalog Management":4,"Revenue Cloud (Core)-Billing & Invoicing":12,"Industry-Loyalty Management":12,"Industry-Mandatory Security Controls":10,"Industry-Health & Insurance":4,"Revenue Cloud (Core)-Product Configurator":25,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Revenue-Salesforce CPQ":16,"Industry-Manufacturing Cloud":4,"Industry-CRM Analytics":1,"Industry-Public Sector Solutions":7,"Industry-Document Generation":9,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":3,"Revenue-Salesforce Contracts":1,"Industry-Retail and Consumer Goods":15,"Revenue Cloud (Core)-Transaction Management":9,"Industry-Energy & Utilities Cloud":2,"Revenue Cloud (Core)-Usage & Ratings":2,"Industry-Email Delivery & Desktop Integrations":3,"Industry-Communication Cloud":4,"Revenue-Document Generation":3,"Revenue-Billing Developer Support":1,"Industry-Media Cloud":1,"Industry-Education Cloud":1,"Industry-Automotive Cloud":1,"Industry-Rebate Management":1,"Industry-Business Rules Engine (BRE)":1},"Abdellah Sabere":{"Industry-Nonprofit Cloud":4,"Industry-Omnistudio":72,"Industry-Health & Insurance":2,"Industry-Business Rules Engine (BRE)":2,"Industry-CPQ / Order Management / Digital Commerce":26,"Revenue-CPQ Developer Support":12,"Revenue Cloud (Core)-Product Configurator":8,"Revenue Cloud (Core)-Advanced Approvals":1,"Industry-Life Sciences":30,"Revenue-Salesforce CPQ":29,"Industry-Security & Activations":5,"Industry-Health Cloud":7,"Industry-Public Sector Solutions":14,"Industry-Education Cloud":7,"Industry-Financial Services":3,"Revenue-Document Generation":4,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":2,"Revenue-Salesforce Contracts":1,"Revenue Cloud (Core)-OmniStudio":1,"Revenue Cloud (Core)-Transaction Management":8,"Revenue Cloud (Core)-Price Management":5,"Revenue Cloud (Core)-Product Catalog Management":2,"Industry-Retail and Consumer Goods":5,"Industry-Energy & Utilities Cloud":3,"Industry-Communication Cloud":4,"Industry-Loyalty Management":4,"Industry-Developer Support":3,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Revenue-Salesforce Subscription Management":2,"Revenue Cloud (Core)-Developer Support - Product to Order":7,"Industry-Nonprofit Success Pack (NPSP)":1,"Industry-Document Generation":3,"Revenue Cloud (Core)-Billing & Invoicing":1,"Revenue-Salesforce Billing":2}};
+
+const ORG_MGR_PT_TOTALS = {"Wahaj Ali Shaik":{"Industry-Life Sciences":45,"Industry-Financial Services":7,"Revenue Cloud (Core)-Price Management":4,"Industry-Omnistudio":10,"Revenue-Salesforce CPQ":7,"Industry-Security & Activations":1,"Revenue-CPQ Developer Support":3,"Industry-Public Sector Solutions":1,"Industry-Health & Insurance":1,"Revenue-Salesforce Contracts":1,"Revenue Cloud (Core)-Transaction Management":3,"Revenue Cloud (Core)-Billing & Invoicing":2,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Industry-Retail and Consumer Goods":2,"Revenue-Document Generation":1,"Industry-Mandatory Security Controls":1,"Revenue Cloud (Core)-Product Configurator":2,"Industry-Health Cloud":1,"Industry-Education Cloud":1,"Industry-CPQ / Order Management / Digital Commerce":1},"Chaten Raghav":{"Industry-Security & Activations":3,"Industry-Life Sciences":52,"Industry-CPQ / Order Management / Digital Commerce":23,"Industry-Developer Support":5,"Industry-Omnistudio":50,"Industry-Financial Services":9,"Industry-Mandatory Security Controls":2,"Industry-Health & Insurance":2,"Industry-Manufacturing Cloud":2,"Industry-CRM Analytics":1,"Industry-Public Sector Solutions":2,"Industry-Document Generation":6,"Revenue Cloud (Core)-Price Management":2,"Revenue-Salesforce Billing":1,"Revenue Cloud (Core)-Billing & Invoicing":2,"Revenue Cloud (Core)-Product Configurator":2,"Industry-Loyalty Management":7,"Industry-Energy & Utilities Cloud":1,"Revenue Cloud (Core)-Usage & Ratings":1,"Industry-Retail and Consumer Goods":2,"Industry-Communication Cloud":3,"Revenue-Billing Developer Support":1,"Revenue-CPQ Developer Support":1,"Industry-Media Cloud":1,"Industry-Rebate Management":1,"Industry-Health Cloud":1},"Pushkar Dwivedi":{"Revenue-CPQ Developer Support":8,"Revenue-Salesforce Billing":2,"Revenue Cloud (Core)-Developer Support - Product to Order":2,"Revenue Cloud (Core)-Price Management":4,"Revenue Cloud (Core)-Product Catalog Management":3,"Revenue Cloud (Core)-Billing & Invoicing":6,"Revenue Cloud (Core)-Product Configurator":18,"Revenue-Salesforce CPQ":5,"Industry-Life Sciences":4,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":2,"Revenue Cloud (Core)-Transaction Management":5,"Revenue Cloud (Core)-Usage & Ratings":1,"Industry-Health Cloud":1,"Industry-Financial Services":1,"Revenue-Document Generation":1},"Angad Rajpal Singh":{"Industry-Health Cloud":4,"Industry-Financial Services":24,"Industry-Security & Activations":10,"Industry-Life Sciences":31,"Industry-Developer Support":1,"Industry-Loyalty Management":5,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Industry-Mandatory Security Controls":7,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":1,"Industry-Retail and Consumer Goods":11,"Revenue-CPQ Developer Support":1,"Revenue Cloud (Core)-Billing & Invoicing":2,"Industry-Email Delivery & Desktop Integrations":3,"Industry-Public Sector Solutions":4,"Industry-Manufacturing Cloud":1,"Industry-Automotive Cloud":1,"Revenue Cloud (Core)-Price Management":1,"Industry-Business Rules Engine (BRE)":1},"Eugene Pugach":{"Industry-Nonprofit Cloud":4,"Industry-Education Cloud":7,"Industry-Nonprofit Success Pack (NPSP)":1},"Sreenivas Voore":{"Industry-Omnistudio":45,"Industry-Health & Insurance":2,"Industry-Business Rules Engine (BRE)":2,"Industry-CPQ / Order Management / Digital Commerce":25,"Industry-Life Sciences":29,"Industry-Financial Services":2,"Industry-Retail and Consumer Goods":5,"Industry-Energy & Utilities Cloud":3,"Revenue Cloud (Core)-Transaction Management":1,"Industry-Security & Activations":1,"Industry-Communication Cloud":4,"Industry-Loyalty Management":4,"Industry-Developer Support":2,"Revenue Cloud (Core)-Price Management":1,"Revenue Cloud (Core)-Developer Support - Product to Order":3,"Industry-Health Cloud":2,"Industry-Document Generation":2,"Revenue Cloud (Core)-Product Configurator":1},"Sam Faulkner":{"Revenue-CPQ Developer Support":12,"Revenue Cloud (Core)-Product Configurator":6,"Revenue Cloud (Core)-Advanced Approvals":1,"Revenue-Salesforce CPQ":25,"Revenue-Document Generation":4,"Revenue Cloud (Core)-Dynamic Revenue Orchestration":2,"Revenue-Salesforce Contracts":1,"Revenue Cloud (Core)-OmniStudio":1,"Revenue Cloud (Core)-Transaction Management":7,"Revenue Cloud (Core)-Price Management":4,"Revenue Cloud (Core)-Product Catalog Management":2,"Revenue-Salesforce Subscription Management":2,"Revenue Cloud (Core)-Developer Support - Product to Order":4,"Revenue Cloud (Core)-Billing & Invoicing":1,"Revenue-Salesforce Billing":2},"Rashi Saraswat":{"Revenue-CPQ Developer Support":7,"Revenue Cloud (Core)-Product Configurator":1,"Industry-Omnistudio":23,"Revenue-Salesforce CPQ":4,"Revenue Cloud (Core)-Transaction Management":1,"Revenue-Salesforce Billing":1,"Revenue-Document Generation":1,"Industry-Document Generation":2,"Industry-Health & Insurance":1,"Industry-Communication Cloud":1},"Adam Dillman":{"Industry-Omnistudio":18,"Industry-Health Cloud":5,"Industry-Public Sector Solutions":14,"Industry-Security & Activations":3,"Industry-How-to, Setup, Configuration, Reports & Dashboards":1,"Industry-Developer Support":1,"Industry-Life Sciences":1,"Industry-CPQ / Order Management / Digital Commerce":1},"Victor Soto":{"Industry-Security & Activations":1,"Industry-Omnistudio":9,"Industry-Financial Services":1,"Revenue-Salesforce CPQ":4,"Revenue Cloud (Core)-Product Configurator":1,"Industry-Document Generation":1},"Farbeena Hussain":{"Industry-Life Sciences":13,"Industry-Omnistudio":4,"Industry-Manufacturing Cloud":1,"Industry-Health Cloud":1,"Industry-Financial Services":4,"Industry-Energy & Utilities Cloud":1,"Industry-Security & Activations":1,"Industry-Document Generation":1,"Revenue Cloud (Core)-Product Configurator":2,"Revenue Cloud (Core)-Product Catalog Management":1}};
 
 // ─────────────────────── CAPACITY TEAM ──────────────────────────────────────
 const CAP_TEAM = [
@@ -3782,6 +3819,9 @@ function buildOrgTab() {
   _orgBuildKpiTiles();
   _orgBuildChart1();
   _orgBuildChart2();
+  _orgBuildChartCloud();
+  _orgBuildSigChart('Industry');
+  _orgBuildSigChart('Revenue');
 }
 
 function setOrgL6(l6) {
@@ -3804,6 +3844,9 @@ function _orgRefreshAll() {
   _orgBuildKpiTiles();
   _orgRebuildChart1();
   _orgRebuildChart2();
+  _orgRebuildChartCloud();
+  _orgRebuildSigChart('Industry');
+  _orgRebuildSigChart('Revenue');
 }
 
 function _orgPopulateMgrFilter() {
@@ -3989,6 +4032,147 @@ function _orgBuildChart2() {
   });
 }
 function _orgRebuildChart2(){ if(_orgCharts.c2){_orgCharts.c2.destroy();delete _orgCharts.c2;} _orgBuildChart2(); }
+
+// ── Org: Inflow by Sub Cloud ──────────────────────────────────────────────────
+function _orgBuildChartCloud() {
+  const canvas = document.getElementById('orgChartCloud');
+  if(!canvas) return;
+  if(_orgCharts.cloud) { _orgCharts.cloud.destroy(); }
+  const wks    = DATA.weeks;
+  const labels = wks.map(w => DATA.week_data[w].label);
+  const subEl  = document.getElementById('orgCloudSub');
+  const lo = {fill:false, tension:0.4, pointRadius:5, pointHoverRadius:7, borderWidth:2.5};
+  let datasets;
+
+  function cloudVals(wk, who, cloud) {
+    if(_orgMgr !== 'ALL') return ((ORG_MGR_CLOUD_WEEKLY[wk]||{})[who]||{})[cloud]||0;
+    return ((ORG_L6_CLOUD_WEEKLY[wk]||{})[who]||{})[cloud]||0;
+  }
+
+  if(_orgMgr !== 'ALL') {
+    datasets = [
+      {...lo, label:'Industry', data:wks.map(w=>cloudVals(w,_orgMgr,'Industry')), borderColor:COLORS.blue,  backgroundColor:hex2rgba(COLORS.blue, 0.12), fill:true},
+      {...lo, label:'Revenue',  data:wks.map(w=>cloudVals(w,_orgMgr,'Revenue')),  borderColor:COLORS.violet,backgroundColor:hex2rgba(COLORS.violet,0.10), fill:true},
+    ];
+    if(subEl) subEl.textContent = _orgMgr;
+  } else if(_orgL6 === 'both') {
+    datasets = [
+      {...lo, label:'Taher — Industry',    data:wks.map(w=>cloudVals(w,'Taher Jamboo',   'Industry')), borderColor:COLORS.blue,   backgroundColor:hex2rgba(COLORS.blue,  0.12), fill:true},
+      {...lo, label:'Taher — Revenue',     data:wks.map(w=>cloudVals(w,'Taher Jamboo',   'Revenue')),  borderColor:COLORS.green,  backgroundColor:hex2rgba(COLORS.green, 0.10), fill:true},
+      {...lo, label:'Abdellah — Industry', data:wks.map(w=>cloudVals(w,'Abdellah Sabere','Industry')), borderColor:COLORS.orange, backgroundColor:hex2rgba(COLORS.orange,0.12), fill:true},
+      {...lo, label:'Abdellah — Revenue',  data:wks.map(w=>cloudVals(w,'Abdellah Sabere','Revenue')),  borderColor:COLORS.violet, backgroundColor:hex2rgba(COLORS.violet,0.10), fill:true},
+    ];
+    if(subEl) subEl.textContent = 'Both Level 6 managers';
+  } else {
+    datasets = [
+      {...lo, label:'Industry', data:wks.map(w=>cloudVals(w,_orgL6,'Industry')), borderColor:COLORS.blue,  backgroundColor:hex2rgba(COLORS.blue, 0.12), fill:true},
+      {...lo, label:'Revenue',  data:wks.map(w=>cloudVals(w,_orgL6,'Revenue')),  borderColor:COLORS.violet,backgroundColor:hex2rgba(COLORS.violet,0.10), fill:true},
+    ];
+    if(subEl) subEl.textContent = _orgL6;
+  }
+
+  _orgCharts.cloud = new Chart(canvas, {
+    type:'line', data:{labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'top', labels:{boxWidth:10, padding:16, color:'#94a3b8'}},
+        tooltip:{mode:'index', intersect:false}
+      },
+      scales:{
+        x:{grid:{color:'#1e293b'}, ticks:{color:'#64748b'}},
+        y:{beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
+           title:{display:true, text:'Cases', color:'#64748b'}}
+      }
+    }
+  });
+}
+function _orgRebuildChartCloud(){ if(_orgCharts.cloud){_orgCharts.cloud.destroy();delete _orgCharts.cloud;} _orgBuildChartCloud(); }
+
+// ── Org: Signature Inflow by P&T (stacked bar) ────────────────────────────────
+const _orgSigCharts = {};
+const _PT_SHORT = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
+
+function _orgBuildSigChart(cloud) {
+  const canvasId = cloud === 'Industry' ? 'orgChartSigInd' : 'orgChartSigRev';
+  const subId    = cloud === 'Industry' ? 'orgSigIndSub'   : 'orgSigRevSub';
+  const canvas   = document.getElementById(canvasId);
+  if(!canvas) return;
+  if(_orgSigCharts[cloud]) { _orgSigCharts[cloud].destroy(); delete _orgSigCharts[cloud]; }
+
+  const wks    = DATA.weeks;
+  const labels = wks.map(w => DATA.week_data[w].label);
+  const subEl  = document.getElementById(subId);
+
+  // Get P&T totals for the active filter (for ordering)
+  let ptTotals = {};
+  if(_orgMgr !== 'ALL') {
+    ptTotals = ORG_MGR_PT_TOTALS[_orgMgr] || {};
+  } else if(_orgL6 === 'both') {
+    ptTotals = Object.assign({}, ORG_COMBINED_PT_TOTALS);
+  } else {
+    ptTotals = ORG_L6_PT_SIG_TOTALS[_orgL6] || {};
+  }
+
+  // Top 10 P&Ts for this cloud
+  const pts = Object.entries(ptTotals)
+    .filter(([pt]) => (DATA.PT_CLOUD_MAP[pt]||'Industry') === cloud)
+    .sort((a,b) => b[1]-a[1])
+    .slice(0, 10)
+    .map(([pt]) => pt);
+
+  if(!pts.length) {
+    if(subEl) subEl.textContent = 'No Signature data for current filter';
+    return;
+  }
+
+  // Get weekly value for a PT given current filter
+  function ptVal(wk, pt) {
+    if(_orgMgr !== 'ALL') return ((ORG_MGR_PT_SIG_WEEKLY[wk]||{})[_orgMgr]||{})[pt]||0;
+    if(_orgL6 === 'both') {
+      const t = ((ORG_L6_PT_SIG_WEEKLY[wk]||{})['Taher Jamboo']   ||{})[pt]||0;
+      const a = ((ORG_L6_PT_SIG_WEEKLY[wk]||{})['Abdellah Sabere']||{})[pt]||0;
+      return t + a;
+    }
+    return ((ORG_L6_PT_SIG_WEEKLY[wk]||{})[_orgL6]||{})[pt]||0;
+  }
+
+  const datasets = pts.map((pt,i) => ({
+    label: _PT_SHORT(pt),
+    data:  wks.map(w => ptVal(w, pt)),
+    backgroundColor: SUBTLE_PALETTE[i % SUBTLE_PALETTE.length] + 'cc',
+    borderColor:     SUBTLE_PALETTE[i % SUBTLE_PALETTE.length],
+    borderWidth: 1
+  }));
+
+  if(subEl) {
+    const who = _orgMgr !== 'ALL' ? _orgMgr : _orgL6 === 'both' ? 'Both managers' : _orgL6;
+    subEl.textContent = `${who} · Top ${pts.length} P&Ts`;
+  }
+
+  _orgSigCharts[cloud] = new Chart(canvas, {
+    type: 'bar',
+    data: {labels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom', labels:{color:'#94a3b8', font:{size:10}, boxWidth:10, padding:8}},
+        tooltip:{mode:'index', intersect:false,
+          callbacks:{footer: items => `Total: ${items.reduce((s,i)=>s+(i.raw||0),0)}`}
+        }
+      },
+      scales:{
+        x:{stacked:true, grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'}},
+        y:{stacked:true, beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
+           title:{display:true, text:'Signature cases', color:'#64748b', font:{size:11}}}
+      }
+    }
+  });
+}
+function _orgRebuildSigChart(cloud){
+  if(_orgSigCharts[cloud]){_orgSigCharts[cloud].destroy();delete _orgSigCharts[cloud];}
+  _orgBuildSigChart(cloud);
+}
 
 buildKPITiles();
 buildTrendCharts();
