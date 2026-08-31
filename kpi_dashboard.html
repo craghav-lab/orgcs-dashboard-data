@@ -666,12 +666,12 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
     <div class="chart-card">
       <div class="chart-title">Inflow &amp; Closure Trend</div>
       <div class="chart-sub" id="orgChart1Sub">Weekly · all managers</div>
-      <div class="chart-wrap" style="height:280px"><canvas id="orgChart1"></canvas></div>
+      <div class="chart-wrap" style="height:260px"><canvas id="orgChart1"></canvas></div>
     </div>
     <div class="chart-card">
       <div class="chart-title">Escalations</div>
       <div class="chart-sub" id="orgChart2Sub">Weekly escalation count</div>
-      <div class="chart-wrap" style="height:280px"><canvas id="orgChart2"></canvas></div>
+      <div class="chart-wrap" style="height:260px"><canvas id="orgChart2"></canvas></div>
     </div>
   </div>
 
@@ -680,7 +680,7 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
     <div class="chart-card" style="flex:1;max-width:100%">
       <div class="chart-title">CSAT &amp; TTR Trend</div>
       <div class="chart-sub" id="orgChart3Sub">CSAT (left axis, 0–5) · TTR days (right axis)</div>
-      <div class="chart-wrap" style="height:280px"><canvas id="orgChart3"></canvas></div>
+      <div class="chart-wrap" style="height:260px"><canvas id="orgChart3"></canvas></div>
     </div>
   </div>
 
@@ -3786,26 +3786,6 @@ let _orgL6 = 'both';
 let _orgMgr = 'ALL';
 const _orgCharts = {};
 
-function _orgGetData(wk) {
-  if (_orgMgr !== 'ALL') {
-    const d = (ORG_MGR_WEEKLY[wk] || {})[_orgMgr] || {inflow:0,closures:0,ttr:0,csat:0,escalations:0};
-    return [d];
-  }
-  if (_orgL6 === 'both') {
-    return ['Taher Jamboo','Abdellah Sabere'].map(l6 => (ORG_L6_WEEKLY[wk]||{})[l6]||{inflow:0,closures:0,ttr:0,csat:0,escalations:0});
-  }
-  return [(ORG_L6_WEEKLY[wk]||{})[_orgL6]||{inflow:0,closures:0,ttr:0,csat:0,escalations:0}];
-}
-
-function _orgSum(field, wk) {
-  return _orgGetData(wk).reduce((s,d)=>s+(d[field]||0),0);
-}
-
-function _orgAvg(field, wk) {
-  const vals = _orgGetData(wk).map(d=>d[field]||0).filter(v=>v>0);
-  return vals.length ? Math.round(vals.reduce((s,v)=>s+v,0)/vals.length * 100)/100 : 0;
-}
-
 function buildOrgTab() {
   _orgPopulateMgrFilter();
   _orgBuildKpiTiles();
@@ -3840,12 +3820,9 @@ function _orgRefreshAll() {
 function _orgPopulateMgrFilter() {
   const sel = document.getElementById('orgMgrSelect');
   if(!sel) return;
-  let mgrs = [];
-  if(_orgL6 === 'both') {
-    mgrs = Object.values(ORG_MGR_L6).flat().sort();
-  } else {
-    mgrs = (ORG_MGR_L6[_orgL6]||[]).slice().sort();
-  }
+  const mgrs = _orgL6 === 'both'
+    ? Object.values(ORG_MGR_L6).flat().sort()
+    : (ORG_MGR_L6[_orgL6]||[]).slice().sort();
   sel.innerHTML = '<option value="ALL">All Managers</option>' +
     mgrs.map(m=>`<option value="${m}"${_orgMgr===m?' selected':''}>${m}</option>`).join('');
   sel.value = _orgMgr;
@@ -3854,35 +3831,47 @@ function _orgPopulateMgrFilter() {
 function _orgBuildKpiTiles() {
   const el = document.getElementById('orgKpiRow');
   if(!el) return;
-  const wks = DATA.weeks;
+  const wks  = DATA.weeks;
   const cur  = wks[wks.length-1];
   const prev = wks[wks.length-2];
   const wkLabel = DATA.week_data[cur].label;
 
-  const inflow   = _orgSum('inflow',   cur);
-  const closures = _orgSum('closures', cur);
-  const esc      = _orgSum('escalations', cur);
-  const ttr      = _orgAvg('ttr',  cur);
-  const csat     = _orgAvg('csat', cur);
-  const inPrev   = _orgSum('inflow',   prev);
-  const clPrev   = _orgSum('closures', prev);
-
-  function wowHtml(d, loBetter) {
-    if(d===0) return '';
-    const pos = loBetter ? d<0 : d>0;
-    const cls = pos ? 'color:#4ade80' : 'color:#f87171';
-    return `<div style="font-size:10px;margin-top:3px;${cls}">${d>0?'+':''}${d} WoW</div>`;
+  function getWk(wk) {
+    if(_orgMgr !== 'ALL') {
+      return (ORG_MGR_WEEKLY[wk]||{})[_orgMgr] || {inflow:0,closures:0,ttr:0,csat:0,escalations:0};
+    }
+    if(_orgL6 === 'both') {
+      const t = (ORG_L6_WEEKLY[wk]||{})['Taher Jamboo']    || {inflow:0,closures:0,ttr:0,csat:0,escalations:0};
+      const a = (ORG_L6_WEEKLY[wk]||{})['Abdellah Sabere'] || {inflow:0,closures:0,ttr:0,csat:0,escalations:0};
+      const csatVals = [t.csat,a.csat].filter(v=>v>0);
+      const ttrVals  = [t.ttr, a.ttr ].filter(v=>v>0);
+      return {
+        inflow:      t.inflow+a.inflow,
+        closures:    t.closures+a.closures,
+        escalations: t.escalations+a.escalations,
+        csat: csatVals.length ? Math.round(csatVals.reduce((s,v)=>s+v,0)/csatVals.length*100)/100 : 0,
+        ttr:  ttrVals.length  ? Math.round(ttrVals.reduce((s,v)=>s+v,0)/ttrVals.length*100)/100  : 0,
+      };
+    }
+    return (ORG_L6_WEEKLY[wk]||{})[_orgL6] || {inflow:0,closures:0,ttr:0,csat:0,escalations:0};
   }
 
-  const prodPct = inflow ? Math.round(closures/inflow*100) : 0;
+  const c = getWk(cur), p = getWk(prev);
+  const prodPct = c.inflow ? Math.round(c.closures/c.inflow*100) : 0;
+
+  function wow(d, loBetter) {
+    if(!d) return '';
+    const pos = loBetter ? d<0 : d>0;
+    return `<div style="font-size:10px;margin-top:3px;color:${pos?'#4ade80':'#f87171'}">${d>0?'+':''}${d} WoW</div>`;
+  }
 
   el.innerHTML = [
-    {label:'Total Inflow',   val:inflow,          unit:'cases '+wkLabel,   color:'cyan',   wow: wowHtml(inflow-inPrev,   false)},
-    {label:'Total Closures', val:closures,         unit:'cases '+wkLabel,   color:'green',  wow: wowHtml(closures-clPrev, false)},
-    {label:'Productivity',   val:prodPct+'%',      unit:'closures / inflow',color:'teal',   wow:''},
-    {label:'Avg TTR',        val:ttr ? ttr+'d':'—',unit:'days to resolve',  color:'yellow', wow:''},
-    {label:'Avg CSAT',       val:csat || '—',      unit:'out of 5.0',       color:'violet', wow:''},
-    {label:'Escalations',    val:esc,              unit:'cases '+wkLabel,   color:'red',    wow:''},
+    {label:'Total Inflow',   val:c.inflow,              unit:'cases '+wkLabel,   color:'cyan',   wow:wow(c.inflow-p.inflow,    false)},
+    {label:'Total Closures', val:c.closures,             unit:'cases '+wkLabel,   color:'green',  wow:wow(c.closures-p.closures,false)},
+    {label:'Productivity',   val:prodPct+'%',            unit:'closures / inflow',color:'teal',   wow:''},
+    {label:'Avg TTR',        val:c.ttr   ? c.ttr+'d':'—',unit:'days to resolve',  color:'yellow', wow:''},
+    {label:'Avg CSAT',       val:c.csat  || '—',         unit:'out of 5.0',       color:'violet', wow:''},
+    {label:'Escalations',    val:c.escalations,          unit:'cases '+wkLabel,   color:'red',    wow:''},
   ].map(t=>`
     <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px 16px;min-width:130px">
       <div style="font-size:10px;color:#94a3b8;margin-bottom:4px">${t.label}</div>
@@ -3900,47 +3889,47 @@ function _orgBuildChart1() {
   const wks    = DATA.weeks;
   const labels = wks.map(w=>DATA.week_data[w].label);
   const subEl  = document.getElementById('orgChart1Sub');
+  const lo = {fill:true, tension:0.4, pointRadius:5, pointHoverRadius:7, borderWidth:2.5};
   let datasets;
 
   if(_orgMgr !== 'ALL') {
     const d = wks.map(w=>(ORG_MGR_WEEKLY[w]||{})[_orgMgr]||{inflow:0,closures:0});
     datasets = [
-      {label:'Inflow',   data:d.map(x=>x.inflow),  backgroundColor:'#38bdf8cc',borderColor:'#38bdf8',borderWidth:1},
-      {label:'Closures', data:d.map(x=>x.closures), backgroundColor:'#4ade80cc',borderColor:'#4ade80',borderWidth:1},
+      {...lo, label:'Inflow',   data:d.map(x=>x.inflow),  borderColor:COLORS.blue,  backgroundColor:hex2rgba(COLORS.blue, 0.12)},
+      {...lo, label:'Closures', data:d.map(x=>x.closures), borderColor:COLORS.green, backgroundColor:hex2rgba(COLORS.green,0.10)},
     ];
     if(subEl) subEl.textContent = _orgMgr;
   } else if(_orgL6 === 'both') {
-    const tD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Taher Jamboo']||{inflow:0,closures:0});
+    const tD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Taher Jamboo']   ||{inflow:0,closures:0});
     const aD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{inflow:0,closures:0});
     datasets = [
-      {label:'Taher — Inflow',      data:tD.map(x=>x.inflow),  backgroundColor:'#38bdf8aa',borderColor:'#38bdf8',borderWidth:1},
-      {label:'Taher — Closures',    data:tD.map(x=>x.closures), backgroundColor:'#4ade80aa',borderColor:'#4ade80',borderWidth:1},
-      {label:'Abdellah — Inflow',   data:aD.map(x=>x.inflow),  backgroundColor:'#f97316aa',borderColor:'#f97316',borderWidth:1},
-      {label:'Abdellah — Closures', data:aD.map(x=>x.closures), backgroundColor:'#a78bfaaa',borderColor:'#a78bfa',borderWidth:1},
+      {...lo, label:'Taher — Inflow',      data:tD.map(x=>x.inflow),  borderColor:COLORS.blue,   backgroundColor:hex2rgba(COLORS.blue,  0.12)},
+      {...lo, label:'Taher — Closures',    data:tD.map(x=>x.closures), borderColor:COLORS.green,  backgroundColor:hex2rgba(COLORS.green, 0.10)},
+      {...lo, label:'Abdellah — Inflow',   data:aD.map(x=>x.inflow),  borderColor:COLORS.orange, backgroundColor:hex2rgba(COLORS.orange,0.12)},
+      {...lo, label:'Abdellah — Closures', data:aD.map(x=>x.closures), borderColor:COLORS.violet, backgroundColor:hex2rgba(COLORS.violet,0.10)},
     ];
     if(subEl) subEl.textContent = 'Both Level 6 managers';
   } else {
     const lD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})[_orgL6]||{inflow:0,closures:0});
     datasets = [
-      {label:'Inflow',   data:lD.map(x=>x.inflow),  backgroundColor:'#38bdf8cc',borderColor:'#38bdf8',borderWidth:1},
-      {label:'Closures', data:lD.map(x=>x.closures), backgroundColor:'#4ade80cc',borderColor:'#4ade80',borderWidth:1},
+      {...lo, label:'Inflow',   data:lD.map(x=>x.inflow),  borderColor:COLORS.blue,  backgroundColor:hex2rgba(COLORS.blue, 0.12)},
+      {...lo, label:'Closures', data:lD.map(x=>x.closures), borderColor:COLORS.green, backgroundColor:hex2rgba(COLORS.green,0.10)},
     ];
     if(subEl) subEl.textContent = _orgL6;
   }
 
   _orgCharts.c1 = new Chart(canvas, {
-    type:'bar',
-    data:{labels, datasets},
+    type:'line', data:{labels, datasets},
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{
-        legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},boxWidth:12,padding:10}},
-        tooltip:{mode:'index',intersect:false}
+        legend:{position:'top', labels:{boxWidth:10, padding:16, color:'#94a3b8'}},
+        tooltip:{mode:'index', intersect:false}
       },
       scales:{
-        x:{grid:{color:'#1e293b'},ticks:{color:'#94a3b8'}},
-        y:{beginAtZero:true,grid:{color:'#1e293b40'},ticks:{color:'#64748b'},
-           title:{display:true,text:'Cases',color:'#64748b',font:{size:11}}}
+        x:{grid:{color:'#1e293b'}, ticks:{color:'#64748b'}},
+        y:{position:'left', beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
+           title:{display:true, text:'Cases', color:'#64748b'}}
       }
     }
   });
@@ -3955,50 +3944,50 @@ function _orgBuildChart2() {
   const wks    = DATA.weeks;
   const labels = wks.map(w=>DATA.week_data[w].label);
   const subEl  = document.getElementById('orgChart2Sub');
+  const lo = {fill:true, tension:0.4, pointRadius:5, pointHoverRadius:7, borderWidth:2.5};
   let datasets;
 
   if(_orgMgr !== 'ALL') {
-    datasets = [{
+    datasets = [{...lo,
       label:'Escalations',
       data:wks.map(w=>((ORG_MGR_WEEKLY[w]||{})[_orgMgr]||{}).escalations||0),
-      backgroundColor:'#f87171cc',borderColor:'#f87171',borderWidth:1
+      borderColor:COLORS.red, backgroundColor:hex2rgba(COLORS.red,0.15)
     }];
     if(subEl) subEl.textContent = _orgMgr;
   } else if(_orgL6 === 'both') {
     datasets = [
-      {label:'Taher Jamboo',    data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})['Taher Jamboo']||{}).escalations||0),    backgroundColor:'#38bdf8cc',borderColor:'#38bdf8',borderWidth:1},
-      {label:'Abdellah Sabere', data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{}).escalations||0), backgroundColor:'#f97316cc',borderColor:'#f97316',borderWidth:1},
+      {...lo, label:'Taher Jamboo',    data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})['Taher Jamboo']   ||{}).escalations||0), borderColor:COLORS.blue,   backgroundColor:hex2rgba(COLORS.blue,  0.12)},
+      {...lo, label:'Abdellah Sabere', data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{}).escalations||0), borderColor:COLORS.orange, backgroundColor:hex2rgba(COLORS.orange,0.15)},
     ];
     if(subEl) subEl.textContent = 'Both Level 6 managers';
   } else {
-    datasets = [{
+    datasets = [{...lo,
       label:'Escalations',
       data:wks.map(w=>((ORG_L6_WEEKLY[w]||{})[_orgL6]||{}).escalations||0),
-      backgroundColor:'#f87171cc',borderColor:'#f87171',borderWidth:1
+      borderColor:COLORS.red, backgroundColor:hex2rgba(COLORS.red,0.15)
     }];
     if(subEl) subEl.textContent = _orgL6;
   }
 
   _orgCharts.c2 = new Chart(canvas, {
-    type:'bar',
-    data:{labels, datasets},
+    type:'line', data:{labels, datasets},
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{
-        legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},boxWidth:12,padding:10}},
-        tooltip:{mode:'index',intersect:false}
+        legend:{position:'top', labels:{boxWidth:10, padding:16, color:'#94a3b8'}},
+        tooltip:{mode:'index', intersect:false}
       },
       scales:{
-        x:{grid:{color:'#1e293b'},ticks:{color:'#94a3b8'}},
-        y:{beginAtZero:true,grid:{color:'#1e293b40'},ticks:{color:'#64748b',stepSize:1},
-           title:{display:true,text:'Count',color:'#64748b',font:{size:11}}}
+        x:{grid:{color:'#1e293b'}, ticks:{color:'#64748b'}},
+        y:{position:'left', beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#f87171', stepSize:1},
+           title:{display:true, text:'Escalations', color:'#f87171'}}
       }
     }
   });
 }
 function _orgRebuildChart2(){ if(_orgCharts.c2){_orgCharts.c2.destroy();delete _orgCharts.c2;} _orgBuildChart2(); }
 
-// ── Chart 3: CSAT & TTR ───────────────────────────────────────────────────────
+// ── Chart 3: CSAT, Escalations & TTR (dual/triple axis) ──────────────────────
 function _orgBuildChart3() {
   const canvas = document.getElementById('orgChart3');
   if(!canvas) return;
@@ -4006,51 +3995,52 @@ function _orgBuildChart3() {
   const wks    = DATA.weeks;
   const labels = wks.map(w=>DATA.week_data[w].label);
   const subEl  = document.getElementById('orgChart3Sub');
+  const lo = {fill:false, tension:0.4, pointRadius:5, pointHoverRadius:7, borderWidth:2.5};
   let datasets;
 
-  function nullZero(v){ return v>0 ? v : null; }
-
   if(_orgMgr !== 'ALL') {
-    const d = wks.map(w=>(ORG_MGR_WEEKLY[w]||{})[_orgMgr]||{csat:0,ttr:0});
+    const d = wks.map(w=>(ORG_MGR_WEEKLY[w]||{})[_orgMgr]||{csat:0,ttr:0,escalations:0});
     datasets = [
-      {label:'CSAT',       data:d.map(x=>nullZero(x.csat)), borderColor:'#a78bfa',backgroundColor:'#a78bfa22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#a78bfa',tension:0.3,fill:false,yAxisID:'yL'},
-      {label:'TTR (days)', data:d.map(x=>nullZero(x.ttr)),  borderColor:'#fb923c',backgroundColor:'#fb923c22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#fb923c',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
+      {...lo, label:'CSAT',        data:d.map(x=>x.csat||null),       borderColor:COLORS.violet, backgroundColor:hex2rgba(COLORS.violet,0.12), yAxisID:'y'},
+      {...lo, label:'Escalations', data:d.map(x=>x.escalations||null), borderColor:COLORS.orange, backgroundColor:hex2rgba(COLORS.orange,0.12), yAxisID:'y1'},
+      {...lo, label:'TTR (days)',  data:d.map(x=>x.ttr||null),         borderColor:COLORS.cyan,   backgroundColor:hex2rgba(COLORS.cyan,  0.10), yAxisID:'y2'},
     ];
-    if(subEl) subEl.textContent = _orgMgr + ' \xb7 CSAT (left) \xb7 TTR days (right)';
+    if(subEl) subEl.textContent = _orgMgr;
   } else if(_orgL6 === 'both') {
-    const tD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Taher Jamboo']||{csat:0,ttr:0});
-    const aD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{csat:0,ttr:0});
+    const tD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Taher Jamboo']   ||{csat:0,ttr:0,escalations:0});
+    const aD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})['Abdellah Sabere']||{csat:0,ttr:0,escalations:0});
     datasets = [
-      {label:'Taher — CSAT',     data:tD.map(x=>nullZero(x.csat)), borderColor:'#38bdf8',backgroundColor:'#38bdf822',borderWidth:2,pointRadius:5,pointBackgroundColor:'#38bdf8',tension:0.3,fill:false,yAxisID:'yL'},
-      {label:'Abdellah — CSAT',  data:aD.map(x=>nullZero(x.csat)), borderColor:'#f97316',backgroundColor:'#f9731622',borderWidth:2,pointRadius:5,pointBackgroundColor:'#f97316',tension:0.3,fill:false,yAxisID:'yL'},
-      {label:'Taher — TTR',      data:tD.map(x=>nullZero(x.ttr)),  borderColor:'#4ade80',backgroundColor:'#4ade8022',borderWidth:2,pointRadius:5,pointBackgroundColor:'#4ade80',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
-      {label:'Abdellah — TTR',   data:aD.map(x=>nullZero(x.ttr)),  borderColor:'#a78bfa',backgroundColor:'#a78bfa22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#a78bfa',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
+      {...lo, label:'Taher — CSAT',       data:tD.map(x=>x.csat||null),        borderColor:COLORS.violet, backgroundColor:hex2rgba(COLORS.violet,0.12), yAxisID:'y'},
+      {...lo, label:'Abdellah — CSAT',    data:aD.map(x=>x.csat||null),        borderColor:COLORS.indigo, backgroundColor:hex2rgba(COLORS.indigo,0.12), yAxisID:'y'},
+      {...lo, label:'Taher — Esc.',       data:tD.map(x=>x.escalations||null), borderColor:COLORS.orange, backgroundColor:hex2rgba(COLORS.orange,0.12), yAxisID:'y1'},
+      {...lo, label:'Abdellah — Esc.',    data:aD.map(x=>x.escalations||null), borderColor:COLORS.amber,  backgroundColor:hex2rgba(COLORS.amber, 0.12), yAxisID:'y1'},
+      {...lo, label:'Taher — TTR',        data:tD.map(x=>x.ttr||null),         borderColor:COLORS.cyan,   backgroundColor:hex2rgba(COLORS.cyan,  0.10), yAxisID:'y2'},
+      {...lo, label:'Abdellah — TTR',     data:aD.map(x=>x.ttr||null),         borderColor:COLORS.teal,   backgroundColor:hex2rgba(COLORS.teal,  0.10), yAxisID:'y2'},
     ];
-    if(subEl) subEl.textContent = 'Both Level 6 \xb7 CSAT (left) \xb7 TTR days (right)';
+    if(subEl) subEl.textContent = 'Both Level 6 managers';
   } else {
-    const lD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})[_orgL6]||{csat:0,ttr:0});
+    const lD = wks.map(w=>(ORG_L6_WEEKLY[w]||{})[_orgL6]||{csat:0,ttr:0,escalations:0});
     datasets = [
-      {label:'CSAT',       data:lD.map(x=>nullZero(x.csat)), borderColor:'#a78bfa',backgroundColor:'#a78bfa22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#a78bfa',tension:0.3,fill:false,yAxisID:'yL'},
-      {label:'TTR (days)', data:lD.map(x=>nullZero(x.ttr)),  borderColor:'#fb923c',backgroundColor:'#fb923c22',borderWidth:2,pointRadius:5,pointBackgroundColor:'#fb923c',tension:0.3,fill:false,yAxisID:'yR',borderDash:[4,3]},
+      {...lo, label:'CSAT',        data:lD.map(x=>x.csat||null),       borderColor:COLORS.violet, backgroundColor:hex2rgba(COLORS.violet,0.12), yAxisID:'y'},
+      {...lo, label:'Escalations', data:lD.map(x=>x.escalations||null), borderColor:COLORS.orange, backgroundColor:hex2rgba(COLORS.orange,0.12), yAxisID:'y1'},
+      {...lo, label:'TTR (days)',  data:lD.map(x=>x.ttr||null),         borderColor:COLORS.cyan,   backgroundColor:hex2rgba(COLORS.cyan,  0.10), yAxisID:'y2'},
     ];
-    if(subEl) subEl.textContent = _orgL6 + ' \xb7 CSAT (left) \xb7 TTR days (right)';
+    if(subEl) subEl.textContent = _orgL6;
   }
 
   _orgCharts.c3 = new Chart(canvas, {
-    type:'line',
-    data:{labels, datasets},
+    type:'line', data:{labels, datasets},
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{
-        legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},boxWidth:12,padding:10}},
-        tooltip:{mode:'index',intersect:false}
+        legend:{position:'top', labels:{boxWidth:10, padding:16, color:'#94a3b8'}},
+        tooltip:{mode:'index', intersect:false}
       },
       scales:{
-        x:{grid:{color:'#1e293b'},ticks:{color:'#94a3b8'}},
-        yL:{position:'left',  beginAtZero:false, min:3.5, max:5.2, grid:{color:'#1e293b40'},ticks:{color:'#a78bfa'},
-            title:{display:true,text:'CSAT',color:'#a78bfa',font:{size:11}}},
-        yR:{position:'right', beginAtZero:true,            grid:{display:false},ticks:{color:'#fb923c'},
-            title:{display:true,text:'TTR (days)',color:'#fb923c',font:{size:11}}}
+        x: {grid:{color:'#1e293b'}, ticks:{color:'#64748b'}},
+        y: {position:'left',  min:4.0, max:5.2, grid:{color:'#1e293b'},           ticks:{color:'#a78bfa'}, title:{display:true, text:'CSAT',        color:'#a78bfa'}},
+        y1:{position:'right', min:0,   max:5,   grid:{drawOnChartArea:false},     ticks:{color:'#fdba74'}, title:{display:true, text:'Escalations', color:'#fdba74'}},
+        y2:{position:'right', min:0,   max:16,  grid:{drawOnChartArea:false},     ticks:{color:'#67e8f9'}, title:{display:true, text:'TTR days',    color:'#67e8f9'}}
       }
     }
   });
