@@ -687,13 +687,43 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
   <!-- Row 3: Signature P&T charts -->
   <div class="chart-row" style="margin-top:20px">
     <div class="chart-card">
-      <div class="chart-title">Signature Inflow — Industry P&amp;T</div>
-      <div class="chart-sub" id="orgSigIndSub">Week-on-week · Signature-tier cases</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px">
+        <div>
+          <div class="chart-title" style="margin-bottom:2px">Signature Inflow — Industry P&amp;T</div>
+          <div class="chart-sub" id="orgSigIndSub" style="margin:0">Week-on-week · Signature-tier cases</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="orgSigIndTopN" onchange="_orgRebuildSigChart('Industry')" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">
+            <option value="3">Top 3</option>
+            <option value="5" selected>Top 5</option>
+            <option value="7">Top 7</option>
+            <option value="10">Top 10</option>
+          </select>
+          <select id="orgSigIndPT" onchange="_orgRebuildSigChart('Industry')" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">
+            <option value="all">All P&amp;Ts</option>
+          </select>
+        </div>
+      </div>
       <div class="chart-wrap" style="height:300px"><canvas id="orgChartSigInd"></canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Signature Inflow — Revenue P&amp;T</div>
-      <div class="chart-sub" id="orgSigRevSub">Week-on-week · Signature-tier cases</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px">
+        <div>
+          <div class="chart-title" style="margin-bottom:2px">Signature Inflow — Revenue P&amp;T</div>
+          <div class="chart-sub" id="orgSigRevSub" style="margin:0">Week-on-week · Signature-tier cases</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="orgSigRevTopN" onchange="_orgRebuildSigChart('Revenue')" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">
+            <option value="3">Top 3</option>
+            <option value="5" selected>Top 5</option>
+            <option value="7">Top 7</option>
+            <option value="10">Top 10</option>
+          </select>
+          <select id="orgSigRevPT" onchange="_orgRebuildSigChart('Revenue')" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer">
+            <option value="all">All P&amp;Ts</option>
+          </select>
+        </div>
+      </div>
       <div class="chart-wrap" style="height:300px"><canvas id="orgChartSigRev"></canvas></div>
     </div>
   </div>
@@ -3845,6 +3875,11 @@ function _orgRefreshAll() {
   _orgRebuildChart1();
   _orgRebuildChart2();
   _orgRebuildChartCloud();
+  // reset PT selects to 'all' when L6/mgr filter changes, then rebuild
+  ['Industry','Revenue'].forEach(c=>{
+    const el=document.getElementById(c==='Industry'?'orgSigIndPT':'orgSigRevPT');
+    if(el) el.value='all';
+  });
   _orgRebuildSigChart('Industry');
   _orgRebuildSigChart('Revenue');
 }
@@ -4089,87 +4124,114 @@ function _orgBuildChartCloud() {
 }
 function _orgRebuildChartCloud(){ if(_orgCharts.cloud){_orgCharts.cloud.destroy();delete _orgCharts.cloud;} _orgBuildChartCloud(); }
 
-// ── Org: Signature Inflow by P&T (stacked bar) ────────────────────────────────
+// ── Org: Signature Inflow by P&T (line chart with filters) ──────────────────
 const _orgSigCharts = {};
 const _PT_SHORT = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
+
+function _orgGetPtTotals() {
+  if(_orgMgr !== 'ALL') return ORG_MGR_PT_TOTALS[_orgMgr] || {};
+  if(_orgL6 === 'both')  return Object.assign({}, ORG_COMBINED_PT_TOTALS);
+  return ORG_L6_PT_SIG_TOTALS[_orgL6] || {};
+}
+
+function _orgPtVal(wk, pt) {
+  if(_orgMgr !== 'ALL') return ((ORG_MGR_PT_SIG_WEEKLY[wk]||{})[_orgMgr]||{})[pt]||0;
+  if(_orgL6 === 'both') {
+    return (((ORG_L6_PT_SIG_WEEKLY[wk]||{})['Taher Jamboo']   ||{})[pt]||0)
+         + (((ORG_L6_PT_SIG_WEEKLY[wk]||{})['Abdellah Sabere']||{})[pt]||0);
+  }
+  return ((ORG_L6_PT_SIG_WEEKLY[wk]||{})[_orgL6]||{})[pt]||0;
+}
+
+function _orgPopulateSigPTFilter(cloud) {
+  const selId = cloud === 'Industry' ? 'orgSigIndPT' : 'orgSigRevPT';
+  const topId = cloud === 'Industry' ? 'orgSigIndTopN' : 'orgSigRevTopN';
+  const sel   = document.getElementById(selId);
+  if(!sel) return;
+  const cur   = sel.value;
+  const totals = _orgGetPtTotals();
+  const pts = Object.entries(totals)
+    .filter(([pt]) => (DATA.PT_CLOUD_MAP[pt]||'Industry') === cloud)
+    .sort((a,b) => b[1]-a[1])
+    .map(([pt]) => pt);
+  sel.innerHTML = '<option value="all">All P&Ts</option>'
+    + pts.map(pt => `<option value="${pt}"${cur===pt?' selected':''}>${_PT_SHORT(pt)}</option>`).join('');
+  if(pts.includes(cur)) sel.value = cur; else sel.value = 'all';
+  const topNSel = document.getElementById(topId);
+  if(topNSel) topNSel.style.opacity = sel.value !== 'all' ? '0.35' : '1';
+}
 
 function _orgBuildSigChart(cloud) {
   const canvasId = cloud === 'Industry' ? 'orgChartSigInd' : 'orgChartSigRev';
   const subId    = cloud === 'Industry' ? 'orgSigIndSub'   : 'orgSigRevSub';
+  const topId    = cloud === 'Industry' ? 'orgSigIndTopN'  : 'orgSigRevTopN';
+  const ptId     = cloud === 'Industry' ? 'orgSigIndPT'    : 'orgSigRevPT';
   const canvas   = document.getElementById(canvasId);
   if(!canvas) return;
   if(_orgSigCharts[cloud]) { _orgSigCharts[cloud].destroy(); delete _orgSigCharts[cloud]; }
+
+  _orgPopulateSigPTFilter(cloud);
+
+  const topNEl  = document.getElementById(topId);
+  const ptEl    = document.getElementById(ptId);
+  const topN    = topNEl ? parseInt(topNEl.value, 10) : 5;
+  const ptFilter = ptEl ? ptEl.value : 'all';
 
   const wks    = DATA.weeks;
   const labels = wks.map(w => DATA.week_data[w].label);
   const subEl  = document.getElementById(subId);
 
-  // Get P&T totals for the active filter (for ordering)
-  let ptTotals = {};
-  if(_orgMgr !== 'ALL') {
-    ptTotals = ORG_MGR_PT_TOTALS[_orgMgr] || {};
-  } else if(_orgL6 === 'both') {
-    ptTotals = Object.assign({}, ORG_COMBINED_PT_TOTALS);
-  } else {
-    ptTotals = ORG_L6_PT_SIG_TOTALS[_orgL6] || {};
-  }
-
-  // Top 10 P&Ts for this cloud
-  const pts = Object.entries(ptTotals)
+  const totals = _orgGetPtTotals();
+  const allPTs = Object.entries(totals)
     .filter(([pt]) => (DATA.PT_CLOUD_MAP[pt]||'Industry') === cloud)
     .sort((a,b) => b[1]-a[1])
-    .slice(0, 10)
     .map(([pt]) => pt);
 
-  if(!pts.length) {
-    if(subEl) subEl.textContent = 'No Signature data for current filter';
-    return;
-  }
+  const pts = (ptFilter && ptFilter !== 'all') ? [ptFilter] : allPTs.slice(0, topN);
+  if(!pts.length) { if(subEl) subEl.textContent = 'No Signature data'; return; }
 
-  // Get weekly value for a PT given current filter
-  function ptVal(wk, pt) {
-    if(_orgMgr !== 'ALL') return ((ORG_MGR_PT_SIG_WEEKLY[wk]||{})[_orgMgr]||{})[pt]||0;
-    if(_orgL6 === 'both') {
-      const t = ((ORG_L6_PT_SIG_WEEKLY[wk]||{})['Taher Jamboo']   ||{})[pt]||0;
-      const a = ((ORG_L6_PT_SIG_WEEKLY[wk]||{})['Abdellah Sabere']||{})[pt]||0;
-      return t + a;
-    }
-    return ((ORG_L6_PT_SIG_WEEKLY[wk]||{})[_orgL6]||{})[pt]||0;
-  }
-
-  const datasets = pts.map((pt,i) => ({
-    label: _PT_SHORT(pt),
-    data:  wks.map(w => ptVal(w, pt)),
-    backgroundColor: SUBTLE_PALETTE[i % SUBTLE_PALETTE.length] + 'cc',
-    borderColor:     SUBTLE_PALETTE[i % SUBTLE_PALETTE.length],
-    borderWidth: 1
-  }));
+  const datasets = pts.map((pt, i) => {
+    const color = SUBTLE_PALETTE[i % SUBTLE_PALETTE.length];
+    return {
+      label: _PT_SHORT(pt),
+      data:  wks.map(w => _orgPtVal(w, pt)),
+      borderColor: color,
+      backgroundColor: color + '22',
+      borderWidth: 2, pointRadius: 4, pointHoverRadius: 7,
+      pointBackgroundColor: color, tension: 0.3, fill: false
+    };
+  });
 
   if(subEl) {
     const who = _orgMgr !== 'ALL' ? _orgMgr : _orgL6 === 'both' ? 'Both managers' : _orgL6;
-    subEl.textContent = `${who} · Top ${pts.length} P&Ts`;
+    subEl.textContent = `${who} · ${ptFilter !== 'all' ? _PT_SHORT(ptFilter) : 'Top '+pts.length+' P&Ts'}`;
   }
 
   _orgSigCharts[cloud] = new Chart(canvas, {
-    type: 'bar',
+    type: 'line',
     data: {labels, datasets},
     options:{
       responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
       plugins:{
-        legend:{position:'bottom', labels:{color:'#94a3b8', font:{size:10}, boxWidth:10, padding:8}},
-        tooltip:{mode:'index', intersect:false,
-          callbacks:{footer: items => `Total: ${items.reduce((s,i)=>s+(i.raw||0),0)}`}
-        }
+        legend:{position:'bottom', labels:{color:'#94a3b8', font:{size:10}, boxWidth:12, padding:8, usePointStyle:true, pointStyle:'circle'}},
+        tooltip:{callbacks:{footer: items => `Total: ${items.reduce((s,i)=>s+(i.raw||0),0)}`}}
       },
       scales:{
-        x:{stacked:true, grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'}},
-        y:{stacked:true, beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
-           title:{display:true, text:'Signature cases', color:'#64748b', font:{size:11}}}
+        x:{grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'}},
+        y:{beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
+           title:{display:true, text:'Signature Inflow', color:'#64748b', font:{size:11}}}
       }
     }
   });
 }
+
 function _orgRebuildSigChart(cloud){
+  const topId = cloud === 'Industry' ? 'orgSigIndTopN' : 'orgSigRevTopN';
+  const topNSel = document.getElementById(topId);
+  const ptId = cloud === 'Industry' ? 'orgSigIndPT' : 'orgSigRevPT';
+  const ptSel = document.getElementById(ptId);
+  if(topNSel && ptSel) topNSel.style.opacity = ptSel.value !== 'all' ? '0.35' : '1';
   if(_orgSigCharts[cloud]){_orgSigCharts[cloud].destroy();delete _orgSigCharts[cloud];}
   _orgBuildSigChart(cloud);
 }
