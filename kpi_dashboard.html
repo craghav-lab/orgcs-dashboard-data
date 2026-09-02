@@ -119,34 +119,66 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 @media(max-width:1400px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.grid3{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.chart-row,.grid2,.grid3{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
 
-/* ── Engineer Dashboard v2 — Backlog & Signature share tab ── */
+/* Engineer Dashboard — Tab 3 (Backlog & Signature share) */
+.eng-dash{padding:0}
+.eng-dash .stat-bar{display:flex;gap:16px;padding:20px 0;background:transparent;flex-wrap:wrap}
+.eng-dash .stat{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:14px 20px;min-width:140px}
+.eng-dash .stat .val{font-size:2rem;font-weight:700;color:#38bdf8}
+.eng-dash .stat .lbl{font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.eng-dash .main{display:grid;grid-template-columns:1fr 320px;gap:20px}
+.eng-dash .card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px}
+.eng-dash .card h2{font-size:1rem;font-weight:600;color:#cbd5e1;margin-bottom:16px}
+.eng-dash .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.eng-dash .filter-btn{padding:5px 12px;border-radius:20px;border:1px solid #475569;background:transparent;color:#94a3b8;cursor:pointer;font-size:0.78rem;transition:all .2s}
+.eng-dash .filter-btn.active{color:#fff;border-color:transparent}
+.eng-dash .filter-btn:hover{opacity:.85}
+.eng-dash table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.eng-dash thead th{background:#0f172a;color:#94a3b8;padding:10px 8px;text-align:left;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0}
+.eng-dash tbody tr:hover{background:#334155}
+.eng-dash tbody td{padding:9px 8px;border-bottom:1px solid #1e293b}
+.eng-dash .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.72rem;font-weight:600;color:#fff}
+.eng-dash .total-cell{font-weight:700;color:#38bdf8}
+.eng-dash .dash-cell{color:#475569}
+.eng-dash .sig-pct-cell{font-weight:600}
+.eng-dash .sig-pct-bar{display:inline-block;height:6px;border-radius:3px;background:#10b981;margin-left:6px;vertical-align:middle}
+.eng-dash .search-box{width:100%;padding:8px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:0.85rem;margin-bottom:12px}
+.eng-dash .search-box:focus{outline:none;border-color:#38bdf8}
+.eng-dash .table-wrap{max-height:440px;overflow-y:auto}
+.eng-dash .donut-wrap{display:flex;flex-direction:column;align-items:center}
+.eng-dash #donutChart{max-width:220px}
+.eng-dash .legend{display:block;margin-top:16px;width:100%}
+.eng-dash .legend-item{display:flex;align-items:center;justify-content:space-between;padding:5px 0;font-size:0.82rem}
+.eng-dash .legend-dot{width:12px;height:12px;border-radius:50%;margin-right:8px;flex-shrink:0}
+.eng-dash .legend-name{display:flex;align-items:center;color:#cbd5e1}
+.eng-dash .legend-cnt{color:#94a3b8;font-weight:600}
+.eng-dash .legend-pct{color:#475569;margin-left:4px}
+@media(max-width:900px){.eng-dash .main{grid-template-columns:1fr}}
 
-
-#backlog-v2 { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+/* ── Engineer Dashboard v2 (Backlog tab) ── */
 
 /* ===== Salesforce-branded executive header ===== */
-#backlog-v2 header { background: linear-gradient(120deg, #032d60 0%, #0b5cab 55%, #0176d3 100%);
-         padding: 22px 32px 20px; border-bottom: 3px solid #04e1cb;
-         box-shadow: 0 4px 24px rgba(1,118,211,.28); position: relative; }
+#backlog-v2 header { background: linear-gradient(120deg, #backlog-v2 #032d60 0%, #backlog-v2 #0b5cab 55%, #backlog-v2 #0176d3 100%);
+         #backlog-v2 padding: 22px 32px 20px; border-bottom: 3px solid #04e1cb;
+         #backlog-v2 box-shadow: 0 4px 24px rgba(1, #backlog-v2 118, #backlog-v2 211, #backlog-v2 .28); position: relative; }
 #backlog-v2 .hdr-top { display: flex; align-items: center; gap: 18px; }
 #backlog-v2 .hdr-logo { display: flex; align-items: center; justify-content: center; width: 54px; height: 54px;
-            background: #fff; border-radius: 14px; flex-shrink: 0; box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+            #backlog-v2 background: #fff; border-radius: 14px; flex-shrink: 0; box-shadow: 0 2px 10px rgba(0, #backlog-v2 0, #backlog-v2 0, #backlog-v2 .25); }
 #backlog-v2 .hdr-logo svg { width: 40px; height: 28px; }
 #backlog-v2 .hdr-titles { flex: 1; min-width: 0; }
 #backlog-v2 .hdr-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-               color: #9fd6ff; margin-bottom: 3px; }
+               #backlog-v2 color: #9fd6ff; margin-bottom: 3px; }
 #backlog-v2 header h1 { font-size: 1.7rem; font-weight: 800; color: #fff; letter-spacing: -.01em; line-height: 1.1; }
-#backlog-v2 header p { font-size: 0.86rem; color: #cfe8ff; margin-top: 5px; }
+#backlog-v2 header p  { font-size: 0.86rem; color: #cfe8ff; margin-top: 5px; }
 #backlog-v2 .hdr-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
 #backlog-v2 .hdr-asof { font-size: 0.74rem; color: #cfe8ff; text-align: right; line-height: 1.35; }
 #backlog-v2 .hdr-asof strong { color: #fff; font-weight: 700; }
 #backlog-v2 .hdr-pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px; border-radius: 20px;
-            background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28);
-            font-size: 0.76rem; font-weight: 700; color: #fff; backdrop-filter: blur(4px); white-space: nowrap; }
+            #backlog-v2 background: rgba(255, #backlog-v2 255, #backlog-v2 255, #backlog-v2 .14); border: 1px solid rgba(255, #backlog-v2 255, #backlog-v2 255, #backlog-v2 .28);
+            #backlog-v2 font-size: 0.76rem; font-weight: 700; color: #fff; backdrop-filter: blur(4px); white-space: nowrap; }
 #backlog-v2 .hdr-pill .dot { width: 9px; height: 9px; border-radius: 50%; background: #04e1cb; box-shadow: 0 0 8px #04e1cb; }
 #backlog-v2 .stat-bar { display: flex; flex-direction: column; gap: 0; padding: 0; background: #1e293b; border-bottom: 1px solid #334155; }
 #backlog-v2 .stat-row { display: flex; gap: 12px; padding: 16px 32px; flex-wrap: wrap; align-items: stretch; }
-#backlog-v2 .stat-row-summary { background: linear-gradient(180deg, #14263f 0%, #1e293b 100%); border-bottom: 1px solid #334155; }
+#backlog-v2 .stat-row-summary { background: linear-gradient(180deg, #backlog-v2 #14263f 0%, #backlog-v2 #1e293b 100%); border-bottom: 1px solid #334155; }
 #backlog-v2 .stat-row-summary .stat.stat-sig { background: #0f172a; border-color: #0176d3; border-left: 4px solid #04e1cb; }
 #backlog-v2 .stat-row-summary .stat.stat-sig .val { color: #38bdf8; }
 #backlog-v2 .stat-row-divider { height: 0; border-top: 2px dashed #334155; margin: 0 32px; }
@@ -170,26 +202,26 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 #backlog-v2 .filter-btn:hover { opacity: .85; }
 #backlog-v2 table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 #backlog-v2 thead th { background: #0f172a; color: #94a3b8; padding: 10px 8px; text-align: left; font-weight: 600;
-           font-size: 0.75rem; text-transform: uppercase; letter-spacing: .04em; position: sticky; top: 0; }
+           #backlog-v2 font-size: 0.75rem; text-transform: uppercase; letter-spacing: .04em; position: sticky; top: 0; }
 #backlog-v2 tbody tr:hover { background: #334155; }
 #backlog-v2 tbody td { padding: 9px 8px; border-bottom: 1px solid #1e293b; }
 #backlog-v2 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600; color: #fff; }
 #backlog-v2 .total-cell { font-weight: 700; color: #38bdf8; }
-#backlog-v2 .dash-cell { color: #475569; }
+#backlog-v2 .dash-cell  { color: #475569; }
 #backlog-v2 .sig-pct-cell { font-weight: 600; }
 #backlog-v2 .sig-pct-bar { display: inline-block; height: 6px; border-radius: 3px; background: #10b981; margin-left: 6px; vertical-align: middle; }
 #backlog-v2 .search-box { width: 100%; padding: 8px 12px; background: #0f172a; border: 1px solid #334155;
-              border-radius: 8px; color: #e2e8f0; font-size: 0.85rem; margin-bottom: 12px; }
+              #backlog-v2 border-radius: 8px; color: #e2e8f0; font-size: 0.85rem; margin-bottom: 12px; }
 #backlog-v2 .search-box:focus { outline: none; border-color: #38bdf8; }
 #backlog-v2 .table-wrap { max-height: 440px; overflow-y: auto; }
 #backlog-v2 .donut-wrap { display: flex; flex-direction: column; align-items: center; }
 #backlog-v2 #donutChart { max-width: 220px; }
 #backlog-v2 .legend { margin-top: 16px; width: 100%; }
 #backlog-v2 .legend-item { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; font-size: 0.82rem; }
-#backlog-v2 .legend-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
+#backlog-v2 .legend-dot  { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
 #backlog-v2 .legend-name { display: flex; align-items: center; color: #cbd5e1; }
-#backlog-v2 .legend-cnt { color: #94a3b8; font-weight: 600; }
-#backlog-v2 .legend-pct { color: #475569; margin-left: 4px; }
+#backlog-v2 .legend-cnt  { color: #94a3b8; font-weight: 600; }
+#backlog-v2 .legend-pct  { color: #475569; margin-left: 4px; }
 
 
 
@@ -197,7 +229,7 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 /* ===== Inline case-detail panel ===== */
 #backlog-v2 #casePanel { display:none; padding:0 32px; }
 #backlog-v2 #casePanel.visible { display:block; }
-#backlog-v2 .cp-wrap { background:#fff; border-radius:12px; overflow:hidden; margin-bottom:24px; box-shadow:0 2px 16px rgba(0,0,0,.18); }
+#backlog-v2 .cp-wrap { background:#fff; border-radius:12px; overflow:hidden; margin-bottom:24px; box-shadow:0 2px 16px rgba(0, #backlog-v2 0, #backlog-v2 0, #backlog-v2 .18); }
 
 /* panel header */
 #backlog-v2 .cp-header { display:flex; align-items:center; gap:10px; padding:14px 20px; background:#1e3a5f; border-bottom:1px solid #1a3352; }
@@ -245,8 +277,8 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 #backlog-v2 .cp-case-num { color:#1d4ed8; font-weight:700; text-decoration:none; font-size:0.85rem; display:block; }
 #backlog-v2 .cp-case-num:hover { text-decoration:underline; }
 #backlog-v2 .cp-case-eng { font-size:0.75rem; color:#6b7280; margin-top:2px; }
-#backlog-v2 .cp-swarm-link { display:inline-block; color:#7c3aed; font-weight:700; text-decoration:none; font-size:0.8rem; padding:2px 8px; border:1px solid rgba(124,58,237,.35); border-radius:6px; background:rgba(124,58,237,.08); }
-#backlog-v2 .cp-swarm-link:hover { background:rgba(124,58,237,.18); }
+#backlog-v2 .cp-swarm-link { display:inline-block; color:#7c3aed; font-weight:700; text-decoration:none; font-size:0.8rem; padding:2px 8px; border:1px solid rgba(124, #backlog-v2 58, #backlog-v2 237, #backlog-v2 .35); border-radius:6px; background:rgba(124, #backlog-v2 58, #backlog-v2 237, #backlog-v2 .08); }
+#backlog-v2 .cp-swarm-link:hover { background:rgba(124, #backlog-v2 58, #backlog-v2 237, #backlog-v2 .18); }
 #backlog-v2 .cp-swarm-status { font-size:0.68rem; color:#6b7280; margin-top:2px; }
 #backlog-v2 .cp-swarm-none { color:#c4c4c4; }
 #backlog-v2 .cp-row-num { color:#9ca3af; font-size:0.78rem; text-align:center; }
@@ -259,16 +291,16 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 
 /* status pill */
 #backlog-v2 .cp-status { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
-#backlog-v2 .cps-working { background:#dbeafe; color:#1e40af; }
-#backlog-v2 .cps-new { background:#ede9fe; color:#5b21b6; }
-#backlog-v2 .cps-nmi { background:#fee2e2; color:#b91c1c; }
+#backlog-v2 .cps-working  { background:#dbeafe; color:#1e40af; }
+#backlog-v2 .cps-new      { background:#ede9fe; color:#5b21b6; }
+#backlog-v2 .cps-nmi      { background:#fee2e2; color:#b91c1c; }
 #backlog-v2 .cps-solution { background:#dcfce7; color:#166534; }
-#backlog-v2 .cps-meeting { background:#e0f2fe; color:#0369a1; }
+#backlog-v2 .cps-meeting  { background:#e0f2fe; color:#0369a1; }
 
 /* age cell */
-#backlog-v2 .cp-age-hot { color:#dc2626; font-weight:800; font-size:0.95rem; }
+#backlog-v2 .cp-age-hot  { color:#dc2626; font-weight:800; font-size:0.95rem; }
 #backlog-v2 .cp-age-warm { color:#d97706; font-weight:700; }
-#backlog-v2 .cp-age-ok { color:#374151; }
+#backlog-v2 .cp-age-ok   { color:#374151; }
 
 /* count footer */
 #backlog-v2 .cp-footer { padding:10px 16px; background:#f8fafc; border-top:1px solid #e5e7eb; font-size:0.78rem; color:#6b7280; display:flex; justify-content:space-between; align-items:center; }
@@ -282,33 +314,33 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 #backlog-v2 .mgr-tbl { width:100%; border-collapse:collapse; font-size:0.83rem; }
 #backlog-v2 .mgr-tbl thead tr { background:#1a2744; }
 #backlog-v2 .mgr-tbl thead th { padding:11px 16px; text-align:left; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#94a3b8; white-space:nowrap; border-bottom:1px solid #334155; }
-#backlog-v2 .mgr-tbl thead th.th-sig { color:#10b981; }
+#backlog-v2 .mgr-tbl thead th.th-sig  { color:#10b981; }
 #backlog-v2 .mgr-tbl thead th.th-spct { color:#10b981; }
 #backlog-v2 .mgr-tbl tbody tr { border-bottom:1px solid #1e293b; cursor:pointer; }
 #backlog-v2 .mgr-tbl tbody tr:hover { background:#1e3a5f; }
 #backlog-v2 .mgr-tbl tbody tr.mgr-active { background:#0f2d4a; outline:1px solid #1d4ed8; }
 #backlog-v2 .mgr-tbl tbody td { padding:13px 16px; color:#e2e8f0; }
-#backlog-v2 .mgr-td-name { font-weight:600; color:#e2e8f0; }
+#backlog-v2 .mgr-td-name  { font-weight:600; color:#e2e8f0; }
 #backlog-v2 .mgr-td-total { font-weight:800; color:#38bdf8; font-size:1rem; }
-#backlog-v2 .mgr-td-sig { font-weight:700; color:#10b981; font-size:1rem; }
-#backlog-v2 .mgr-td-nonsig { color:#94a3b8; }
+#backlog-v2 .mgr-td-sig   { font-weight:700; color:#10b981; font-size:1rem; }
+#backlog-v2 .mgr-td-nonsig{ color:#94a3b8; }
 #backlog-v2 .mgr-pct-wrap { display:flex; align-items:center; gap:8px; }
-#backlog-v2 .mgr-pct-lbl { font-weight:700; min-width:44px; }
+#backlog-v2 .mgr-pct-lbl  { font-weight:700; min-width:44px; }
 #backlog-v2 .mgr-pct-bar-track { flex:1; background:#1e293b; border-radius:4px; height:8px; max-width:120px; }
-#backlog-v2 .mgr-pct-bar-fill { height:8px; border-radius:4px; }
+#backlog-v2 .mgr-pct-bar-fill  { height:8px; border-radius:4px; }
 
 /* Engineer drilldown */
 #backlog-v2 .eng-drill-header { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:#0f1f35; border-top:2px solid #1d4ed8; }
-#backlog-v2 .eng-drill-title { font-size:0.85rem; font-weight:700; color:#38bdf8; }
-#backlog-v2 .eng-drill-close { padding:4px 12px; border-radius:6px; border:1px solid #334155; background:transparent; color:#94a3b8; cursor:pointer; font-size:0.75rem; }
+#backlog-v2 .eng-drill-title  { font-size:0.85rem; font-weight:700; color:#38bdf8; }
+#backlog-v2 .eng-drill-close  { padding:4px 12px; border-radius:6px; border:1px solid #334155; background:transparent; color:#94a3b8; cursor:pointer; font-size:0.75rem; }
 #backlog-v2 .eng-drill-close:hover { background:#334155; color:#fff; }
-#backlog-v2 .eng-drill-body { max-height:380px; overflow-y:auto; }
+#backlog-v2 .eng-drill-body   { max-height:380px; overflow-y:auto; }
 
 
 /* Entitlement badge in engineer drilldown */
-#backlog-v2 .ent-sig { color:#10b981; font-weight:700; font-size:0.78rem; }
-#backlog-v2 .ent-std { color:#f59e0b; font-weight:600; font-size:0.78rem; }
-#backlog-v2 .ent-none { color:#64748b; font-size:0.78rem; }
+#backlog-v2 .ent-sig   { color:#10b981; font-weight:700; font-size:0.78rem; }
+#backlog-v2 .ent-std   { color:#f59e0b; font-weight:600; font-size:0.78rem; }
+#backlog-v2 .ent-none  { color:#64748b; font-size:0.78rem; }
 
 
 /* Clickable engineer name in drilldown */
@@ -318,11 +350,11 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 /* ===== Engineer case panel ===== */
 #backlog-v2 #engCasePanel { display:none; padding:0 32px; margin-bottom:24px; }
 #backlog-v2 #engCasePanel.visible { display:block; }
-#backlog-v2 .ecp-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,.18); }
+#backlog-v2 .ecp-wrap { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 16px rgba(0, #backlog-v2 0, #backlog-v2 0, #backlog-v2 .18); }
 #backlog-v2 .ecp-header { display:flex; align-items:center; gap:10px; padding:14px 20px; background:#1d4ed8; }
-#backlog-v2 .ecp-title { font-size:1rem; font-weight:700; color:#fff; flex:1; }
-#backlog-v2 .ecp-close { width:28px; height:28px; border-radius:6px; border:1px solid rgba(255,255,255,.3); background:transparent; color:#fff; cursor:pointer; font-size:1rem; line-height:1; }
-#backlog-v2 .ecp-close:hover { background:rgba(255,255,255,.15); }
+#backlog-v2 .ecp-title  { font-size:1rem; font-weight:700; color:#fff; flex:1; }
+#backlog-v2 .ecp-close  { width:28px; height:28px; border-radius:6px; border:1px solid rgba(255, #backlog-v2 255, #backlog-v2 255, #backlog-v2 .3); background:transparent; color:#fff; cursor:pointer; font-size:1rem; line-height:1; }
+#backlog-v2 .ecp-close:hover { background:rgba(255, #backlog-v2 255, #backlog-v2 255, #backlog-v2 .15); }
 #backlog-v2 .ecp-tbl-wrap { overflow-x:auto; max-height:540px; overflow-y:auto; }
 #backlog-v2 .ecp-tbl { width:100%; border-collapse:collapse; font-size:0.82rem; color:#111827; }
 #backlog-v2 .ecp-tbl thead tr { background:#1d4ed8; }
@@ -336,21 +368,21 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 #backlog-v2 .ecp-tbl tbody tr:nth-child(even) { background:#f9fafb; }
 #backlog-v2 .ecp-tbl tbody tr:hover { background:#eff6ff; }
 #backlog-v2 .ecp-tbl tbody td { padding:11px 14px; vertical-align:top; color:#374151; }
-#backlog-v2 .ecp-row-num { color:#9ca3af; font-size:0.78rem; text-align:center; }
+#backlog-v2 .ecp-row-num  { color:#9ca3af; font-size:0.78rem; text-align:center; }
 #backlog-v2 .ecp-case-num { color:#1d4ed8; font-weight:700; text-decoration:none; font-size:0.85rem; display:block; }
 #backlog-v2 .ecp-case-num:hover { text-decoration:underline; }
 #backlog-v2 .ecp-case-eng { font-size:0.73rem; color:#6b7280; margin-top:2px; }
-#backlog-v2 .ecp-swarm-link { display:inline-block; color:#7c3aed; font-weight:700; text-decoration:none; font-size:0.8rem; padding:2px 8px; border:1px solid rgba(124,58,237,.35); border-radius:6px; background:rgba(124,58,237,.08); }
-#backlog-v2 .ecp-swarm-link:hover { background:rgba(124,58,237,.18); text-decoration:none; }
+#backlog-v2 .ecp-swarm-link { display:inline-block; color:#7c3aed; font-weight:700; text-decoration:none; font-size:0.8rem; padding:2px 8px; border:1px solid rgba(124, #backlog-v2 58, #backlog-v2 237, #backlog-v2 .35); border-radius:6px; background:rgba(124, #backlog-v2 58, #backlog-v2 237, #backlog-v2 .08); }
+#backlog-v2 .ecp-swarm-link:hover { background:rgba(124, #backlog-v2 58, #backlog-v2 237, #backlog-v2 .18); text-decoration:none; }
 #backlog-v2 .ecp-swarm-status { font-size:0.68rem; color:#6b7280; margin-top:2px; }
 #backlog-v2 .ecp-swarm-none { color:#c4c4c4; }
-#backlog-v2 .ecp-na { color:#d1d5db; font-size:0.78rem; }
-#backlog-v2 .ecp-footer { padding:10px 16px; background:#f8fafc; border-top:1px solid #e5e7eb; font-size:0.78rem; color:#6b7280; }
+#backlog-v2 .ecp-na       { color:#d1d5db; font-size:0.78rem; }
+#backlog-v2 .ecp-footer   { padding:10px 16px; background:#f8fafc; border-top:1px solid #e5e7eb; font-size:0.78rem; color:#6b7280; }
 
 /* ===== Account / Red cell styling (light case tables) ===== */
-#backlog-v2 .dash-acct-name { font-weight:600; color:#111827; display:flex; align-items:center; gap:6px; }
-#backlog-v2 .dash-acct-red { color:#b91c1c; }
-#backlog-v2 .dash-red-dot { width:9px; height:9px; border-radius:50%; background:#dc2626; display:inline-block; flex-shrink:0; box-shadow:0 0 0 3px rgba(220,38,38,.18); }
+#backlog-v2 .dash-acct-name   { font-weight:600; color:#111827; display:flex; align-items:center; gap:6px; }
+#backlog-v2 .dash-acct-red    { color:#b91c1c; }
+#backlog-v2 .dash-red-dot     { width:9px; height:9px; border-radius:50%; background:#dc2626; display:inline-block; flex-shrink:0; box-shadow:0 0 0 3px rgba(220, #backlog-v2 38, #backlog-v2 38, #backlog-v2 .18); }
 #backlog-v2 .dash-acct-reason { font-size:0.7rem; color:#dc2626; margin-top:2px; }
 
 /* ===== Derived-data banner ===== */
@@ -372,191 +404,184 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 /* ===== Red Account Summary filter row ===== */
 #backlog-v2 .red-filter-row { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
 #backlog-v2 .red-plan-select { padding:8px 12px; background:#0f172a; border:1px solid #334155; border-radius:8px;
-                   color:#e2e8f0; font-size:0.85rem; min-width:190px; cursor:pointer; }
+                   #backlog-v2 color:#e2e8f0; font-size:0.85rem; min-width:190px; cursor:pointer; }
 #backlog-v2 .red-plan-select:focus { outline:none; border-color:#38bdf8; }
 
 /* ===== CSM Lead + Success-score trend (Red Account Summary) ===== */
-#backlog-v2 .dash-csm { font-size:0.8rem; color:#e2e8f0; font-weight:600; white-space:nowrap; }
-#backlog-v2 .dash-csm-none { font-size:0.78rem; color:#64748b; }
-#backlog-v2 .dash-trend { display:flex; align-items:center; gap:9px; }
-#backlog-v2 .dash-spark { display:block; flex-shrink:0; }
+#backlog-v2 .dash-csm       { font-size:0.8rem; color:#e2e8f0; font-weight:600; white-space:nowrap; }
+#backlog-v2 .dash-csm-none  { font-size:0.78rem; color:#64748b; }
+#backlog-v2 .dash-trend     { display:flex; align-items:center; gap:9px; }
+#backlog-v2 .dash-spark     { display:block; flex-shrink:0; }
 #backlog-v2 .dash-trend-score { font-weight:700; font-size:0.9rem; }
 #backlog-v2 .dash-trend-arrow { font-size:0.85rem; font-weight:700; }
-#backlog-v2 .dash-trend-up { color:#22c55e; }
-#backlog-v2 .dash-trend-down { color:#f87171; }
-#backlog-v2 .dash-trend-flat { color:#94a3b8; }
+#backlog-v2 .dash-trend-up    { color:#22c55e; }
+#backlog-v2 .dash-trend-down  { color:#f87171; }
+#backlog-v2 .dash-trend-flat  { color:#94a3b8; }
 #backlog-v2 .dash-sent-pill { display:inline-block; margin-top:3px; padding:1px 7px; border-radius:10px; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
-#backlog-v2 .dash-sent-Green { background:rgba(34,197,94,.18);  color:#4ade80; border:1px solid rgba(34,197,94,.4); }
-#backlog-v2 .dash-sent-Yellow { background:rgba(234,179,8,.18);  color:#facc15; border:1px solid rgba(234,179,8,.4); }
-#backlog-v2 .dash-sent-Red { background:rgba(239,68,68,.18);  color:#f87171; border:1px solid rgba(239,68,68,.4); }
-#backlog-v2 .dash-trend-na { color:#475569; font-size:0.78rem; }
-#backlog-v2 .dash-dim-row { display:flex; gap:4px; margin-top:4px; cursor:help; }
-#backlog-v2 .dash-dim-chip { display:inline-block; padding:1px 5px; border-radius:5px; font-size:0.58rem; font-weight:700; letter-spacing:.02em; font-family:ui-monospace,"SFMono-Regular",Menlo,monospace; }
-#backlog-v2 .dash-dim-hi { background:rgba(34,197,94,.16);  color:#4ade80; border:1px solid rgba(34,197,94,.35); }
-#backlog-v2 .dash-dim-mid { background:rgba(234,179,8,.16);  color:#facc15; border:1px solid rgba(234,179,8,.35); }
-#backlog-v2 .dash-dim-lo { background:rgba(239,68,68,.16);  color:#f87171; border:1px solid rgba(239,68,68,.35); }
+#backlog-v2 .dash-sent-Green  { background:rgba(34, #backlog-v2 197, #backlog-v2 94, #backlog-v2 .18);  color:#4ade80; border:1px solid rgba(34, #backlog-v2 197, #backlog-v2 94, #backlog-v2 .4); }
+#backlog-v2 .dash-sent-Yellow { background:rgba(234, #backlog-v2 179, #backlog-v2 8, #backlog-v2 .18);  color:#facc15; border:1px solid rgba(234, #backlog-v2 179, #backlog-v2 8, #backlog-v2 .4); }
+#backlog-v2 .dash-sent-Red    { background:rgba(239, #backlog-v2 68, #backlog-v2 68, #backlog-v2 .18);  color:#f87171; border:1px solid rgba(239, #backlog-v2 68, #backlog-v2 68, #backlog-v2 .4); }
+#backlog-v2 .dash-trend-na    { color:#475569; font-size:0.78rem; }
+#backlog-v2 .dash-dim-row   { display:flex; gap:4px; margin-top:4px; cursor:help; }
+#backlog-v2 .dash-dim-chip  { display:inline-block; padding:1px 5px; border-radius:5px; font-size:0.58rem; font-weight:700; letter-spacing:.02em; font-family:ui-monospace, #backlog-v2 "SFMono-Regular", #backlog-v2 Menlo, #backlog-v2 monospace; }
+#backlog-v2 .dash-dim-hi    { background:rgba(34, #backlog-v2 197, #backlog-v2 94, #backlog-v2 .16);  color:#4ade80; border:1px solid rgba(34, #backlog-v2 197, #backlog-v2 94, #backlog-v2 .35); }
+#backlog-v2 .dash-dim-mid   { background:rgba(234, #backlog-v2 179, #backlog-v2 8, #backlog-v2 .16);  color:#facc15; border:1px solid rgba(234, #backlog-v2 179, #backlog-v2 8, #backlog-v2 .35); }
+#backlog-v2 .dash-dim-lo    { background:rgba(239, #backlog-v2 68, #backlog-v2 68, #backlog-v2 .16);  color:#f87171; border:1px solid rgba(239, #backlog-v2 68, #backlog-v2 68, #backlog-v2 .35); }
 
 /* ============================================================
-   ===== Revenue QBR reskin — light theme + sidebar shell =====
-   (Look & feel only. Later rules override the dark theme above.)
-   ============================================================ */
-#backlog-v2 {
-  --qbr-page:#eaf1f9; --qbr-card:#ffffff; --qbr-border:#e4ecf5;
-  --qbr-ink:#0b2545; --qbr-ink2:#16324f; --qbr-muted:#5c6f88;
-  --qbr-blue:#0b6fd0; --qbr-blue-d:#0a4fa0; --qbr-accent:#7b3fe4;
-  --qbr-shadow:0 1px 3px rgba(16,42,76,.07), 0 8px 24px rgba(16,42,76,.06);
+   #backlog-v2 ===== Revenue QBR reskin — light theme + sidebar shell =====
+   #backlog-v2 (Look & feel only. Later rules override the dark theme above.)
+   #backlog-v2 ============================================================ */
+#backlog-v2 :root {
+  #backlog-v2 --qbr-page:#eaf1f9; --qbr-card:#ffffff; --qbr-border:#e4ecf5;
+  #backlog-v2 --qbr-ink:#0b2545; --qbr-ink2:#16324f; --qbr-muted:#5c6f88;
+  #backlog-v2 --qbr-blue:#0b6fd0; --qbr-blue-d:#0a4fa0; --qbr-accent:#7b3fe4;
+  #backlog-v2 --qbr-shadow:0 1px 3px rgba(16, #backlog-v2 42, #backlog-v2 76, #backlog-v2 .07), #backlog-v2 0 8px 24px rgba(16, #backlog-v2 42, #backlog-v2 76, #backlog-v2 .06);
 }
-#backlog-v2 { background:var(--qbr-page); color:var(--qbr-ink2); }
+#backlog-v2 body{ background:var(--qbr-page); color:var(--qbr-ink2); }
 
 /* --- layout shell --- */
-#backlog-v2 .app-shell { display:flex; min-height:100vh; align-items:flex-start; }
-#backlog-v2 .app-main { flex:1; min-width:0; padding-bottom:40px; }
+#backlog-v2 .app-shell{ display:flex; min-height:100vh; align-items:flex-start; }
+#backlog-v2 .app-main{ flex:1; min-width:0; padding-bottom:40px; }
 
 /* --- sidebar --- */
-#backlog-v2 .sidebar { width:246px; flex-shrink:0; position:sticky; top:0; align-self:flex-start;
-  height:100vh; overflow-y:auto; background:linear-gradient(180deg,#0d2a4d 0%,#0a1c39 100%);
-  border-right:1px solid rgba(255,255,255,.06); }
-#backlog-v2 .sb-brand { display:flex; align-items:center; gap:13px; padding:22px 20px 20px;
-  border-bottom:1px solid rgba(255,255,255,.08); }
-#backlog-v2 .sb-logo { width:46px; height:46px; background:#fff; border-radius:12px; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center; box-shadow:0 2px 10px rgba(0,0,0,.25); }
-#backlog-v2 .sb-logo svg { width:34px; height:24px; }
-#backlog-v2 .sb-brand-title { color:#fff; font-weight:800; font-size:1.02rem; line-height:1.15; letter-spacing:-.01em; }
-#backlog-v2 .sb-brand-sub { color:#8fb4e0; font-size:.72rem; font-weight:600; margin-top:2px; }
-#backlog-v2 .sb-nav { padding:14px 12px; display:flex; flex-direction:column; gap:3px; }
-#backlog-v2 .sb-sec { color:#5f7ba1; font-size:.64rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
-  padding:14px 14px 6px; }
-#backlog-v2 .sb-item { display:flex; align-items:center; gap:13px; padding:11px 14px; border-radius:12px;
-  color:#b9cbe4; font-size:.88rem; font-weight:600; text-decoration:none; cursor:pointer; transition:all .15s; }
-#backlog-v2 .sb-item:hover { background:rgba(255,255,255,.07); color:#fff; }
-#backlog-v2 .sb-item.active { background:linear-gradient(90deg,#1f6fe0 0%,#7b3fe4 100%); color:#fff;
-  box-shadow:0 8px 20px rgba(80,60,220,.32); }
-#backlog-v2 .sb-ico { width:20px; text-align:center; font-size:1rem; opacity:.92; flex-shrink:0; }
+#backlog-v2 .sidebar{ width:246px; flex-shrink:0; position:sticky; top:0; align-self:flex-start;
+  #backlog-v2 height:100vh; overflow-y:auto; background:linear-gradient(180deg, #backlog-v2 #0d2a4d 0%, #backlog-v2 #0a1c39 100%);
+  #backlog-v2 border-right:1px solid rgba(255, #backlog-v2 255, #backlog-v2 255, #backlog-v2 .06); }
+#backlog-v2 .sb-brand{ display:flex; align-items:center; gap:13px; padding:22px 20px 20px;
+  #backlog-v2 border-bottom:1px solid rgba(255, #backlog-v2 255, #backlog-v2 255, #backlog-v2 .08); }
+#backlog-v2 .sb-logo{ width:46px; height:46px; background:#fff; border-radius:12px; flex-shrink:0;
+  #backlog-v2 display:flex; align-items:center; justify-content:center; box-shadow:0 2px 10px rgba(0, #backlog-v2 0, #backlog-v2 0, #backlog-v2 .25); }
+#backlog-v2 .sb-logo svg{ width:34px; height:24px; }
+#backlog-v2 .sb-brand-title{ color:#fff; font-weight:800; font-size:1.02rem; line-height:1.15; letter-spacing:-.01em; }
+#backlog-v2 .sb-brand-sub{ color:#8fb4e0; font-size:.72rem; font-weight:600; margin-top:2px; }
+#backlog-v2 .sb-nav{ padding:14px 12px; display:flex; flex-direction:column; gap:3px; }
+#backlog-v2 .sb-sec{ color:#5f7ba1; font-size:.64rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+  #backlog-v2 padding:14px 14px 6px; }
+#backlog-v2 .sb-item{ display:flex; align-items:center; gap:13px; padding:11px 14px; border-radius:12px;
+  #backlog-v2 color:#b9cbe4; font-size:.88rem; font-weight:600; text-decoration:none; cursor:pointer; transition:all .15s; }
+#backlog-v2 .sb-item:hover{ background:rgba(255, #backlog-v2 255, #backlog-v2 255, #backlog-v2 .07); color:#fff; }
+#backlog-v2 .sb-item.active{ background:linear-gradient(90deg, #backlog-v2 #1f6fe0 0%, #backlog-v2 #7b3fe4 100%); color:#fff;
+  #backlog-v2 box-shadow:0 8px 20px rgba(80, #backlog-v2 60, #backlog-v2 220, #backlog-v2 .32); }
+#backlog-v2 .sb-ico{ width:20px; text-align:center; font-size:1rem; opacity:.92; flex-shrink:0; }
 
 /* --- banner (was dark header) --- */
-#backlog-v2 header { margin:26px 30px 0; padding:24px 30px; border-radius:20px; position:relative;
-  background:linear-gradient(120deg,#0b3d91 0%,#0b5cab 55%,#0176d3 100%);
-  border-bottom:none; box-shadow:0 14px 34px rgba(1,90,180,.22); overflow:hidden; }
-#backlog-v2 .hdr-logo { display:none; }
-#backlog-v2 header h1 { font-size:1.55rem; }
+#backlog-v2 header{ margin:26px 30px 0; padding:24px 30px; border-radius:20px; position:relative;
+  #backlog-v2 background:linear-gradient(120deg, #backlog-v2 #0b3d91 0%, #backlog-v2 #0b5cab 55%, #backlog-v2 #0176d3 100%);
+  #backlog-v2 border-bottom:none; box-shadow:0 14px 34px rgba(1, #backlog-v2 90, #backlog-v2 180, #backlog-v2 .22); overflow:hidden; }
+#backlog-v2 .hdr-logo{ display:none; }
+#backlog-v2 header h1{ font-size:1.55rem; }
 
 /* --- stat bar → light KPI cards --- */
-#backlog-v2 .stat-bar { background:transparent; border-bottom:none; padding:0 30px; margin-top:20px; }
-#backlog-v2 .stat-row { padding:0; margin-bottom:14px; }
-#backlog-v2 .stat-row-summary { background:transparent; border-bottom:none; }
-#backlog-v2 .stat-row-divider { display:none; }
-#backlog-v2 .stat-row-sig,
-#backlog-v2 .stat-row-rest { background:transparent; border-bottom:none; }
-#backlog-v2 .stat { background:var(--qbr-card); border:1px solid var(--qbr-border); border-radius:16px;
-  box-shadow:var(--qbr-shadow); }
-#backlog-v2 .stat.stat-sig { border-width:1px; border-left:4px solid var(--qbr-accent); }
-#backlog-v2 .stat-row-summary .stat.stat-sig { background:var(--qbr-card); border-color:var(--qbr-border); border-left:4px solid var(--qbr-accent); }
-#backlog-v2 .stat-row-summary .stat.stat-sig .val { color:var(--qbr-blue); }
-#backlog-v2 .stat .val { color:var(--qbr-blue); }
-#backlog-v2 .stat .lbl { color:var(--qbr-muted); }
+#backlog-v2 .stat-bar{ background:transparent; border-bottom:none; padding:0 30px; margin-top:20px; }
+#backlog-v2 .stat-row{ padding:0; margin-bottom:14px; }
+#backlog-v2 .stat-row-summary{ background:transparent; border-bottom:none; }
+#backlog-v2 .stat-row-divider{ display:none; }
+#backlog-v2 .stat-row-sig, #backlog-v2 .stat-row-rest{ background:transparent; border-bottom:none; }
+#backlog-v2 .stat{ background:var(--qbr-card); border:1px solid var(--qbr-border); border-radius:16px;
+  #backlog-v2 box-shadow:var(--qbr-shadow); }
+#backlog-v2 .stat.stat-sig{ border-width:1px; border-left:4px solid var(--qbr-accent); }
+#backlog-v2 .stat-row-summary .stat.stat-sig{ background:var(--qbr-card); border-color:var(--qbr-border); border-left:4px solid var(--qbr-accent); }
+#backlog-v2 .stat-row-summary .stat.stat-sig .val{ color:var(--qbr-blue); }
+#backlog-v2 .stat .val{ color:var(--qbr-blue); }
+#backlog-v2 .stat .lbl{ color:var(--qbr-muted); }
 
 /* --- cards --- */
-#backlog-v2 .main { padding:22px 30px 0; }
-#backlog-v2 .card { background:var(--qbr-card); border:1px solid var(--qbr-border); border-radius:20px;
-  box-shadow:var(--qbr-shadow); }
-#backlog-v2 .card h2 { color:var(--qbr-ink); font-weight:800; font-size:1.15rem; }
+#backlog-v2 .main{ padding:22px 30px 0; }
+#backlog-v2 .card{ background:var(--qbr-card); border:1px solid var(--qbr-border); border-radius:20px;
+  #backlog-v2 box-shadow:var(--qbr-shadow); }
+#backlog-v2 .card h2{ color:var(--qbr-ink); font-weight:800; font-size:1.15rem; }
 
 /* --- manager tabs (pill segmented) --- */
-#backlog-v2 .mgr-tabs { background:#fff; border-bottom:1px solid var(--qbr-border); border-radius:20px 20px 0 0; padding:14px 16px; }
-#backlog-v2 .mgr-tab { border:1px solid #d7e2ef; background:#fff; color:var(--qbr-muted); font-weight:600; }
-#backlog-v2 .mgr-tab:hover { border-color:var(--qbr-blue); color:var(--qbr-ink); }
-#backlog-v2 .mgr-tab.active { background:linear-gradient(90deg,#1f6fe0,#7b3fe4); border-color:transparent; color:#fff;
-  box-shadow:0 6px 14px rgba(80,60,220,.28); }
+#backlog-v2 .mgr-tabs{ background:#fff; border-bottom:1px solid var(--qbr-border); border-radius:20px 20px 0 0; padding:14px 16px; }
+#backlog-v2 .mgr-tab{ border:1px solid #d7e2ef; background:#fff; color:var(--qbr-muted); font-weight:600; }
+#backlog-v2 .mgr-tab:hover{ border-color:var(--qbr-blue); color:var(--qbr-ink); }
+#backlog-v2 .mgr-tab.active{ background:linear-gradient(90deg, #backlog-v2 #1f6fe0, #backlog-v2 #7b3fe4); border-color:transparent; color:#fff;
+  #backlog-v2 box-shadow:0 6px 14px rgba(80, #backlog-v2 60, #backlog-v2 220, #backlog-v2 .28); }
 
 /* --- searchable manager selector --- */
-#backlog-v2 .mgr-combo { position:relative; max-width:340px; }
-#backlog-v2 .mgr-search-input { width:100%; padding:9px 14px; border:1px solid #d7e2ef; border-radius:12px;
-  background:#fff; color:var(--qbr-ink2); font-size:.86rem; font-weight:600; outline:none; transition:all .15s; }
-#backlog-v2 .mgr-search-input::placeholder { color:#9aa7b8; font-weight:500; }
-#backlog-v2 .mgr-search-input:focus { border-color:var(--qbr-blue); box-shadow:0 0 0 3px rgba(11,111,208,.12); }
-#backlog-v2 .mgr-menu { display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:40;
-  background:#fff; border:1px solid #d7e2ef; border-radius:12px; box-shadow:0 12px 30px rgba(16,42,76,.16);
-  max-height:280px; overflow-y:auto; padding:6px; }
-#backlog-v2 .mgr-combo.open .mgr-menu { display:block; }
-#backlog-v2 .mgr-menu-item { padding:9px 12px; border-radius:9px; font-size:.85rem; font-weight:600; color:var(--qbr-ink2);
-  cursor:pointer; }
-#backlog-v2 .mgr-menu-item:hover { background:#f0f6ff; color:var(--qbr-ink); }
-#backlog-v2 .mgr-menu-item.sel { background:linear-gradient(90deg,#1f6fe0,#7b3fe4); color:#fff; }
-#backlog-v2 .mgr-menu-empty { padding:10px 12px; font-size:.82rem; color:#9aa7b8; }
+#backlog-v2 .mgr-combo{ position:relative; max-width:340px; }
+#backlog-v2 .mgr-search-input{ width:100%; padding:9px 14px; border:1px solid #d7e2ef; border-radius:12px;
+  #backlog-v2 background:#fff; color:var(--qbr-ink2); font-size:.86rem; font-weight:600; outline:none; transition:all .15s; }
+#backlog-v2 .mgr-search-input::placeholder{ color:#9aa7b8; font-weight:500; }
+#backlog-v2 .mgr-search-input:focus{ border-color:var(--qbr-blue); box-shadow:0 0 0 3px rgba(11, #backlog-v2 111, #backlog-v2 208, #backlog-v2 .12); }
+#backlog-v2 .mgr-menu{ display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:40;
+  #backlog-v2 background:#fff; border:1px solid #d7e2ef; border-radius:12px; box-shadow:0 12px 30px rgba(16, #backlog-v2 42, #backlog-v2 76, #backlog-v2 .16);
+  #backlog-v2 max-height:280px; overflow-y:auto; padding:6px; }
+#backlog-v2 .mgr-combo.open .mgr-menu{ display:block; }
+#backlog-v2 .mgr-menu-item{ padding:9px 12px; border-radius:9px; font-size:.85rem; font-weight:600; color:var(--qbr-ink2);
+  #backlog-v2 cursor:pointer; }
+#backlog-v2 .mgr-menu-item:hover{ background:#f0f6ff; color:var(--qbr-ink); }
+#backlog-v2 .mgr-menu-item.sel{ background:linear-gradient(90deg, #backlog-v2 #1f6fe0, #backlog-v2 #7b3fe4); color:#fff; }
+#backlog-v2 .mgr-menu-empty{ padding:10px 12px; font-size:.82rem; color:#9aa7b8; }
 
 /* --- manager table (light) --- */
-#backlog-v2 .mgr-tbl thead tr { background:#f4f7fb; }
-#backlog-v2 .mgr-tbl thead th { color:var(--qbr-muted); border-bottom:1px solid var(--qbr-border); }
-#backlog-v2 .mgr-tbl thead th.th-sig,
-#backlog-v2 .mgr-tbl thead th.th-spct { color:#0a8f5b; }
-#backlog-v2 .mgr-tbl tbody tr { border-bottom:1px solid #eef2f7; }
-#backlog-v2 .mgr-tbl tbody tr:hover { background:#f0f6ff; }
-#backlog-v2 .mgr-tbl tbody tr.mgr-active { background:#eaf2ff; outline:1px solid var(--qbr-blue); }
-#backlog-v2 .mgr-tbl tbody td { color:var(--qbr-ink2); }
-#backlog-v2 .mgr-td-name { color:var(--qbr-ink); }
-#backlog-v2 .mgr-td-total { color:var(--qbr-blue); }
-#backlog-v2 .mgr-td-nonsig { color:var(--qbr-muted); }
-#backlog-v2 .mgr-pct-bar-track { background:#e6edf5; }
+#backlog-v2 .mgr-tbl thead tr{ background:#f4f7fb; }
+#backlog-v2 .mgr-tbl thead th{ color:var(--qbr-muted); border-bottom:1px solid var(--qbr-border); }
+#backlog-v2 .mgr-tbl thead th.th-sig, #backlog-v2 .mgr-tbl thead th.th-spct{ color:#0a8f5b; }
+#backlog-v2 .mgr-tbl tbody tr{ border-bottom:1px solid #eef2f7; }
+#backlog-v2 .mgr-tbl tbody tr:hover{ background:#f0f6ff; }
+#backlog-v2 .mgr-tbl tbody tr.mgr-active{ background:#eaf2ff; outline:1px solid var(--qbr-blue); }
+#backlog-v2 .mgr-tbl tbody td{ color:var(--qbr-ink2); }
+#backlog-v2 .mgr-td-name{ color:var(--qbr-ink); }
+#backlog-v2 .mgr-td-total{ color:var(--qbr-blue); }
+#backlog-v2 .mgr-td-nonsig{ color:var(--qbr-muted); }
+#backlog-v2 .mgr-pct-bar-track{ background:#e6edf5; }
 
 /* --- engineer drilldown (light) --- */
-#backlog-v2 .eng-drill-header { background:#f4f7fb; border-top:2px solid var(--qbr-blue); }
-#backlog-v2 .eng-drill-title { color:var(--qbr-blue); }
-#backlog-v2 .eng-drill-close { border:1px solid #d7e2ef; background:#fff; color:var(--qbr-muted); }
-#backlog-v2 .eng-drill-close:hover { background:#eef2f7; color:var(--qbr-ink); }
-#backlog-v2 .eng-drill-link { color:var(--qbr-blue); }
+#backlog-v2 .eng-drill-header{ background:#f4f7fb; border-top:2px solid var(--qbr-blue); }
+#backlog-v2 .eng-drill-title{ color:var(--qbr-blue); }
+#backlog-v2 .eng-drill-close{ border:1px solid #d7e2ef; background:#fff; color:var(--qbr-muted); }
+#backlog-v2 .eng-drill-close:hover{ background:#eef2f7; color:var(--qbr-ink); }
+#backlog-v2 .eng-drill-link{ color:var(--qbr-blue); }
 
 /* --- top-level generic table (dark→light) --- */
-#backlog-v2 table thead th { background:#f4f7fb; color:var(--qbr-muted); }
-#backlog-v2 tbody tr:hover { background:#f0f6ff; }
-#backlog-v2 tbody td { border-bottom:1px solid #eef2f7; }
-#backlog-v2 .total-cell { color:var(--qbr-blue); }
+#backlog-v2 table thead th{ background:#f4f7fb; color:var(--qbr-muted); }
+#backlog-v2 tbody tr:hover{ background:#f0f6ff; }
+#backlog-v2 tbody td{ border-bottom:1px solid #eef2f7; }
+#backlog-v2 .total-cell{ color:var(--qbr-blue); }
 
 /* Keep the case-panel table headers blue (the generic light override above
-   must NOT bleed into these — their th text is white). */
-#backlog-v2 .ecp-tbl thead th,
-#backlog-v2 .cp-tbl thead th { background:#1d4ed8; color:#fff; }
-#backlog-v2 .ecp-tbl thead th:hover,
-#backlog-v2 .cp-tbl thead th:hover,
-#backlog-v2 .ecp-tbl thead th.ecp-sorted,
-#backlog-v2 .cp-tbl thead th.cp-sorted { background:#1e40af; }
+   #backlog-v2 must NOT bleed into these — their th text is white). */
+#backlog-v2 .ecp-tbl thead th, #backlog-v2 .cp-tbl thead th{ background:#1d4ed8; color:#fff; }
+#backlog-v2 .ecp-tbl thead th:hover, #backlog-v2 .cp-tbl thead th:hover
+#backlog-v2 .ecp-tbl thead th.ecp-sorted, #backlog-v2 .cp-tbl thead th.cp-sorted{ background:#1e40af; }
 
 /* --- red account summary (light) --- */
-#backlog-v2 .dash-red-tbl thead th { background:#fff5f5; color:#b42318; border-bottom:1px solid #f3d6d6; }
-#backlog-v2 .dash-red-tbl tbody td { border-bottom:1px solid #eef2f7; color:var(--qbr-ink2); }
-#backlog-v2 .dash-red-tbl tbody tr:hover { background:#fff5f5; }
-#backlog-v2 .dash-red-acct { color:#b42318; }
-#backlog-v2 .dash-chip-num { color:#b42318; }
+#backlog-v2 .dash-red-tbl thead th{ background:#fff5f5; color:#b42318; border-bottom:1px solid #f3d6d6; }
+#backlog-v2 .dash-red-tbl tbody td{ border-bottom:1px solid #eef2f7; color:var(--qbr-ink2); }
+#backlog-v2 .dash-red-tbl tbody tr:hover{ background:#fff5f5; }
+#backlog-v2 .dash-red-acct{ color:#b42318; }
+#backlog-v2 .dash-chip-num{ color:#b42318; }
 
 /* --- filters / inputs (light) --- */
-#backlog-v2 .search-box { background:#fff; border:1px solid #d7e2ef; color:var(--qbr-ink2); }
-#backlog-v2 .search-box:focus { border-color:var(--qbr-blue); }
-#backlog-v2 .red-plan-select { background:#fff; border:1px solid #d7e2ef; color:var(--qbr-ink2); }
-#backlog-v2 .red-plan-select:focus { border-color:var(--qbr-blue); }
-#backlog-v2 .filter-btn { border:1px solid #d7e2ef; color:var(--qbr-muted); background:#fff; }
-#backlog-v2 .filter-btn.active { color:#fff; }
+#backlog-v2 .search-box{ background:#fff; border:1px solid #d7e2ef; color:var(--qbr-ink2); }
+#backlog-v2 .search-box:focus{ border-color:var(--qbr-blue); }
+#backlog-v2 .red-plan-select{ background:#fff; border:1px solid #d7e2ef; color:var(--qbr-ink2); }
+#backlog-v2 .red-plan-select:focus{ border-color:var(--qbr-blue); }
+#backlog-v2 .filter-btn{ border:1px solid #d7e2ef; color:var(--qbr-muted); background:#fff; }
+#backlog-v2 .filter-btn.active{ color:#fff; }
 
 /* --- CSM lead cell (light) --- */
-#backlog-v2 .dash-csm { color:var(--qbr-ink2); }
-#backlog-v2 .dash-csm-none { color:#9aa7b8; }
+#backlog-v2 .dash-csm{ color:var(--qbr-ink2); }
+#backlog-v2 .dash-csm-none{ color:#9aa7b8; }
 
 /* --- derived banner (light) --- */
-#backlog-v2 #dashDerivedBanner { background:#fff8e6; color:#8a5a00; border:1px solid #f0dca6; }
-#backlog-v2 #dashDerivedBanner strong { color:#7a4f00; }
-#backlog-v2 #dashDerivedBanner.visible { margin:12px 30px 0; }
+#backlog-v2 #dashDerivedBanner{ background:#fff8e6; color:#8a5a00; border:1px solid #f0dca6; }
+#backlog-v2 #dashDerivedBanner strong{ color:#7a4f00; }
+#backlog-v2 #dashDerivedBanner.visible{ margin:12px 30px 0; }
 
 /* --- misc spacing for panels inside light shell --- */
-#backlog-v2 #casePanel,
-#backlog-v2 #engCasePanel { padding-left:30px; padding-right:30px; }
+#backlog-v2 #casePanel, #backlog-v2 #engCasePanel{ padding-left:30px; padding-right:30px; }
 
 @media (max-width:900px){
-  #backlog-v2 .sidebar { display:none; }
-  #backlog-v2 header { margin:18px 16px 0; }
-  #backlog-v2 .stat-bar,
-#backlog-v2 .main { padding-left:16px; padding-right:16px; }
+  #backlog-v2 .sidebar{ display:none; }
+  #backlog-v2 header{ margin:18px 16px 0; }
+  #backlog-v2 .stat-bar, #backlog-v2 .main{ padding-left:16px; padding-right:16px; }
 }
 
 
-/* ── END Engineer Dashboard v2 CSS ── */
+/* ── END v2 CSS ── */
 </style>
 </head>
 <body>
@@ -770,7 +795,8 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 
 <!-- ═══════════════════════════════════ SECTION 3: BACKLOG ═══════════════════════════════════ -->
 <div id="sec-backlog" class="section">
-<div id="backlog-v2" class="app-shell">
+<div id="backlog-v2">
+<div class="app-shell">
 <aside class="sidebar">
   <div class="sb-brand">
     <div class="sb-logo" aria-hidden="true">
@@ -878,9 +904,17 @@ body{background:#0f172a;color:#e2e8f0;font-family:'Segoe UI',system-ui,sans-seri
 
 </div><!-- /.app-main -->
 </div><!-- /.app-shell -->
+
+
+
+
+
+
+
+</div>
 </div>
 
-<!-- ══════════════════ SECTION 4: CAPACITY & DELIVERY ══════════════════ -->
+<!-- ══════════════════ CAPACITY & DELIVERY ══════════════════ -->
 <div id="sec-capacity" class="section">
 
   <div class="section-head">
@@ -3335,9 +3369,22 @@ function buildSev1TrendChart(){
 }
 
 // ─────────────────────── SECTION 3: BACKLOG & SIGNATURE SHARE ───────────────
-// ── Engineer Dashboard v2 — Backlog & Signature share ──
-function buildBacklogSection() {
+const ENG_ENGINEERS = ["Sumair Sufiyan Mohammed", "Shivam Singh", "Guy Friley", "Aakanksha Bhurewar", "Javeeria Muskan F", "Komal Waghmare", "Saurabh Shukla", "Sai Shree Tumula", "Apoorva Chava", "Sashi Preetham Kotni", "Shruti Baskar", "Harshal Bansod", "Sai Sheshank Gottimukkula", "Vipin Sharma", "Kevin .", "Jyotishmathi V B", "Abhi Chohan", "Tahoor Khan", "Shivam Gupta", "Vaibhav Pandya", "Kaleb Lollar", "Harika Neela", "Gaurav Kunte", "Anushka Phougat", "Archana Chintagari", "Jahanvi Gupta", "Harshavardan Regula", "Paul Wunglueck Jr.", "Sandipto Dutta Choudhury", "Sathyavathi K N", "Prashant Bhutani", "Dishant J", "Geetika Jalli", "Manish Garg", "Rakesh Singh", "Joshitha Manchikanti", "M S Angel Niharika", "Pallavi Pandey", "Minal Adkane", "Sandilya Kumar Tanna", "Saikiran Murrarishetty", "Ronak Patil", "Kshitij Mittal", "UmaMahesh Devabhakthuni", "Stephanie Margarita Iraheta", "Jayesh Naik", "Vivek Solanke", "Vinay Vura", "Kaushik Jagatap", "Vikram Makhija", "Satya Vasanth Sai Devoju", "Jhansi Vipulasri Chodisetti", "Akshay Shikhare", "Priyankar Sarkar", "Germán Ferrer", "Cameron Snider", "Aalan Miranda", "Nathan Ulmer", "Pratibha Rajpoot", "Rahul Gupta", "Jessica Rivera", "Sridhar Khandavilli", "Priyanka Patil", "Harshdeep Singh Songara", "Ashwini Garwandha", "Usha Ganta", "Rodrigo Gabriel Torres", "Priya Chandrika Kambala", "Lalith Banala", "Bailey Jefferson", "Jake Doan", "Joseph Toney", "Shihai Chen", "Michael Dudrey", "Gouse Mohiuddin Mohammad", "Cameron Cline", "Anita Kumari", "Matthew Oladele", "Bart Lis", "Lokesh Reddy Koya", "Isaac Sánchez", "VINAY KUMAR K", "Sohan Sarode", "Aishwarya Das", "Mike Grabinski", "Deekshita Pusarla", "Aisharya Roy", "Debashis Kar", "Divyaa Thellore Venkataraman", "Sangeetha Laxman", "M M Krupashree", "Prasad Rao", "Anil Kumar Ganubolu", "Aniruddha Kishor Bagde", "Sanket Ihare", "Shaun Ray", "Swati Sinha"];
+const ENG_DATASETS = [{"label": "Gov Premier", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], "backgroundColor": "#ef4444", "borderColor": "#ef4444", "borderWidth": 1}, {"label": "Gov Signature Success", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "backgroundColor": "#f97316", "borderColor": "#f97316", "borderWidth": 1}, {"label": "Partner Premier", "data": [0, 1, 1, 0, 0, 2, 0, 0, 0, 0, 1, 3, 3, 0, 1, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 1, 6, 4, 0, 3, 0, 1, 1, 2, 1, 0, 2, 1, 0, 0, 0, 3, 0, 0, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "backgroundColor": "#06b6d4", "borderColor": "#06b6d4", "borderWidth": 1}, {"label": "Premier", "data": [0, 1, 3, 4, 4, 2, 0, 4, 1, 0, 0, 0, 1, 0, 4, 0, 0, 2, 1, 0, 0, 4, 0, 1, 1, 2, 1, 1, 1, 0, 0, 1, 4, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 2, 1, 0, 2, 0, 2, 0, 0, 0, 0, 1, 2, 2, 1, 0, 1, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "backgroundColor": "#3b82f6", "borderColor": "#3b82f6", "borderWidth": 1}, {"label": "Premier+", "data": [1, 6, 3, 8, 4, 5, 5, 5, 7, 0, 1, 4, 5, 1, 2, 1, 0, 4, 2, 1, 0, 4, 0, 7, 6, 1, 4, 1, 3, 0, 1, 5, 2, 1, 3, 5, 3, 4, 2, 5, 0, 2, 4, 0, 3, 0, 4, 2, 0, 2, 3, 2, 1, 2, 4, 3, 1, 3, 1, 1, 0, 3, 0, 2, 2, 0, 3, 0, 1, 1, 0, 1, 4, 2, 0, 0, 0, 2, 1, 0, 3, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1], "backgroundColor": "#8b5cf6", "borderColor": "#8b5cf6", "borderWidth": 1}, {"label": "Signature", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "backgroundColor": "#f59e0b", "borderColor": "#f59e0b", "borderWidth": 1}, {"label": "Signature Success", "data": [23, 2, 1, 3, 3, 3, 6, 0, 6, 14, 0, 4, 3, 12, 3, 3, 12, 5, 6, 6, 0, 2, 9, 0, 0, 5, 0, 3, 3, 10, 6, 1, 1, 6, 1, 1, 6, 4, 5, 4, 9, 5, 2, 8, 0, 7, 0, 0, 8, 2, 1, 3, 2, 3, 1, 0, 0, 2, 2, 0, 0, 3, 2, 1, 0, 3, 1, 5, 3, 0, 1, 0, 0, 1, 5, 3, 2, 1, 3, 4, 0, 3, 1, 0, 1, 1, 0, 0, 2, 1, 1, 0, 1, 0, 0, 0, 0], "backgroundColor": "#10b981", "borderColor": "#10b981", "borderWidth": 1}, {"label": "Standard", "data": [0, 7, 9, 1, 5, 4, 4, 6, 0, 0, 12, 2, 2, 0, 2, 6, 0, 0, 1, 5, 11, 1, 0, 3, 4, 3, 5, 0, 0, 0, 0, 3, 2, 2, 4, 3, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 4, 3, 3, 4, 2, 0, 1, 0, 0, 2, 4, 0, 0, 0, 2, 2, 0, 0, 0, 1, 0, 0, 2, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0], "backgroundColor": "#64748b", "borderColor": "#64748b", "borderWidth": 1}, {"label": "US Premier", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "backgroundColor": "#0ea5e9", "borderColor": "#0ea5e9", "borderWidth": 1}, {"label": "US Signature Success", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "backgroundColor": "#22d3ee", "borderColor": "#22d3ee", "borderWidth": 1}];
+const ENG_PLANS = ["Gov Premier", "Gov Signature Success", "Partner Premier", "Premier", "Premier+", "Signature", "Signature Success", "Standard", "US Premier", "US Signature Success"];
+const ENG_TABLE = [{"name": "Sumair Sufiyan Mohammed", "total": 24, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 23, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 23, "sig_pct": 95.8}, {"name": "Shivam Singh", "total": 17, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 1, "Premier+": 6, "Signature": 0, "Signature Success": 2, "Standard": 7, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 11.8}, {"name": "Guy Friley", "total": 17, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 3, "Premier+": 3, "Signature": 0, "Signature Success": 1, "Standard": 9, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 5.9}, {"name": "Aakanksha Bhurewar", "total": 16, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 4, "Premier+": 8, "Signature": 0, "Signature Success": 3, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 18.8}, {"name": "Javeeria Muskan F", "total": 16, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 4, "Premier+": 4, "Signature": 0, "Signature Success": 3, "Standard": 5, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 18.8}, {"name": "Komal Waghmare", "total": 16, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 2, "Premier": 2, "Premier+": 5, "Signature": 0, "Signature Success": 3, "Standard": 4, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 18.8}, {"name": "Saurabh Shukla", "total": 15, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 5, "Signature": 0, "Signature Success": 6, "Standard": 4, "US Premier": 0, "US Signature Success": 0, "sig_count": 6, "sig_pct": 40.0}, {"name": "Sai Shree Tumula", "total": 15, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 4, "Premier+": 5, "Signature": 0, "Signature Success": 0, "Standard": 6, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Apoorva Chava", "total": 14, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 7, "Signature": 0, "Signature Success": 6, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 6, "sig_pct": 42.9}, {"name": "Sashi Preetham Kotni", "total": 14, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 14, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 14, "sig_pct": 100.0}, {"name": "Shruti Baskar", "total": 14, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 12, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Harshal Bansod", "total": 14, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 3, "Premier": 0, "Premier+": 4, "Signature": 1, "Signature Success": 4, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 5, "sig_pct": 35.7}, {"name": "Sai Sheshank Gottimukkula", "total": 14, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 3, "Premier": 1, "Premier+": 5, "Signature": 0, "Signature Success": 3, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 21.4}, {"name": "Vipin Sharma", "total": 13, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 12, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 12, "sig_pct": 92.3}, {"name": "Kevin .", "total": 12, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 4, "Premier+": 2, "Signature": 0, "Signature Success": 3, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 25.0}, {"name": "Jyotishmathi V B", "total": 12, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 2, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 3, "Standard": 6, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 25.0}, {"name": "Abhi Chohan", "total": 12, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 12, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 12, "sig_pct": 100.0}, {"name": "Tahoor Khan", "total": 12, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 2, "Premier+": 4, "Signature": 0, "Signature Success": 5, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 5, "sig_pct": 41.7}, {"name": "Shivam Gupta", "total": 12, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 2, "Premier": 1, "Premier+": 2, "Signature": 0, "Signature Success": 6, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 6, "sig_pct": 50.0}, {"name": "Vaibhav Pandya", "total": 12, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 6, "Standard": 5, "US Premier": 0, "US Signature Success": 0, "sig_count": 6, "sig_pct": 50.0}, {"name": "Kaleb Lollar", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 0, "Standard": 11, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Harika Neela", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 4, "Premier+": 4, "Signature": 0, "Signature Success": 2, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 18.2}, {"name": "Gaurav Kunte", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 9, "Standard": 0, "US Premier": 0, "US Signature Success": 2, "sig_count": 11, "sig_pct": 100.0}, {"name": "Anushka Phougat", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 7, "Signature": 0, "Signature Success": 0, "Standard": 3, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Archana Chintagari", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 6, "Signature": 0, "Signature Success": 0, "Standard": 4, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Jahanvi Gupta", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 2, "Premier+": 1, "Signature": 0, "Signature Success": 5, "Standard": 3, "US Premier": 0, "US Signature Success": 0, "sig_count": 5, "sig_pct": 45.5}, {"name": "Harshavardan Regula", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 1, "Premier+": 4, "Signature": 0, "Signature Success": 0, "Standard": 5, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Paul Wunglueck Jr.", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 6, "Premier": 1, "Premier+": 1, "Signature": 0, "Signature Success": 3, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 27.3}, {"name": "Sandipto Dutta Choudhury", "total": 11, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 4, "Premier": 1, "Premier+": 3, "Signature": 0, "Signature Success": 3, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 27.3}, {"name": "Sathyavathi K N", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 10, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 10, "sig_pct": 100.0}, {"name": "Prashant Bhutani", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 3, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 6, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 6, "sig_pct": 60.0}, {"name": "Dishant J", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 5, "Signature": 0, "Signature Success": 1, "Standard": 3, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 10.0}, {"name": "Geetika Jalli", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 4, "Premier+": 2, "Signature": 0, "Signature Success": 1, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 10.0}, {"name": "Manish Garg", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 6, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 6, "sig_pct": 60.0}, {"name": "Rakesh Singh", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 2, "Premier": 0, "Premier+": 3, "Signature": 0, "Signature Success": 1, "Standard": 4, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 10.0}, {"name": "Joshitha Manchikanti", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 5, "Signature": 0, "Signature Success": 1, "Standard": 3, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 10.0}, {"name": "M S Angel Niharika", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 3, "Signature": 0, "Signature Success": 6, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 6, "sig_pct": 60.0}, {"name": "Pallavi Pandey", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 2, "Premier": 0, "Premier+": 4, "Signature": 0, "Signature Success": 4, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 4, "sig_pct": 40.0}, {"name": "Minal Adkane", "total": 10, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 1, "Premier+": 2, "Signature": 0, "Signature Success": 5, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 5, "sig_pct": 50.0}, {"name": "Sandilya Kumar Tanna", "total": 9, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 5, "Signature": 0, "Signature Success": 4, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 4, "sig_pct": 44.4}, {"name": "Saikiran Murrarishetty", "total": 9, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 9, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 9, "sig_pct": 100.0}, {"name": "Ronak Patil", "total": 9, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 2, "Premier+": 2, "Signature": 0, "Signature Success": 5, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 5, "sig_pct": 55.6}, {"name": "Kshitij Mittal", "total": 9, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 3, "Premier": 0, "Premier+": 4, "Signature": 0, "Signature Success": 2, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 22.2}, {"name": "UmaMahesh Devabhakthuni", "total": 9, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 0, "Signature": 0, "Signature Success": 8, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 8, "sig_pct": 88.9}, {"name": "Stephanie Margarita Iraheta", "total": 8, "Gov Premier": 3, "Gov Signature Success": 2, "Partner Premier": 0, "Premier": 0, "Premier+": 3, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 25.0}, {"name": "Jayesh Naik", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 7, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 7, "sig_pct": 87.5}, {"name": "Vivek Solanke", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 4, "Signature": 0, "Signature Success": 0, "Standard": 3, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Vinay Vura", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 5, "Premier": 0, "Premier+": 2, "Signature": 0, "Signature Success": 0, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Kaushik Jagatap", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 8, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 8, "sig_pct": 100.0}, {"name": "Vikram Makhija", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 2, "Signature": 0, "Signature Success": 2, "Standard": 4, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 25.0}, {"name": "Satya Vasanth Sai Devoju", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 3, "Signature": 0, "Signature Success": 1, "Standard": 3, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 12.5}, {"name": "Jhansi Vipulasri Chodisetti", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 2, "Signature": 0, "Signature Success": 3, "Standard": 3, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 37.5}, {"name": "Akshay Shikhare", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 1, "Signature": 0, "Signature Success": 2, "Standard": 4, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 25.0}, {"name": "Priyankar Sarkar", "total": 8, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 2, "Signature": 0, "Signature Success": 3, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 37.5}, {"name": "Germán Ferrer", "total": 7, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 2, "Premier+": 4, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 14.3}, {"name": "Cameron Snider", "total": 7, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 2, "Premier": 1, "Premier+": 3, "Signature": 0, "Signature Success": 0, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Aalan Miranda", "total": 7, "Gov Premier": 6, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Nathan Ulmer", "total": 7, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 2, "Premier+": 3, "Signature": 0, "Signature Success": 2, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 28.6}, {"name": "Pratibha Rajpoot", "total": 7, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 2, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 2, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 28.6}, {"name": "Rahul Gupta", "total": 7, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 2, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 4, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Jessica Rivera", "total": 7, "Gov Premier": 4, "Gov Signature Success": 3, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 42.9}, {"name": "Sridhar Khandavilli", "total": 7, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 3, "Signature": 0, "Signature Success": 3, "Standard": 0, "US Premier": 1, "US Signature Success": 0, "sig_count": 3, "sig_pct": 42.9}, {"name": "Priyanka Patil", "total": 7, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 2, "Standard": 0, "US Premier": 0, "US Signature Success": 5, "sig_count": 7, "sig_pct": 100.0}, {"name": "Harshdeep Singh Songara", "total": 6, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 2, "Signature": 0, "Signature Success": 1, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 16.7}, {"name": "Ashwini Garwandha", "total": 6, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 1, "Premier+": 2, "Signature": 0, "Signature Success": 0, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Usha Ganta", "total": 6, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 2, "Premier+": 0, "Signature": 0, "Signature Success": 3, "Standard": 0, "US Premier": 1, "US Signature Success": 0, "sig_count": 3, "sig_pct": 50.0}, {"name": "Rodrigo Gabriel Torres", "total": 6, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 2, "Premier+": 3, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 16.7}, {"name": "Priya Chandrika Kambala", "total": 6, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 0, "Signature": 0, "Signature Success": 5, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 5, "sig_pct": 83.3}, {"name": "Lalith Banala", "total": 6, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 3, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 50.0}, {"name": "Bailey Jefferson", "total": 6, "Gov Premier": 2, "Gov Signature Success": 2, "Partner Premier": 0, "Premier": 1, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 33.3}, {"name": "Jake Doan", "total": 6, "Gov Premier": 3, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 1, "US Signature Success": 1, "sig_count": 2, "sig_pct": 33.3}, {"name": "Joseph Toney", "total": 6, "Gov Premier": 0, "Gov Signature Success": 1, "Partner Premier": 0, "Premier": 2, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 2, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 16.7}, {"name": "Shihai Chen", "total": 5, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 4, "Signature": 0, "Signature Success": 0, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Michael Dudrey", "total": 5, "Gov Premier": 1, "Gov Signature Success": 1, "Partner Premier": 0, "Premier": 0, "Premier+": 2, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 40.0}, {"name": "Gouse Mohiuddin Mohammad", "total": 5, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 5, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 5, "sig_pct": 100.0}, {"name": "Cameron Cline", "total": 5, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 1, "Premier+": 0, "Signature": 0, "Signature Success": 3, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 60.0}, {"name": "Anita Kumari", "total": 5, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 3, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 2, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 40.0}, {"name": "Matthew Oladele", "total": 5, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 2, "Signature": 0, "Signature Success": 1, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 20.0}, {"name": "Bart Lis", "total": 4, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 3, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 75.0}, {"name": "Lokesh Reddy Koya", "total": 4, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 4, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 4, "sig_pct": 100.0}, {"name": "Isaac Sánchez", "total": 4, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 3, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "VINAY KUMAR K", "total": 3, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 3, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 3, "sig_pct": 100.0}, {"name": "Sohan Sarode", "total": 3, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 1, "Premier+": 1, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 33.3}, {"name": "Aishwarya Das", "total": 3, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 1, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Mike Grabinski", "total": 3, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 1, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 33.3}, {"name": "Deekshita Pusarla", "total": 2, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 1, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 100.0}, {"name": "Aisharya Roy", "total": 2, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Debashis Kar", "total": 2, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Divyaa Thellore Venkataraman", "total": 2, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 2, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 2, "sig_pct": 100.0}, {"name": "Sangeetha Laxman", "total": 2, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 50.0}, {"name": "M M Krupashree", "total": 2, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 50.0}, {"name": "Prasad Rao", "total": 2, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 1, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Anil Kumar Ganubolu", "total": 1, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 1, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 1, "sig_pct": 100.0}, {"name": "Aniruddha Kishor Bagde", "total": 1, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Sanket Ihare", "total": 1, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Shaun Ray", "total": 1, "Gov Premier": 1, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 0, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}, {"name": "Swati Sinha", "total": 1, "Gov Premier": 0, "Gov Signature Success": 0, "Partner Premier": 0, "Premier": 0, "Premier+": 1, "Signature": 0, "Signature Success": 0, "Standard": 0, "US Premier": 0, "US Signature Success": 0, "sig_count": 0, "sig_pct": 0.0}];
+const ENG_PLAN_TOTALS = {"Gov Premier": 20, "Gov Signature Success": 9, "Partner Premier": 63, "Premier": 68, "Premier+": 196, "Signature": 2, "Signature Success": 286, "Standard": 150, "US Premier": 3, "US Signature Success": 8};
+const ENG_COLORS = {"Gov Premier": "#ef4444", "Gov Signature Success": "#f97316", "Partner Premier": "#06b6d4", "Premier": "#3b82f6", "Premier+": "#8b5cf6", "Signature": "#f59e0b", "Signature Success": "#10b981", "Standard": "#64748b", "US Premier": "#0ea5e9", "US Signature Success": "#22d3ee"};
+const DATA_ACCT_L1 = {"Harrow Health":{"2026-07-26":1,"2026-08-02":1,"2026-08-09":2,"2026-08-16":4},"Apsen Farmaceutica":{"2026-07-26":0,"2026-08-02":4,"2026-08-09":0,"2026-08-16":0},"S&P Global":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Liberty Iberoamerica":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":1,"2026-08-16":0},"Eaton Main":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":1},"Workday, Inc.":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":2},"Equinix":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Elevance Health":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"MD Dept of Education":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"First Command Financial":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"NM Reg & Licensing":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Digicert":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"UDAF Ag Info Mgmt":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Comunicación Celular":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Point32Health":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Convergint Technologies":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Claro S.A.":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Leidos Inc.":{"2026-07-26":1,"2026-08-02":0,"2026-08-09":0,"2026-08-16":0},"Genesis Energy":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Consensus Cloud Solutions":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"AT&T Business":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"HHS NIH - All of Us":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Louisiana Workers Comp":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Kaseya US, LLC":{"2026-07-26":0,"2026-08-02":1,"2026-08-09":0,"2026-08-16":0},"Telecom Argentina":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Meta Platforms":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Banco Bradesco":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Axis Bank":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Capital One":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"ISACA":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Asian Paints":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Takeda Pharmaceuticals":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Colmena Seguros":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Goodyear Tire & Rubber":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"PepsiCo, Inc.":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Hypera Farma":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Leaf Home":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"CVS/Aetna":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"AAA Northern CA NV UT":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Verizon Sourcing":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Nissan North America":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"AGL Energy":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":1,"2026-08-16":0},"Mars Information Services":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Lilly Life Sciences":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Centrica Plc":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Johnson & Johnson":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"DoubleVerify":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"NMDP Platform Org":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Bridgestone Mobility":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Pacific Gas & Electric":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Laerdal Medical":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1},"Dialpad, Inc.":{"2026-07-26":0,"2026-08-02":0,"2026-08-09":0,"2026-08-16":1}};
+const DATA_ACCT_PT_L1 = {};
+const DATA_ACCT_CLOUD = {"Harrow Health":"Industry","Apsen Farmaceutica":"Industry","S&P Global":"Industry","Liberty Iberoamerica":"Industry","Eaton Main":"Industry","Workday, Inc.":"Revenue","Equinix":"Revenue","Elevance Health":"Industry","MD Dept of Education":"Industry","First Command Financial":"Industry","NM Reg & Licensing":"Industry","Digicert":"Revenue","UDAF Ag Info Mgmt":"Industry","Comunicación Celular":"Industry","Point32Health":"Industry","Convergint Technologies":"Industry","Claro S.A.":"Industry","Leidos Inc.":"Industry","Genesis Energy":"Industry","Consensus Cloud Solutions":"Revenue","AT&T Business":"Industry","HHS NIH - All of Us":"Industry","Louisiana Workers Comp":"Industry","Kaseya US, LLC":"Revenue","Telecom Argentina":"Industry","Meta Platforms":"Revenue","Banco Bradesco":"Industry","Axis Bank":"Industry","Capital One":"Industry","ISACA":"Revenue","Asian Paints":"Industry","Takeda Pharmaceuticals":"Industry","Colmena Seguros":"Industry","Goodyear Tire & Rubber":"Industry","PepsiCo, Inc.":"Industry","Hypera Farma":"Industry","Leaf Home":"Revenue","CVS/Aetna":"Industry","AAA Northern CA NV UT":"Industry","Verizon Sourcing":"Industry","Nissan North America":"Industry","AGL Energy":"Industry","Mars Information Services":"Industry","Lilly Life Sciences":"Industry","Centrica Plc":"Industry","Johnson & Johnson":"Industry","DoubleVerify":"Revenue","NMDP Platform Org":"Industry","Bridgestone Mobility":"Revenue","Pacific Gas & Electric":"Industry","Laerdal Medical":"Revenue","Dialpad, Inc.":"Revenue"};
+const ENG_TOTAL_CASES = 805;
+const ENG_TOTAL_ENG = 97;
+const ENG_MGR_ROWS = [{"name": "Angad Rajpal Singh", "total": 125, "sig": 39, "non_sig": 86, "sig_pct": 31.2}, {"name": "Farbeena Hussain", "total": 103, "sig": 26, "non_sig": 77, "sig_pct": 25.2}, {"name": "Wahaj Ali Shaik", "total": 87, "sig": 34, "non_sig": 53, "sig_pct": 39.1}, {"name": "Chaten Raghav", "total": 80, "sig": 71, "non_sig": 9, "sig_pct": 88.8}, {"name": "Pushkar Dwivedi", "total": 80, "sig": 30, "non_sig": 50, "sig_pct": 37.5}, {"name": "Rashi Saraswat", "total": 80, "sig": 13, "non_sig": 67, "sig_pct": 16.2}, {"name": "Eugene Pugach", "total": 66, "sig": 7, "non_sig": 59, "sig_pct": 10.6}, {"name": "Sreenivas Voore", "total": 63, "sig": 48, "non_sig": 15, "sig_pct": 76.2}, {"name": "Sam Faulkner", "total": 59, "sig": 23, "non_sig": 36, "sig_pct": 39.0}, {"name": "Adam Dillman", "total": 45, "sig": 12, "non_sig": 33, "sig_pct": 26.7}, {"name": "Victor Soto", "total": 17, "sig": 2, "non_sig": 15, "sig_pct": 11.8}];
+const ENG_META = {"Sumair Sufiyan Mohammed":{"shift":"PST","skill":"CORE","grade":6},"Prasad Rao":{"shift":"EST","skill":"RCA","grade":6},"Abhi Chohan":{"shift":"PST","skill":"IND-CPQ","grade":6},"Jayesh Naik":{"shift":"PST","skill":"CORE","grade":6},"Gouse Mohiuddin Mohammad":{"shift":"PST","skill":"IND-CPQ","grade":6},"UmaMahesh Devabhakthuni":{"shift":"EST","skill":"CORE","grade":6},"Sathyavathi K N":{"shift":"EST","skill":"IND-CPQ","grade":6},"Kaushik Jagatap":{"shift":"EST","skill":"CORE","grade":6},"Vipin Sharma":{"shift":"PST","skill":"CORE","grade":6},"Lokesh Reddy Koya":{"shift":"PST","skill":"IND-CPQ","grade":6},"Minal Adkane":{"shift":"PST","skill":"CORE","grade":6},"Sandilya Kumar Tanna":{"shift":"PST","skill":"RCA","grade":6},"Harshal Bansod":{"shift":"EST","skill":"RCA","grade":6},"Pallavi Pandey":{"shift":"EST","skill":"RCA","grade":6},"Anita Kumari":{"shift":"PST","skill":"RCA","grade":6},"Pratibha Rajpoot":{"shift":"EST","skill":"RCA","grade":6},"Vaibhav Pandya":{"shift":"PST","skill":"REV-CPQ","grade":6},"Kshitij Mittal":{"shift":"EST","skill":"REV-CPQ","grade":6},"Anil Kumar Ganubolu":{"shift":"EST","skill":"REV-CPQ","grade":6},"VINAY KUMAR K":{"shift":"EST","skill":"RCA","grade":6},"Jahanvi Gupta":{"shift":"EST","skill":"CORE","grade":6},"Saurabh Shukla":{"shift":"PST","skill":"Sub Scale","grade":6},"Manish Garg":{"shift":"EST","skill":"CORE","grade":6},"Shivam Gupta":{"shift":"EST","skill":"Sub Scale","grade":6},"Tahoor Khan":{"shift":"EST","skill":"CORE","grade":6},"M S Angel Niharika":{"shift":"EST","skill":"CORE","grade":6},"Deekshita Pusarla":{"shift":"EST","skill":"CORE","grade":6},"Shihai Chen":{"shift":"EST","skill":"REV-CPQ","grade":6},"Mike Grabinski":{"shift":"EST","skill":"REV-CPQ","grade":6},"Apoorva Chava":{"shift":"PST","skill":"REV-CPQ","grade":5},"Jhansi Vipulasri Chodisetti":{"shift":"PST","skill":"REV-CPQ","grade":6},"Paul Wunglueck Jr.":{"shift":"EST","skill":"RCA","grade":6},"Bart Lis":{"shift":"EST","skill":"REV-CPQ","grade":5},"Prashant Bhutani":{"shift":"EST","skill":"RCA","grade":6},"Priya Chandrika Kambala":{"shift":"PST","skill":"CORE","grade":5},"Gaurav Kunte":{"shift":"PST","skill":"CORE","grade":6},"Saikiran Murrarishetty":{"shift":"EST","skill":"IND-CPQ","grade":6},"Divyaa Thellore Venkataraman":{"shift":"PST","skill":"IND-CPQ","grade":6},"Sangeetha Laxman":{"shift":"EST","skill":"IND-CPQ","grade":6},"Sridhar Khandavilli":{"shift":"PST","skill":"IND-CPQ","grade":6},"Lalith Banala":{"shift":"EST","skill":"IND-CPQ","grade":6},"Ronak Patil":{"shift":"EST","skill":"CORE","grade":6},"Usha Ganta":{"shift":"EST","skill":"CORE","grade":6},"Shruti Baskar":{"shift":"PST","skill":"NPSP/EDU","grade":6},"Cameron Cline":{"shift":"PST","skill":"NPSP/EDU","grade":6},"Guy Friley":{"shift":"EST","skill":"NPSP/EDU","grade":6},"Kaleb Lollar":{"shift":"EST","skill":"NPSP/EDU","grade":6},"Matthew Oladele":{"shift":"EST","skill":"NPSP/EDU","grade":6},"Cameron Snider":{"shift":"EST","skill":"NPSP/EDU","grade":5},"Nathan Ulmer":{"shift":"EST","skill":"NPSP/EDU","grade":6},"Jake Doan":{"shift":"EST","skill":"","grade":5},"Michael Dudrey":{"shift":"PST","skill":"","grade":6},"Stephanie Margarita Iraheta":{"shift":"PST","skill":"","grade":5},"Bailey Jefferson":{"shift":"PST","skill":"","grade":6},"Aalan Miranda":{"shift":"EST","skill":"","grade":6},"Jessica Rivera":{"shift":"EST","skill":"","grade":6},"Joseph Toney":{"shift":"PST","skill":"","grade":6},"Isaac Sánchez":{"shift":"AMER LATM","skill":"","grade":6},"Rodrigo Gabriel Torres":{"shift":"AMER LATM","skill":"","grade":6},"Germán Ferrer":{"shift":"AMER LATM","skill":"","grade":6}};
+const ENG_MANAGER = {"Aakanksha Bhurewar": "Rashi Saraswat", "Aalan Miranda": "Adam Dillman", "Abhi Chohan": "Chaten Raghav", "Aisharya Roy": "Wahaj Ali Shaik", "Aishwarya Das": "Rashi Saraswat", "Akshay Shikhare": "Wahaj Ali Shaik", "Anil Kumar Ganubolu": "Pushkar Dwivedi", "Aniruddha Kishor Bagde": "Chaten Raghav", "Anita Kumari": "Pushkar Dwivedi", "Anushka Phougat": "Farbeena Hussain", "Apoorva Chava": "Sam Faulkner", "Archana Chintagari": "Rashi Saraswat", "Ashwini Garwandha": "Angad Rajpal Singh", "Bailey Jefferson": "Adam Dillman", "Bart Lis": "Sam Faulkner", "Cameron Cline": "Eugene Pugach", "Cameron Snider": "Eugene Pugach", "Debashis Kar": "Wahaj Ali Shaik", "Deekshita Pusarla": "Angad Rajpal Singh", "Dishant J": "Wahaj Ali Shaik", "Divyaa Thellore Venkataraman": "Sreenivas Voore", "Gaurav Kunte": "Sreenivas Voore", "Geetika Jalli": "Farbeena Hussain", "Germán Ferrer": "Victor Soto", "Gouse Mohiuddin Mohammad": "Chaten Raghav", "Guy Friley": "Eugene Pugach", "Harika Neela": "Wahaj Ali Shaik", "Harshal Bansod": "Pushkar Dwivedi", "Harshavardan Regula": "Rashi Saraswat", "Harshdeep Singh Songara": "Farbeena Hussain", "Isaac Sánchez": "Victor Soto", "Jahanvi Gupta": "Angad Rajpal Singh", "Jake Doan": "Adam Dillman", "Javeeria Muskan F": "Farbeena Hussain", "Jayesh Naik": "Chaten Raghav", "Jessica Rivera": "Adam Dillman", "Jhansi Vipulasri Chodisetti": "Sam Faulkner", "Joseph Toney": "Adam Dillman", "Joshitha Manchikanti": "Wahaj Ali Shaik", "Jyotishmathi V B": "Rashi Saraswat", "Kaleb Lollar": "Eugene Pugach", "Kaushik Jagatap": "Chaten Raghav", "Kevin .": "Farbeena Hussain", "Komal Waghmare": "Angad Rajpal Singh", "Kshitij Mittal": "Pushkar Dwivedi", "Lalith Banala": "Sreenivas Voore", "Lokesh Reddy Koya": "Chaten Raghav", "M M Krupashree": "Rashi Saraswat", "M S Angel Niharika": "Angad Rajpal Singh", "Manish Garg": "Angad Rajpal Singh", "Matthew Oladele": "Eugene Pugach", "Michael Dudrey": "Adam Dillman", "Mike Grabinski": "Sam Faulkner", "Minal Adkane": "Chaten Raghav", "Nathan Ulmer": "Eugene Pugach", "Pallavi Pandey": "Pushkar Dwivedi", "Paul Wunglueck Jr.": "Sam Faulkner", "Prasad Rao": "Farbeena Hussain", "Prashant Bhutani": "Sam Faulkner", "Pratibha Rajpoot": "Pushkar Dwivedi", "Priya Chandrika Kambala": "Sreenivas Voore", "Priyanka Patil": "Sreenivas Voore", "Priyankar Sarkar": "Wahaj Ali Shaik", "Rahul Gupta": "Farbeena Hussain", "Rakesh Singh": "Pushkar Dwivedi", "Rodrigo Gabriel Torres": "Victor Soto", "Ronak Patil": "Sreenivas Voore", "Sai Sheshank Gottimukkula": "Rashi Saraswat", "Sai Shree Tumula": "Angad Rajpal Singh", "Saikiran Murrarishetty": "Sreenivas Voore", "Sandilya Kumar Tanna": "Pushkar Dwivedi", "Sandipto Dutta Choudhury": "Rashi Saraswat", "Sangeetha Laxman": "Sam Faulkner", "Sanket Ihare": "Wahaj Ali Shaik", "Sashi Preetham Kotni": "Farbeena Hussain", "Sathyavathi K N": "Chaten Raghav", "Satya Vasanth Sai Devoju": "Wahaj Ali Shaik", "Saurabh Shukla": "Angad Rajpal Singh", "Shaun Ray": "Sam Faulkner", "Shihai Chen": "Sam Faulkner", "Shivam Gupta": "Angad Rajpal Singh", "Shivam Singh": "Farbeena Hussain", "Shruti Baskar": "Eugene Pugach", "Sohan Sarode": "Wahaj Ali Shaik", "Sridhar Khandavilli": "Sreenivas Voore", "Stephanie Margarita Iraheta": "Adam Dillman", "Sumair Sufiyan Mohammed": "Wahaj Ali Shaik", "Swati Sinha": "Sam Faulkner", "Tahoor Khan": "Angad Rajpal Singh", "UmaMahesh Devabhakthuni": "Chaten Raghav", "Usha Ganta": "Sreenivas Voore", "VINAY KUMAR K": "Pushkar Dwivedi", "Vaibhav Pandya": "Pushkar Dwivedi", "Vikram Makhija": "Farbeena Hussain", "Vinay Vura": "Angad Rajpal Singh", "Vipin Sharma": "Chaten Raghav", "Vivek Solanke": "Angad Rajpal Singh"};
 
+function buildBacklogSection() {
 /* ---- Data injected by Python ---- */
 const ENGINEERS  = ["Archana Chintagari","Sai Shree Tumula","Sumair Sufiyan Mohammed","Kaleb Lollar","Apoorva Chava","Geetika Jalli","Jahanvi Gupta","Jyotishmathi V B","M S Angel Niharika","Sandipto Dutta Choudhury","Shruti Baskar","Komal Waghmare","Lokesh Reddy Koya","Aishwarya Das","Gaurav Kunte","Kshitij Mittal","Rahul Gupta","Sashi Preetham Kotni","Shivam Singh","UmaMahesh Devabhakthuni","Deekshita Pusarla","Harika Neela","Kevin .","Abhi Chohan","Harshal Bansod","Harshavardan Regula","Nathan Ulmer","Shihai Chen","Aakanksha Bhurewar","Pallavi Pandey","Paul Wunglueck Jr.","Priya Chandrika Kambala","Priyanka Patil","Sai Sheshank Gottimukkula","Satya Vasanth Sai Devoju","Saurabh Shukla","Tahoor Khan","Vipin Sharma","Akshay Shikhare","Anita Kumari","Anushka Phougat","Cameron Snider","Dishant J","Jhansi Vipulasri Chodisetti","Kaushik Jagatap","Rakesh Singh","Anil Kumar Ganubolu","Bart Lis","Guy Friley","Jessica Rivera","Manish Garg","Prashant Bhutani","Vivek Solanke","Cameron Cline","Divyaa Thellore Venkataraman","Harshdeep Singh Songara","Isaac Sánchez","Priyankar Sarkar","Rodrigo Gabriel Torres","Sangeetha Laxman","Shivam Gupta","Vaibhav Pandya","Vikram Makhija","Aalan Miranda","Joshitha Manchikanti","Lalith Banala","M M Krupashree","Michael Dudrey","Pratibha Rajpoot","Saikiran Murrarishetty","Deepak Sharnagat","Gouse Mohiuddin Mohammad","Jayesh Naik","Joseph Toney","Madharam Ravalika","Aastha Sati","Aisharya Roy","Debashis Kar","Germán Ferrer","Sridhar Khandavilli","Alejandro Rodriguez","Aniruddha Kishor Bagde","Bailey Jefferson","Jake Doan","Matthew Oladele","Mike Grabinski","Sandilya Kumar Tanna","Stephanie Margarita Iraheta","Burak Ilikci","Sohan Sarode","Javeeria Muskan F","Usha Ganta","Vinay Vura","Dinesh K Balasubramanian","Josh Reyes","Prasad Rao","Ritik Srivastav","Suchitha Reddy Chagam","Swati Sinha","VINAY KUMAR K","Victoria Luc"];
 const DATASETS    = [{"label":"Gov Premier","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,2,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"backgroundColor":"#ef4444","borderColor":"#ef4444","borderWidth":1},{"label":"Gov Signature Success","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,2,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],"backgroundColor":"#f97316","borderColor":"#f97316","borderWidth":1},{"label":"Partner Premier","data":[1,0,0,1,1,4,0,2,0,4,0,3,0,4,0,3,1,0,1,0,0,0,2,0,2,0,2,0,0,3,3,2,0,5,0,0,0,0,0,4,0,2,1,0,0,2,0,0,0,0,1,3,0,2,0,1,0,0,1,0,0,0,1,0,2,0,1,0,2,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0],"backgroundColor":"#06b6d4","borderColor":"#06b6d4","borderWidth":1},{"label":"Premier","data":[5,3,0,2,1,4,2,2,1,0,0,0,1,1,0,0,2,0,3,2,1,6,2,0,0,1,2,0,2,0,1,6,0,0,0,0,2,0,1,0,0,0,0,1,0,0,1,2,2,1,1,0,3,2,0,1,1,1,1,0,0,0,0,1,2,1,0,0,0,0,4,0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,0,1,0,0,0,0],"backgroundColor":"#3b82f6","borderColor":"#3b82f6","borderWidth":1},{"label":"Premier+","data":[17,4,1,3,5,2,0,3,3,4,5,4,0,4,0,5,3,0,6,0,6,3,4,1,1,6,2,6,7,1,2,0,1,3,4,4,3,1,7,2,5,6,2,3,0,4,5,2,0,0,1,1,4,2,1,3,4,2,3,1,1,1,3,2,2,2,1,2,2,0,0,0,0,2,1,1,2,2,4,0,0,2,1,0,2,2,2,3,0,1,1,0,0,0,0,0,0,1,1,0,0],"backgroundColor":"#8b5cf6","borderColor":"#8b5cf6","borderWidth":1},{"label":"Signature","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"backgroundColor":"#f59e0b","borderColor":"#f59e0b","borderWidth":1},{"label":"Signature Success","data":[11,0,17,0,6,4,13,3,12,7,1,3,14,0,14,4,0,14,0,11,4,0,2,11,7,1,6,3,2,5,5,3,7,0,4,6,6,10,0,4,0,0,1,3,10,0,3,4,1,0,5,4,0,1,7,1,3,2,3,7,5,6,1,0,1,4,4,0,1,7,0,6,5,0,1,2,0,0,1,5,0,0,0,1,0,2,1,0,3,0,1,1,1,0,0,0,0,0,0,1,0],"backgroundColor":"#10b981","borderColor":"#10b981","borderWidth":1},{"label":"Standard","data":[11,11,0,11,3,2,1,6,0,1,10,5,0,5,0,2,8,0,4,0,2,4,3,0,2,4,0,3,0,2,0,0,0,3,3,1,0,0,2,0,5,2,6,3,0,4,0,1,6,0,1,0,2,1,0,2,0,3,0,0,2,1,2,0,0,0,1,0,2,0,2,0,0,3,2,1,3,2,0,0,0,1,0,0,2,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1],"backgroundColor":"#64748b","borderColor":"#64748b","borderWidth":1},{"label":"US Premier","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],"backgroundColor":"#0ea5e9","borderColor":"#0ea5e9","borderWidth":1},{"label":"US Signature Success","data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"backgroundColor":"#22d3ee","borderColor":"#22d3ee","borderWidth":1}];
@@ -3855,7 +3902,6 @@ function setMgrFilter(mgrName) {
     if(trEl && trEl.scrollIntoView) trEl.scrollIntoView({block:'nearest'});
   }
 }
-
 
 /* ===== Inline plan-detail panel ===== */
 (function() {
@@ -4494,6 +4540,144 @@ function openAccountCases(acctName){
   /* default view */
   show('loadSharing');
 })();
+}
+
+
+// ─────────────────────── INIT ────────────────────────────────────────────────
+const _sigCharts = {};
+const _sigMetric = { Industry: 'inflow', Revenue: 'inflow' };
+
+function populateSigPTDropdown(cloud){
+  const selId = cloud === 'Industry' ? 'sigIndustryPT' : 'sigRevenuePT';
+  const sel = document.getElementById(selId);
+  if(!sel || !DATA.pt_sig_inflow) return;
+  const _short = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
+  const pts = Object.keys(DATA.pt_sig_inflow)
+    .filter(pt => (DATA.PT_CLOUD_MAP[pt] || 'Industry') === cloud)
+    .sort((a,b) => (DATA.pt_sig_inflow[b]||0) - (DATA.pt_sig_inflow[a]||0));
+  sel.innerHTML = '<option value="all">All P&Ts (Top N)</option>';
+  pts.forEach(pt => {
+    const opt = document.createElement('option');
+    opt.value = pt;
+    opt.textContent = _short(pt);
+    sel.appendChild(opt);
+  });
+}
+
+function setSigMetric(cloud, metric){
+  _sigMetric[cloud] = metric;
+  // Update button styles
+  ['inflow','closure','both'].forEach(m => {
+    const btn = document.getElementById(`sig${cloud}Btn_${m}`);
+    if(!btn) return;
+    if(m === metric){
+      btn.style.background = '#1e40af'; btn.style.color = '#93c5fd';
+    } else {
+      btn.style.background = '#1e293b'; btn.style.color = '#64748b';
+    }
+  });
+  rebuildSigChart(cloud);
+}
+
+function buildSigChart(cloud, topN, metric, ptFilter){
+  const canvasId = cloud === 'Industry' ? 'chartSigIndustry' : 'chartSigRevenue';
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+
+  if(_sigCharts[cloud]){ _sigCharts[cloud].destroy(); delete _sigCharts[cloud]; }
+
+  const wks = DATA.weeks;
+  const wkLabels = wks.map(w => DATA.week_data[w].label);
+  const hasSigData = DATA.pt_sig_inflow && Object.keys(DATA.pt_sig_inflow).length > 0;
+
+  if(!hasSigData){
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth || 400; canvas.height = canvas.offsetHeight || 320;
+    ctx.fillStyle = '#334155'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#64748b'; ctx.font = '13px "Segoe UI", sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('No Signature data — run /kpi-page1-update with KPI CSV to populate', canvas.width/2, canvas.height/2);
+    return;
+  }
+
+  // Determine which P&Ts to show
+  const allPTs = Object.keys(DATA.pt_sig_inflow)
+    .filter(pt => (DATA.PT_CLOUD_MAP[pt] || 'Industry') === cloud)
+    .sort((a,b) => (DATA.pt_sig_inflow[b]||0) - (DATA.pt_sig_inflow[a]||0));
+  const pts = (ptFilter && ptFilter !== 'all') ? [ptFilter] : allPTs.slice(0, topN);
+  if(!pts.length) return;
+
+  const _short = pt => pt.replace('Industry-','').replace('Revenue Cloud (Core)-','RC-').replace('Revenue-','Rev-');
+  const getVal = (src, w, pt) => (src[w] && src[w][pt]) || 0;
+
+  const datasets = [];
+  pts.forEach((pt, i) => {
+    const color = SUBTLE_PALETTE[i % SUBTLE_PALETTE.length];
+    const short = _short(pt);
+    if(metric === 'inflow' || metric === 'both'){
+      datasets.push({
+        label: metric === 'both' ? `${short} (In)` : short,
+        data: wks.map(w => getVal(DATA.pt_sig_weekly, w, pt)),
+        borderColor: color, backgroundColor: color + '22',
+        borderWidth: 2, pointRadius: 4, pointHoverRadius: 7,
+        pointBackgroundColor: color, tension: 0.3, fill: false,
+        borderDash: []
+      });
+    }
+    if(metric === 'closure' || metric === 'both'){
+      datasets.push({
+        label: metric === 'both' ? `${short} (Cl)` : short,
+        data: wks.map(w => getVal(DATA.pt_sig_closure_weekly, w, pt)),
+        borderColor: color, backgroundColor: color + '11',
+        borderWidth: 2, pointRadius: 4, pointHoverRadius: 7,
+        pointBackgroundColor: color, tension: 0.3, fill: false,
+        borderDash: [5, 3]
+      });
+    }
+  });
+
+  const yLabel = metric === 'inflow' ? 'Inflow (Signature)'
+               : metric === 'closure' ? 'Closures (Signature)'
+               : 'Cases — solid: Inflow · dashed: Closure';
+
+  _sigCharts[cloud] = new Chart(canvas, {
+    type: 'line',
+    data: { labels: wkLabels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { position:'bottom', labels:{color:'#94a3b8', font:{size:10}, boxWidth:12, padding:8,
+          usePointStyle:true, pointStyle:'circle'} },
+        tooltip: {
+          callbacks: {
+            footer: items => `Total: ${items.reduce((s,i)=>s+(i.raw||0),0)}`
+          }
+        }
+      },
+      scales: {
+        x: { grid:{color:'#1e293b'}, ticks:{color:'#94a3b8'} },
+        y: { beginAtZero:true, grid:{color:'#1e293b'}, ticks:{color:'#64748b'},
+             title:{display:true, text:yLabel, color:'#64748b', font:{size:11}} }
+      }
+    }
+  });
+}
+
+function rebuildSigChart(cloud){
+  const topN = parseInt(document.getElementById(cloud==='Industry'?'sigIndustryTopN':'sigRevenueTopN').value, 10);
+  const ptSel = document.getElementById(cloud==='Industry'?'sigIndustryPT':'sigRevenuePT');
+  const ptFilter = ptSel ? ptSel.value : 'all';
+  // Dim Top N selector when a specific P&T is selected
+  const topNSel = document.getElementById(cloud==='Industry'?'sigIndustryTopN':'sigRevenueTopN');
+  if(topNSel) topNSel.style.opacity = (ptFilter !== 'all') ? '0.35' : '1';
+  buildSigChart(cloud, topN, _sigMetric[cloud], ptFilter);
+}
+
+function buildSigPTCharts(){
+  populateSigPTDropdown('Industry');
+  populateSigPTDropdown('Revenue');
+  rebuildSigChart('Industry');
+  rebuildSigChart('Revenue');
 }
 
 // ─────────────────────── CAPACITY & DELIVERY ─────────────────────────────────
